@@ -1,0 +1,33 @@
+package com.xh.media.main;
+
+import java.sql.Timestamp;
+
+import com.xh.media.timer.LogXhMediaInteractiveTimer;
+import com.xh.media.timer.LogXhMediaProgramTimer;
+import com.xh.media.timer.LogXhMediaUserTimer;
+import com.xh.media.timer.LogXhMediaVisitTimer;
+
+public class DayTimerMain {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Timestamp ts = new Timestamp(System.currentTimeMillis());
+		System.out.println("Day Count Timer is Run at:"+ts);
+		LogXhMediaVisitTimer lxmvt = new LogXhMediaVisitTimer();
+		LogXhMediaProgramTimer lxmpt = new LogXhMediaProgramTimer();
+		LogXhMediaUserTimer lxmut = new LogXhMediaUserTimer();
+		LogXhMediaInteractiveTimer lxmit = new LogXhMediaInteractiveTimer();
+		//定时执行
+		lxmvt.TimerMainNowDay();
+		lxmpt.TimerMainNowDay();
+		lxmut.TimerMainNowDay();
+		lxmit.TimerMainNowDay();
+		
+		Timestamp ts1 = new Timestamp(System.currentTimeMillis());
+		System.out.println("Day Count Timer is End at:"+ts1);
+	}
+
+}

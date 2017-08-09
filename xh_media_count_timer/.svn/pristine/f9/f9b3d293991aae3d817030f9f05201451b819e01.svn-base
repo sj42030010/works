@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Thu Jun 08 11:55:11 CST 2017
+onejar.license.required=true
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=xh_media_count_timer.jar
+manifest.mergeall=true
+manifest.mainclass=com.xh.media.main.TimerMain
+manifest.file=<createnew>
+jarname.isextern=false
+onejar.expand=
+excludes=
+includes=

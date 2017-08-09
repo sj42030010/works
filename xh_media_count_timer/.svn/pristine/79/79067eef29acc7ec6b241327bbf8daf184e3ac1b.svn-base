@@ -1,0 +1,102 @@
+package com.xh.media.dao;
+
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.xh.media.bean.SourceVisitBean;
+import com.xh.media.bean.UserLogBean;
+import com.xh.media.util.DbConn;
+
+public class LogXhMediaUserDao {
+	private DbConn dbConn;
+	public LogXhMediaUserDao(DbConn dbConn){
+		this.dbConn = dbConn;
+	}
+	
+	public int findNewUserCount(String originId,String siteCode,String startTime,String endTime){
+		int newuser = 0;
+		try{
+			String select = "SELECT COUNT(DISTINCT user_id) AS newuser FROM source_xh_media_user_visit_log WHERE last_visit_time=0 AND origin_id='"+originId+"' AND site_code='"+siteCode+"' AND create_time>='"+startTime+"' AND create_time<'"+endTime+"'";
+			ResultSet rs1 = dbConn.executeQuery(select, true);
+			if(rs1.next())
+				newuser = rs1.getInt("newuser");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return newuser;
+	}
+	
+	public int findActiveUserCount(String originId,String siteCode,String startTime,String endTime){
+		int activeuser = 0;
+		try{
+			String select = "SELECT COUNT(DISTINCT user_id) AS activeuser FROM source_xh_media_user_visit_log WHERE origin_id='"+originId+"' AND site_code='"+siteCode+"' AND create_time>='"+startTime+"' AND create_time<'"+endTime+"'";
+			ResultSet rs1 = dbConn.executeQuery(select, true);
+			if(rs1.next())
+				activeuser = rs1.getInt("activeuser");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return activeuser;
+	}
+	
+	public List<SourceVisitBean> getUserList(String startTime, String endTime){
+		List<SourceVisitBean> list = new ArrayList<SourceVisitBean>();
+		try{
+			String select = "SELECT origin_id,site_code FROM source_xh_media_user_visit_log WHERE create_time>='"+startTime+"' AND create_time<'"+endTime+"' GROUP BY origin_id,site_code ORDER BY origin_id DESC";
+			ResultSet rs1 = dbConn.executeQuery(select, true);
+			while(rs1.next()){
+				SourceVisitBean svb = new SourceVisitBean();
+				svb.setOriginId(rs1.getString("origin_id"));
+				svb.setSiteCode(rs1.getString("site_code"));
+				list.add(svb);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	public int insertUserLog(UserLogBean ulb){
+		int result = 1;
+		try{
+			StringBuffer insert = new StringBuffer("INSERT INTO log_xh_media_user (date,hour,minute,origin_id,origin_name,channel_id,channel_name,new_user,active_user,use_length,site_code) VALUES ('");
+			insert.append(ulb.getDate()).append("','").append(ulb.getHour()).append("','").append(ulb.getMinute()).append("','").append(ulb.getOriginId()).append("','").append(ulb.getOriginName()).append("','").append(ulb.getChannelId()).append("','")
+			.append(ulb.getChannelName()).append("',").append(ulb.getNewUser()).append(",").append(ulb.getActiveUser()).append(",").append(ulb.getUseLength()).append(",'").append(ulb.getSiteCode()).append("') ON DUPLICATE KEY UPDATE new_user=VALUES(new_user),active_user=VALUES(active_user),use_length=VALUES(use_length)");
+			dbConn.execute(insert.toString());
+		}catch(Exception e){
+			e.printStackTrace();
+			result = 0;
+		}
+		return result;
+	}
+	
+	public int insertDayUserLog(UserLogBean ulb){
+		int result = 1;
+		try{
+			StringBuffer insert = new StringBuffer("INSERT INTO log_day_xh_media_user (date,origin_id,origin_name,channel_id,channel_name,new_user,active_user,use_length,site_code) VALUES ('");
+			insert.append(ulb.getDate()).append("','").append(ulb.getOriginId()).append("','").append(ulb.getOriginName()).append("','").append(ulb.getChannelId()).append("','")
+			.append(ulb.getChannelName()).append("',").append(ulb.getNewUser()).append(",").append(ulb.getActiveUser()).append(",").append(ulb.getUseLength()).append(",'").append(ulb.getSiteCode()).append("') ON DUPLICATE KEY UPDATE new_user=VALUES(new_user),active_user=VALUES(active_user),use_length=VALUES(use_length)");
+			dbConn.execute(insert.toString());
+		}catch(Exception e){
+			e.printStackTrace();
+			result = 0;
+		}
+		return result;
+	}
+	
+	public int insertUserLogTest(UserLogBean ulb){
+		int result = 1;
+		try{
+			StringBuffer insert = new StringBuffer("INSERT INTO log_xh_media_user (date,hour,minute,origin_id,origin_name,channel_id,channel_name,new_user,active_user,use_length,site_code) VALUES ('");
+			insert.append(ulb.getDate()).append("','").append(ulb.getHour()).append("','").append(ulb.getMinute()).append("','").append(ulb.getOriginId()).append("','").append(ulb.getOriginName()).append("','").append(ulb.getChannelId()).append("','")
+			.append(ulb.getChannelName()).append("',").append(ulb.getNewUser()).append(",").append(ulb.getActiveUser()).append(",").append(ulb.getUseLength()).append(",'").append(ulb.getSiteCode()).append("') ON DUPLICATE KEY UPDATE new_user=VALUES(new_user),active_user=VALUES(active_user),use_length=VALUES(use_length)");
+//			System.out.println(insert);
+//			dbConn.execute(insert.toString());
+		}catch(Exception e){
+			e.printStackTrace();
+			result = 0;
+		}
+		return result;
+	}
+}

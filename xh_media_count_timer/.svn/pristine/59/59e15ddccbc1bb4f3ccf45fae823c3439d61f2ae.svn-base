@@ -1,0 +1,208 @@
+package com.xh.media.timer;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.xh.media.bean.ChannelBean;
+import com.xh.media.bean.OriginBean;
+import com.xh.media.bean.SourceVisitBean;
+import com.xh.media.bean.VisitLogBean;
+import com.xh.media.dao.LogXhMediaVisitDao;
+import com.xh.media.dao.PublicDao;
+import com.xh.media.util.DateUtil;
+import com.xh.media.util.DbConn;
+import com.xh.media.util.Key;
+import com.xh.media.util.Util;
+
+public class LogXhMediaVisitTimer {
+	private LogXhMediaVisitDao lxmvd;
+	private PublicDao pd;
+	private DbConn dbConn;
+	
+	public LogXhMediaVisitTimer(){
+		dbConn = new DbConn(Key.COUNT_DATABASE[0], Key.COUNT_DATABASE[1], Key.COUNT_DATABASE[2]);
+		lxmvd = new LogXhMediaVisitDao(dbConn);
+		pd = new PublicDao(dbConn);
+	}
+	
+	public void TimerMainNomarl(){
+		List<OriginBean> originList = pd.getOriginAndChannel();
+		for(OriginBean ob:originList){
+			for(ChannelBean cb:ob.getChannelList()){
+				String[][] timeArr = DateUtil.getDateValueNomarl();
+				for(int i=0;i<timeArr.length;i++){
+					VisitLogBean vlb = new VisitLogBean();
+					vlb.setDate(timeArr[i][3]);
+					vlb.setHour(timeArr[i][0]);
+					vlb.setChannelId(cb.getChannelId());
+					vlb.setChannelName(cb.getChannelName());
+					vlb.setOriginId(ob.getOriginId());
+					vlb.setOriginName(ob.getOriginName());
+					vlb.setSiteCode(cb.getSiteCode());
+					vlb.setPv(lxmvd.findPvCount(ob.getOriginId(), cb.getChannelId(), cb.getSiteCode(), timeArr[i][1], timeArr[i][2]));
+					vlb.setUv(lxmvd.findUvCount(ob.getOriginId(), cb.getChannelId(), cb.getSiteCode(), timeArr[i][1], timeArr[i][2]));
+					vlb.setIp(lxmvd.findIpCount(ob.getOriginId(), cb.getChannelId(), cb.getSiteCode(), timeArr[i][1], timeArr[i][2]));
+					vlb.setPlayTime(lxmvd.findPlayTimeCount(ob.getOriginId(), cb.getChannelId(), cb.getSiteCode(), timeArr[i][1], timeArr[i][2]));
+					vlb.setLocal(lxmvd.findLocalCount(ob.getOriginId(), cb.getChannelId(), cb.getSiteCode(), timeArr[i][1], timeArr[i][2]));
+					vlb.setNonLocal(lxmvd.findNonLocalCount(ob.getOriginId(), cb.getChannelId(), cb.getSiteCode(), timeArr[i][1], timeArr[i][2]));
+					lxmvd.insertVisitLog(vlb);
+				}
+			}
+		}
+		Util.closeResultSetAndConnection(dbConn);
+	}
+	
+	public void TimerMainNow(){
+		List<OriginBean> originList = pd.getOriginAndChannel();
+		for(OriginBean ob:originList){
+			for(ChannelBean cb:ob.getChannelList()){
+				String[][] timeArr = DateUtil.getDateValueNow();
+				for(int i=0;i<timeArr.length;i++){
+					VisitLogBean vlb = new VisitLogBean();
+					vlb.setDate(timeArr[i][3]);
+					vlb.setHour(timeArr[i][0]);
+					vlb.setChannelId(cb.getChannelId());
+					vlb.setChannelName(cb.getChannelName());
+					vlb.setOriginId(ob.getOriginId());
+					vlb.setOriginName(ob.getOriginName());
+					vlb.setSiteCode(cb.getSiteCode());
+					vlb.setPv(lxmvd.findPvCount(ob.getOriginId(), cb.getChannelId(), cb.getSiteCode(), timeArr[i][1], timeArr[i][2]));
+					vlb.setUv(lxmvd.findUvCount(ob.getOriginId(), cb.getChannelId(), cb.getSiteCode(), timeArr[i][1], timeArr[i][2]));
+					vlb.setIp(lxmvd.findIpCount(ob.getOriginId(), cb.getChannelId(), cb.getSiteCode(), timeArr[i][1], timeArr[i][2]));
+					vlb.setPlayTime(lxmvd.findPlayTimeCount(ob.getOriginId(), cb.getChannelId(), cb.getSiteCode(), timeArr[i][1], timeArr[i][2]));
+					vlb.setLocal(lxmvd.findLocalCount(ob.getOriginId(), cb.getChannelId(), cb.getSiteCode(), timeArr[i][1], timeArr[i][2]));
+					vlb.setNonLocal(lxmvd.findNonLocalCount(ob.getOriginId(), cb.getChannelId(), cb.getSiteCode(), timeArr[i][1], timeArr[i][2]));
+					lxmvd.insertVisitLog(vlb);
+				}
+			}
+		}
+		Util.closeResultSetAndConnection(dbConn);
+	}
+	
+	public void TimerMainNowMinute(){//存在全为零的数据记录需修改
+		List<OriginBean> originList = pd.getOriginAndChannel();
+		for(OriginBean ob:originList){
+			for(ChannelBean cb:ob.getChannelList()){
+				String[] timeArr = DateUtil.getDateValueNowMinute();
+				VisitLogBean vlb = new VisitLogBean();
+				vlb.setDate(timeArr[0]);
+				vlb.setHour(timeArr[1]);
+				vlb.setMinute(timeArr[2]);
+				vlb.setChannelId(cb.getChannelId());
+				vlb.setChannelName(cb.getChannelName());
+				vlb.setOriginId(ob.getOriginId());
+				vlb.setOriginName(ob.getOriginName());
+				vlb.setSiteCode(cb.getSiteCode());
+				vlb.setPv(lxmvd.findPvCount(ob.getOriginId(), cb.getChannelId(), cb.getSiteCode(), timeArr[3], timeArr[4]));
+				vlb.setUv(lxmvd.findUvCount(ob.getOriginId(), cb.getChannelId(), cb.getSiteCode(), timeArr[3], timeArr[4]));
+				vlb.setIp(lxmvd.findIpCount(ob.getOriginId(), cb.getChannelId(), cb.getSiteCode(), timeArr[3], timeArr[4]));
+				vlb.setPlayTime(lxmvd.findPlayTimeCount(ob.getOriginId(), cb.getChannelId(), cb.getSiteCode(), timeArr[3], timeArr[4]));
+				vlb.setLocal(lxmvd.findLocalCount(ob.getOriginId(), cb.getChannelId(), cb.getSiteCode(), timeArr[3], timeArr[4]));
+				vlb.setNonLocal(lxmvd.findNonLocalCount(ob.getOriginId(), cb.getChannelId(), cb.getSiteCode(), timeArr[3], timeArr[4]));
+				lxmvd.insertVisitLog(vlb);
+			}
+		}
+		Util.closeResultSetAndConnection(dbConn);
+	}
+	
+	public void TimerMainNowMinute1(){
+		String[] timeArr = DateUtil.getDateValueNowMinute();
+		List<SourceVisitBean> list = new ArrayList<SourceVisitBean>();
+		list = lxmvd.getVisitList(timeArr[3], timeArr[4]);
+		if(list.size()>0){
+			for(SourceVisitBean svb:list){
+				String channelName = "";
+				channelName = pd.getChannelNameByChannelId(svb.getChannelId(), svb.getSiteCode());
+				String originName = "";
+				originName = pd.getOriginNameByOriginId(svb.getOriginId(), svb.getSiteCode());
+				if(!"null".equals(channelName) && !"null".equals(originName)){
+					VisitLogBean vlb = new VisitLogBean();
+					vlb.setDate(timeArr[0]);
+					vlb.setHour(timeArr[1]);
+					vlb.setMinute(timeArr[2]);
+					vlb.setChannelId(svb.getChannelId());
+					vlb.setChannelName(channelName);
+					vlb.setOriginId(svb.getOriginId());
+					vlb.setOriginName(originName);
+					vlb.setSiteCode(svb.getSiteCode());
+					vlb.setPv(lxmvd.findPvCount(svb.getOriginId(), svb.getChannelId(), svb.getSiteCode(), timeArr[3], timeArr[4]));
+					vlb.setUv(lxmvd.findUvCount(svb.getOriginId(), svb.getChannelId(), svb.getSiteCode(), timeArr[3], timeArr[4]));
+					vlb.setIp(lxmvd.findIpCount(svb.getOriginId(), svb.getChannelId(), svb.getSiteCode(), timeArr[3], timeArr[4]));
+					vlb.setPlayTime(lxmvd.findPlayTimeCount(svb.getOriginId(), svb.getChannelId(), svb.getSiteCode(), timeArr[3], timeArr[4]));
+					vlb.setLocal(lxmvd.findLocalCount(svb.getOriginId(), svb.getChannelId(), svb.getSiteCode(), timeArr[3], timeArr[4]));
+					vlb.setNonLocal(lxmvd.findNonLocalCount(svb.getOriginId(), svb.getChannelId(), svb.getSiteCode(), timeArr[3], timeArr[4]));
+					lxmvd.insertVisitLog(vlb);
+				}
+			}
+		}
+		Util.closeResultSetAndConnection(dbConn);
+	}
+	
+	public void TimerMainNowDay(){
+		String[] timeArr = DateUtil.getDateValueNowDay();
+		List<SourceVisitBean> list = new ArrayList<SourceVisitBean>();
+		list = lxmvd.getVisitList(timeArr[1], timeArr[2]);
+		if(list.size()>0){
+			for(SourceVisitBean svb:list){
+				String channelName = "";
+				channelName = pd.getChannelNameByChannelId(svb.getChannelId(), svb.getSiteCode());
+				String originName = "";
+				originName = pd.getOriginNameByOriginId(svb.getOriginId(), svb.getSiteCode());
+				if(!"null".equals(channelName) && !"null".equals(originName)){
+					VisitLogBean vlb = new VisitLogBean();
+					vlb.setDate(timeArr[0]);
+					vlb.setChannelId(svb.getChannelId());
+					vlb.setChannelName(channelName);
+					vlb.setOriginId(svb.getOriginId());
+					vlb.setOriginName(originName);
+					vlb.setSiteCode(svb.getSiteCode());
+					vlb.setPv(lxmvd.findPvCount(svb.getOriginId(), svb.getChannelId(), svb.getSiteCode(), timeArr[1], timeArr[2]));
+					vlb.setUv(lxmvd.findUvCount(svb.getOriginId(), svb.getChannelId(), svb.getSiteCode(), timeArr[1], timeArr[2]));
+					vlb.setIp(lxmvd.findIpCount(svb.getOriginId(), svb.getChannelId(), svb.getSiteCode(), timeArr[1], timeArr[2]));
+					vlb.setPlayTime(lxmvd.findPlayTimeCount(svb.getOriginId(), svb.getChannelId(), svb.getSiteCode(), timeArr[1], timeArr[2]));
+					vlb.setLocal(lxmvd.findLocalCount(svb.getOriginId(), svb.getChannelId(), svb.getSiteCode(), timeArr[1], timeArr[2]));
+					vlb.setNonLocal(lxmvd.findNonLocalCount(svb.getOriginId(), svb.getChannelId(), svb.getSiteCode(), timeArr[1], timeArr[2]));
+					lxmvd.insertDayVisitLog(vlb);
+				}
+			}
+		}
+		Util.closeResultSetAndConnection(dbConn);
+	}
+	
+	public void TimerMainNowMinuteTest(String start, String end, String date, String hour, String minute){
+//		String[] timeArr = DateUtil.getDateValueNowMinute();
+		List<SourceVisitBean> list = new ArrayList<SourceVisitBean>();
+		list = lxmvd.getVisitList(start, end);
+		System.out.println(list.size());
+		if(list.size()>0){
+			for(SourceVisitBean svb:list){
+				String channelName = "";
+				channelName = pd.getChannelNameByChannelId(svb.getChannelId(), svb.getSiteCode());
+				String originName = "";
+				originName = pd.getOriginNameByOriginId(svb.getOriginId(), svb.getSiteCode());
+				System.out.println("111111111="+svb.getOriginId()+"="+originName+";"+svb.getChannelId()+"="+channelName);
+				if(!"null".equals(channelName) && !"null".equals(originName)){
+					System.out.println(svb.getOriginId()+"="+originName+";"+svb.getChannelId()+"="+channelName);
+					VisitLogBean vlb = new VisitLogBean();
+					vlb.setDate(date);
+					vlb.setHour(hour);
+					vlb.setMinute(minute);
+					vlb.setChannelId(svb.getChannelId());
+					vlb.setChannelName(channelName);
+					vlb.setOriginId(svb.getOriginId());
+					vlb.setOriginName(originName);
+					vlb.setSiteCode(svb.getSiteCode());
+					vlb.setPv(lxmvd.findPvCount(svb.getOriginId(), svb.getChannelId(), svb.getSiteCode(), start, end));
+					vlb.setUv(lxmvd.findUvCount(svb.getOriginId(), svb.getChannelId(), svb.getSiteCode(), start, end));
+					vlb.setIp(lxmvd.findIpCount(svb.getOriginId(), svb.getChannelId(), svb.getSiteCode(), start, end));
+					vlb.setPlayTime(lxmvd.findPlayTimeCount(svb.getOriginId(), svb.getChannelId(), svb.getSiteCode(), start, end));
+					vlb.setLocal(lxmvd.findLocalCount(svb.getOriginId(), svb.getChannelId(), svb.getSiteCode(), start, end));
+					vlb.setNonLocal(lxmvd.findNonLocalCount(svb.getOriginId(), svb.getChannelId(), svb.getSiteCode(), start, end));
+					
+					lxmvd.insertVisitLogTest(vlb);
+				}
+			}
+		}
+		Util.closeResultSetAndConnection(dbConn);
+	}
+}

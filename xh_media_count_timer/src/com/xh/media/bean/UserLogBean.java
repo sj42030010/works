@@ -1,0 +1,68 @@
+package com.xh.media.bean;
+
+public class UserLogBean {
+	private String date;
+	private String hour;
+	private String minute;
+	private String originId;
+	private String originName;
+	private int newUser;
+	private int activeUser;
+	private int useLength;
+	private String siteCode;
+	
+	public String getMinute() {
+		return minute;
+	}
+	public void setMinute(String minute) {
+		this.minute = minute;
+	}
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
+	public String getHour() {
+		return hour;
+	}
+	public void setHour(String hour) {
+		this.hour = hour;
+	}
+	public String getOriginId() {
+		return originId;
+	}
+	public void setOriginId(String originId) {
+		this.originId = originId;
+	}
+	public String getOriginName() {
+		return originName;
+	}
+	public void setOriginName(String originName) {
+		this.originName = originName;
+	}
+	public int getNewUser() {
+		return newUser;
+	}
+	public void setNewUser(int newUser) {
+		this.newUser = newUser;
+	}
+	public int getActiveUser() {
+		return activeUser;
+	}
+	public void setActiveUser(int activeUser) {
+		this.activeUser = activeUser;
+	}
+	public int getUseLength() {
+		return useLength;
+	}
+	public void setUseLength(int useLength) {
+		this.useLength = useLength;
+	}
+	public String getSiteCode() {
+		return siteCode;
+	}
+	public void setSiteCode(String siteCode) {
+		this.siteCode = siteCode;
+	}
+}

@@ -1,0 +1,26 @@
+package com.xh.media.main;
+
+import java.sql.Timestamp;
+
+import com.xh.media.timer.LogXhMediaInteractiveTimer;
+import com.xh.media.timer.LogXhMediaProgramTimer;
+import com.xh.media.timer.LogXhMediaUserTimer;
+import com.xh.media.timer.LogXhMediaVisitTimer;
+
+public class TestMain {
+
+	public static void main(String[] args){
+		Timestamp ts = new Timestamp(System.currentTimeMillis());
+		System.out.println("Count Timer is Run at:"+ts);
+		LogXhMediaVisitTimer lxmvt = new LogXhMediaVisitTimer();
+		LogXhMediaProgramTimer lxmpt = new LogXhMediaProgramTimer();
+		LogXhMediaUserTimer lxmut = new LogXhMediaUserTimer();
+		LogXhMediaInteractiveTimer lxmit = new LogXhMediaInteractiveTimer();
+		lxmvt.TimerMainNowMinuteTest("2017-05-26 19:15:00", "2017-05-26 19:20:00", "2017-05-26", "19", "20");
+//		lxmpt.TimerMainNowMinuteTest("2017-05-26 17:50:00", "2017-05-26 17:55:00", "2017-05-26", "17", "45");
+//		lxmut.TimerMainNowMinuteTest("2017-05-26 17:50:00", "2017-05-26 17:55:00", "2017-05-26", "17", "45");
+//		lxmit.TimerMainNowMinuteTest("2017-05-26 17:50:00", "2017-05-26 17:55:00", "2017-05-26", "17", "45");
+		Timestamp ts1 = new Timestamp(System.currentTimeMillis());
+		System.out.println("Count Timer is End at:"+ts1);
+	}
+}

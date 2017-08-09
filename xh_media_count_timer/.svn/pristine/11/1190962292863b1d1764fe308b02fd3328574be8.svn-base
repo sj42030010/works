@@ -1,0 +1,10 @@
+package com.xh.media.util;
+
+import java.io.Serializable;
+
+public class Key implements Serializable{
+//	public static final String[] COUNT_DATABASE = {"jdbc:mysql://192.168.202.2:3306/xh_media_count?characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull","root","tidecms2008"};//tidecms -p'5Z8AHpWZRheaQ9wEqCbC'
+//	public static final String[] TIDE_DATABASE = {"jdbc:mysql://localhost:3306/tidemedia_tongji?characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull","songjian","773726791231"};
+//	public static final String[] COUNT_DATABASE = {"jdbc:mysql://192.168.1.15:3306/xh_media_count?characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull","tidecms","5Z8AHpWZRheaQ9wEqCbC"};
+	public static final String[] COUNT_DATABASE = {"jdbc:mysql://db.ctv-cloud.com:3306/xh_media_count?characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull","tidecms","5Z8AHpWZRheaQ9wEqCbC"};
+}

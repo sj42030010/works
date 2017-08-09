@@ -1,0 +1,161 @@
+package com.xh.media.dao;
+
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.xh.media.bean.ProgramLogBean;
+import com.xh.media.bean.SourceVisitBean;
+import com.xh.media.util.DbConn;
+
+public class LogXhMediaProgramDao {
+	private DbConn dbConn;
+	public LogXhMediaProgramDao(DbConn dbConn){
+		this.dbConn = dbConn;
+	}
+	
+	public int findPlayTimeCount(String originId,String channelId,String globalId,String siteCode,String startTime,String endTime){
+		int playtime = 0;
+		try{
+			String select = "SELECT SUM(play_time) AS playtime FROM source_xh_media_user_visit_log WHERE origin_id='"+originId+"' AND channle_id='"+channelId+"' AND global_id='"+globalId+"' AND site_code='"+siteCode+"' AND create_time>='"+startTime+"' AND create_time<'"+endTime+"'";
+			ResultSet rs1 = dbConn.executeQuery(select, true);
+			if(rs1.next())
+				playtime = rs1.getInt("playtime");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return playtime;
+	}
+	
+	public int findPlayNumberCount(String originId,String channelId,String globalId,String siteCode,String startTime,String endTime){
+		int playnumber = 0;
+		try{
+			String select = "SELECT COUNT(id) AS playnumber FROM source_xh_media_user_visit_log WHERE play_time>0 AND origin_id='"+originId+"' AND channle_id='"+channelId+"' AND global_id='"+globalId+"' AND site_code='"+siteCode+"' AND create_time>='"+startTime+"' AND create_time<'"+endTime+"'";
+			ResultSet rs1 = dbConn.executeQuery(select, true);
+			if(rs1.next())
+				playnumber = rs1.getInt("playnumber");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return playnumber;
+	}
+	
+	public int findPlayUserNumberCount(String originId,String channelId,String globalId,String siteCode,String startTime,String endTime){
+		int playusernumber = 0;
+		try{
+			String select = "SELECT COUNT(DISTINCT user_id) AS playusernumber FROM source_xh_media_user_visit_log WHERE play_time>0 AND origin_id='"+originId+"' AND channle_id='"+channelId+"' AND global_id='"+globalId+"' AND site_code='"+siteCode+"' AND create_time>='"+startTime+"' AND create_time<'"+endTime+"'";
+			ResultSet rs1 = dbConn.executeQuery(select, true);
+			if(rs1.next())
+				playusernumber = rs1.getInt("playusernumber");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return playusernumber;
+	}
+	
+	public int findPvCount(String originId,String channelId,String globalId,String siteCode,String startTime,String endTime){
+		int pv = 0;
+		try{
+			String select = "SELECT COUNT(id) AS pv FROM source_xh_media_user_visit_log WHERE origin_id='"+originId+"' AND channle_id='"+channelId+"' AND global_id='"+globalId+"' AND site_code='"+siteCode+"' AND create_time>='"+startTime+"' AND create_time<'"+endTime+"'";
+			ResultSet rs1 = dbConn.executeQuery(select, true);
+			if(rs1.next())
+				pv = rs1.getInt("pv");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return pv;
+	}
+	
+	public int findUvCount(String originId,String channelId,String globalId,String siteCode,String startTime,String endTime){
+		int uv = 0;
+		try{
+			String select = "SELECT COUNT(DISTINCT user_id) AS uv FROM source_xh_media_user_visit_log WHERE origin_id='"+originId+"' AND channle_id='"+channelId+"' AND global_id='"+globalId+"' AND site_code='"+siteCode+"' AND create_time>='"+startTime+"' AND create_time<'"+endTime+"'";
+			ResultSet rs1 = dbConn.executeQuery(select, true);
+			if(rs1.next())
+				uv = rs1.getInt("uv");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return uv;
+	}
+	
+	public int findIpCount(String originId,String channelId,String globalId,String siteCode,String startTime,String endTime){
+		int ip = 0;
+		try{
+			String select = "SELECT COUNT(DISTINCT ip) AS ip FROM source_xh_media_user_visit_log WHERE origin_id='"+originId+"' AND channle_id='"+channelId+"' AND global_id='"+globalId+"' AND site_code='"+siteCode+"' AND create_time>='"+startTime+"' AND create_time<'"+endTime+"'";
+			ResultSet rs1 = dbConn.executeQuery(select, true);
+			if(rs1.next())
+				ip = rs1.getInt("ip");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return ip;
+	}
+	
+	public List<SourceVisitBean> getProgramList(String startTime, String endTime){
+		List<SourceVisitBean> list = new ArrayList<SourceVisitBean>();
+		try{
+			String select = "SELECT origin_id,channle_id,global_id,site_code FROM source_xh_media_user_visit_log WHERE global_id !=0 AND create_time>='"+startTime+"' AND create_time<'"+endTime+"' GROUP BY global_id,site_code,channle_id,origin_id ORDER BY global_id DESC";
+			ResultSet rs1 = dbConn.executeQuery(select, true);
+			while(rs1.next()){
+				SourceVisitBean svb = new SourceVisitBean();
+				svb.setOriginId(rs1.getString("origin_id"));
+				svb.setChannelId(rs1.getString("channle_id"));
+				svb.setGlobalId(rs1.getString("global_id"));
+				svb.setSiteCode(rs1.getString("site_code"));
+				list.add(svb);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	public int insertProgramLog(ProgramLogBean plb){
+		int result = 1;
+		try{
+			StringBuffer insert = new StringBuffer("INSERT INTO log_xh_media_program_analysis (date,hour,minute,origin_id,origin_name,channel_id,channel_name,global_id,chinese_name,pub_date,type,play_time,time_length,play_number,play_user_number,source,pv,uv,ip,site_code) VALUES ('");
+			insert.append(plb.getDate()).append("','").append(plb.getHour()).append("','").append(plb.getMinute()).append("','").append(plb.getOriginId()).append("','").append(plb.getOriginName()).append("','").append(plb.getChannelId()).append("','")
+			.append(plb.getChannelName()).append("','").append(plb.getGlobalId()).append("','").append(plb.getChineseName()).append("','").append(plb.getPubDate()).append("','").append(plb.getType()).append("',").append(plb.getPlayTime()).append(",").append(plb.getTimeLength()).append(",")
+			.append(plb.getPlayNumber()).append(",").append(plb.getPlayUserNumber()).append(",'").append(plb.getSource()).append("',").append(plb.getPv()).append(",").append(plb.getUv()).append(",").append(plb.getIp()).append(",'").append(plb.getSiteCode()).append("') ON DUPLICATE KEY UPDATE play_time=VALUES(play_time),time_length=VALUES(time_length),play_number=VALUES(play_number),play_user_number=VALUES(play_user_number),pv=VALUES(pv),uv=VALUES(uv),ip=VALUES(ip)");
+//			System.out.println(insert);
+			dbConn.execute(insert.toString());
+		}catch(Exception e){
+			e.printStackTrace();
+			result = 0;
+		}
+		return result;
+	}
+	
+	public int insertDayProgramLog(ProgramLogBean plb){
+		int result = 1;
+		try{
+			StringBuffer insert = new StringBuffer("INSERT INTO log_day_xh_media_program_analysis (date,origin_id,origin_name,channel_id,channel_name,global_id,chinese_name,pub_date,type,play_time,time_length,play_number,play_user_number,source,pv,uv,ip,site_code) VALUES ('");
+			insert.append(plb.getDate()).append("','").append(plb.getOriginId()).append("','").append(plb.getOriginName()).append("','").append(plb.getChannelId()).append("','")
+			.append(plb.getChannelName()).append("','").append(plb.getGlobalId()).append("','").append(plb.getChineseName()).append("','").append(plb.getPubDate()).append("','").append(plb.getType()).append("',").append(plb.getPlayTime()).append(",").append(plb.getTimeLength()).append(",")
+			.append(plb.getPlayNumber()).append(",").append(plb.getPlayUserNumber()).append(",'").append(plb.getSource()).append("',").append(plb.getPv()).append(",").append(plb.getUv()).append(",").append(plb.getIp()).append(",'").append(plb.getSiteCode()).append("') ON DUPLICATE KEY UPDATE play_time=VALUES(play_time),time_length=VALUES(time_length),play_number=VALUES(play_number),play_user_number=VALUES(play_user_number),pv=VALUES(pv),uv=VALUES(uv),ip=VALUES(ip)");
+//			System.out.println(insert);
+			dbConn.execute(insert.toString());
+		}catch(Exception e){
+			e.printStackTrace();
+			result = 0;
+		}
+		return result;
+	}
+	
+	public int insertProgramLogTest(ProgramLogBean plb){
+		int result = 1;
+		try{
+			StringBuffer insert = new StringBuffer("INSERT INTO log_xh_media_program_analysis (date,hour,minute,origin_id,origin_name,channel_id,channel_name,global_id,chinese_name,pub_date,type,play_time,time_length,play_number,play_user_number,source,pv,uv,ip,site_code) VALUES ('");
+			insert.append(plb.getDate()).append("','").append(plb.getHour()).append("','").append(plb.getMinute()).append("','").append(plb.getOriginId()).append("','").append(plb.getOriginName()).append("','").append(plb.getChannelId()).append("','")
+			.append(plb.getChannelName()).append("','").append(plb.getGlobalId()).append("','").append(plb.getChineseName()).append("','").append(plb.getPubDate()).append("','").append(plb.getType()).append("',").append(plb.getPlayTime()).append(",").append(plb.getTimeLength()).append(",")
+			.append(plb.getPlayNumber()).append(",").append(plb.getPlayUserNumber()).append(",'").append(plb.getSource()).append("',").append(plb.getPv()).append(",").append(plb.getUv()).append(",").append(plb.getIp()).append(",'").append(plb.getSiteCode()).append("') ON DUPLICATE KEY UPDATE play_time=VALUES(play_time),time_length=VALUES(time_length),play_number=VALUES(play_number),play_user_number=VALUES(play_user_number),pv=VALUES(pv),uv=VALUES(uv),ip=VALUES(ip)");
+//			System.out.println(insert);
+//			dbConn.execute(insert.toString());
+		}catch(Exception e){
+			e.printStackTrace();
+			result = 0;
+		}
+		return result;
+	}
+}

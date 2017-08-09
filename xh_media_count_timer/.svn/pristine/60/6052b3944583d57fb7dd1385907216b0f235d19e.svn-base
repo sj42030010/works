@@ -1,0 +1,8 @@
+package com.xh.media.util;
+
+public class Util {
+	public static void closeResultSetAndConnection(DbConn dbConn){
+		dbConn.closeResultSet();
+		dbConn.closeConnection();
+	}
+}
