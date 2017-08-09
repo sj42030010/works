@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xh.media.dao.SysUsersMapper" >
+  <resultMap id="BaseResultMap" type="com.xh.media.model.SysUsers" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="USER_ACCOUNT" property="userAccount" jdbcType="VARCHAR" />
+    <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+    <result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+    <result column="TRUE_PASSWORD" property="truePassword" jdbcType="VARCHAR" />
+    <result column="DESC" property="desc" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="SMALLINT" />
+    <result column="DEPT" property="dept" jdbcType="VARCHAR" />
+    <result column="DUTY" property="duty" jdbcType="VARCHAR" />
+    <result column="SUB_SYSTEM" property="subSystem" jdbcType="VARCHAR" />
+    <result column="ISADMIN" property="isadmin" jdbcType="SMALLINT" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, USER_ACCOUNT, USER_NAME, `PASSWORD`, TRUE_PASSWORD, `DESC`, `STATUS`, DEPT, DUTY, SUB_SYSTEM, 
+    ISADMIN, CREATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_users
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_users
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.xh.media.model.SysUsers" >
+    insert into sys_users (ID, USER_ACCOUNT, USER_NAME, 
+      PASSWORD, TRUE_PASSWORD, `DESC`, 
+      STATUS, DEPT, DUTY, 
+      SUB_SYSTEM, ISADMIN, CREATE_TIME
+      )
+    values (#{id,jdbcType=INTEGER}, #{userAccount,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{truePassword,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR}, 
+      #{status,jdbcType=SMALLINT}, #{dept,jdbcType=VARCHAR}, #{duty,jdbcType=VARCHAR}, 
+      #{subSystem,jdbcType=VARCHAR}, #{isadmin,jdbcType=SMALLINT}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.xh.media.model.SysUsers" >
+    insert into sys_users
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="userAccount != null" >
+        USER_ACCOUNT,
+      </if>
+      <if test="userName != null" >
+        USER_NAME,
+      </if>
+      <if test="password != null" >
+        PASSWORD,
+      </if>
+      <if test="truePassword != null" >
+        TRUE_PASSWORD,
+      </if>
+      <if test="desc != null" >
+        `DESC`,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="dept != null" >
+        DEPT,
+      </if>
+      <if test="duty != null" >
+        DUTY,
+      </if>
+      <if test="subSystem != null" >
+        SUB_SYSTEM,
+      </if>
+      <if test="isadmin != null" >
+        ISADMIN,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userAccount != null" >
+        #{userAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="truePassword != null" >
+        #{truePassword,jdbcType=VARCHAR},
+      </if>
+      <if test="desc != null" >
+        #{desc,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="dept != null" >
+        #{dept,jdbcType=VARCHAR},
+      </if>
+      <if test="duty != null" >
+        #{duty,jdbcType=VARCHAR},
+      </if>
+      <if test="subSystem != null" >
+        #{subSystem,jdbcType=VARCHAR},
+      </if>
+      <if test="isadmin != null" >
+        #{isadmin,jdbcType=SMALLINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xh.media.model.SysUsers" >
+    update sys_users
+    <set >
+      <if test="userAccount != null" >
+        USER_ACCOUNT = #{userAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        USER_NAME = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        PASSWORD = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="truePassword != null" >
+        TRUE_PASSWORD = #{truePassword,jdbcType=VARCHAR},
+      </if>
+      <if test="desc != null" >
+        `DESC` = #{desc,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="dept != null" >
+        DEPT = #{dept,jdbcType=VARCHAR},
+      </if>
+      <if test="duty != null" >
+        DUTY = #{duty,jdbcType=VARCHAR},
+      </if>
+      <if test="subSystem != null" >
+        SUB_SYSTEM = #{subSystem,jdbcType=VARCHAR},
+      </if>
+      <if test="isadmin != null" >
+        ISADMIN = #{isadmin,jdbcType=SMALLINT},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xh.media.model.SysUsers" >
+    update sys_users
+    set USER_ACCOUNT = #{userAccount,jdbcType=VARCHAR},
+      USER_NAME = #{userName,jdbcType=VARCHAR},
+      PASSWORD = #{password,jdbcType=VARCHAR},
+      TRUE_PASSWORD = #{truePassword,jdbcType=VARCHAR},
+      `DESC` = #{desc,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=SMALLINT},
+      DEPT = #{dept,jdbcType=VARCHAR},
+      DUTY = #{duty,jdbcType=VARCHAR},
+      SUB_SYSTEM = #{subSystem,jdbcType=VARCHAR},
+      ISADMIN = #{isadmin,jdbcType=SMALLINT},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="loadUserAuthorities" resultType="java.lang.String">
+  	SELECT sa.name FROM ((sys_users su INNER JOIN sys_user_role sur ON su.id=sur.user_id) INNER JOIN sys_role_auth sra ON sur.role_id=sra.role_id) INNER JOIN sys_authorities sa ON sra.auth_id=sa.id WHERE su.user_account=#{0}
+  </select>
+  <select id="getUserByUsername" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	select 
+    <include refid="Base_Column_List" />
+    from sys_users
+    where USER_ACCOUNT = #{0}
+  </select>
+  <select id="getPasswordByUseraccount" resultType="java.lang.String">
+  	select password from sys_users where user_account=#{0}
+  </select>
+  <select id="getUserByUseraccount" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	select 
+    <include refid="Base_Column_List" />
+    from sys_users
+    where USER_ACCOUNT = #{0} AND status=0
+  </select>
+  <select id="getSysUsersList" resultMap="BaseResultMap">
+  	SELECT 
+  	<include refid="Base_Column_List" />
+	FROM sys_users WHERE status=0 AND dept=#{dept,jdbcType=VARCHAR} 
+	ORDER BY 
+   <foreach collection="orderList" index="index" item="item" separator=",">
+                ${item}       
+    </foreach>
+  </select>
+  <select id="getAllSysUsersList" resultMap="BaseResultMap">
+  	SELECT 
+  	<include refid="Base_Column_List" />
+	FROM sys_users WHERE status=0 AND dept&gt;=#{dept,jdbcType=VARCHAR} 
+	ORDER BY 
+   <foreach collection="orderList" index="index" item="item" separator=",">
+                ${item}       
+    </foreach>
+  </select>
+  <select id="getMaxId" resultType="java.lang.Integer">
+  	select max(id+1) from sys_users
+  </select>
+  <select id="getUserCanVisitUrl" resultType='java.lang.String'>
+  	SELECT sr.resource_string FROM (((sys_users su INNER JOIN sys_user_role sur ON su.id=sur.user_id) INNER JOIN sys_role_auth sra ON sur.role_id=sra.role_id) INNER JOIN sys_authority_res sar ON sra.auth_id=sar.auth_id) INNER JOIN sys_resources sr ON sar.res_id=sr.id WHERE su.user_account=#{0}
+  </select>
+  
+  <select id="getDeptList" resultType="java.lang.String">
+  	SELECT dept FROM sys_users WHERE dept&gt;=#{0} ORDER BY dept asc
+  </select>
+  
+  <select id="countSysUserByAccountDeptAndStatus" resultType="java.lang.Integer">
+  	SELECT COUNT(id) FROM sys_users WHERE user_account=#{0} AND dept=#{1} AND status=0
+  </select>
+  
+  <select id="getUserIdByAccountDeptAndStatus" resultType="java.lang.Integer">
+  	SELECT id FROM sys_users WHERE user_account=#{0} AND dept=#{1} AND status=0
+  </select>
+  
+    <select id="getIdByDept" resultType="java.lang.Integer">
+  	SELECT id FROM sys_users WHERE dept=#{0}
+   </select>
+   
+    <update id="updateDeptById"  parameterType="com.xh.media.model.SysUsers" >
+  	update sys_users
+    set
+      DEPT = #{dept,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+   </update>
+</mapper>

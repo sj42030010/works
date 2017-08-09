@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+						http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+                    	http://www.springframework.org/schema/mvc
+                    	http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+						">
+	
+    <!-- 注解驱动 -->
+    <mvc:annotation-driven />
+	<!--使Spring支持自动检测组件，如注解的Controller-->
+    <context:component-scan base-package="com.xh.media.controller"/>
+    
+    
+	<!-- 解决静态资源加载显示问题 -->
+	<mvc:resources location="/images/" mapping="/images/**"/>
+    <mvc:resources location="/js/" mapping="/js/**"/>
+    <mvc:resources location="/img/" mapping="/img/**"/>
+    <mvc:resources location="/css/" mapping="/css/**"/>
+    <mvc:resources location="/icons/" mapping="/icons/**"/>
+    <mvc:resources location="/temp/" mapping="/temp/**"/>
+    <mvc:resources location="/easyui/" mapping="/easyui/**"/>
+    
+<mvc:interceptors>  
+    <mvc:interceptor>  
+        <mvc:mapping path="/**"/>  
+        <!-- 定义在mvc:interceptor下面的表示是对特定的请求才进行拦截的 -->
+        <mvc:exclude-mapping path="/login" />
+        <mvc:exclude-mapping path="/logout" />
+        <mvc:exclude-mapping path="/index.jsp" />
+        <mvc:exclude-mapping path="/images/**"/>
+    	<mvc:exclude-mapping path="/js/**"/>
+    	<mvc:exclude-mapping path="/img/**"/>
+    	<mvc:exclude-mapping path="/css/**"/>
+    	<mvc:exclude-mapping path="/icons/**"/>
+    	<mvc:exclude-mapping path="/temp/**"/>
+    	<mvc:exclude-mapping path="/easyui/**"/>  
+        <bean class="com.xh.media.interceptor.LoginAndSessionInterceptor" >
+        	<property name="loginUrl" value="/login"></property>
+			<!-- 设置不予拦截的地址如登录页面以及登录controller -->
+			<property name="excludedUrls">
+        	<list>
+        		<value>/login</value>
+        		<value>/logout</value>
+        		<value>/index.jsp</value>
+        		<value>/images</value>
+        		<value>/js</value>
+        		<value>/img</value>
+        		<value>/css</value>
+        		<value>/icons</value>
+        		<value>/easyui</value>
+        	</list>
+        	</property> 
+        </bean>  
+    </mvc:interceptor>  
+    <!-- 使用bean定义一个Interceptor，直接定义在mvc:interceptors根下面的Interceptor将拦截所有的请求 -->  
+    <bean class="com.xh.media.interceptor.LogRecordHandlerInterceptor"/>
+</mvc:interceptors>
+	<!-- HandlerAdapter -->  
+	<bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
+	
+	<!-- ViewResolver -->  
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
+	    <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>  
+	    <property name="prefix" value="/"/>  
+	    <property name="suffix" value=".jsp"/>  
+	</bean>
+	
+	<!-- 处理器 -->  
+	<!-- <bean name="/hello" class="com.cms.springmvc.controller.HelloController"/>
+	<bean name="/login" class="com.cms.springmvc.controller.LoginController"/>
+	<bean name="/succ" class="com.cms.springmvc.controller.SuccController"/>
+	<bean name="/accessDenied" class="com.cms.springmvc.controller.AccessDeniedController"/>
+	<bean name="/index" class="com.cms.springmvc.controller.IndexController"/>
+	<bean name="/sysusers" class="com.cms.springmvc.controller.SysUsersController"/>
+	<bean name="/cmsparts" class="com.cms.springmvc.controller.CmsPartsController"/>
+	<bean name="/data" class="com.cms.springmvc.controller.DataController"/>
+	<bean name="/sysauthority" class="com.cms.springmvc.controller.SysAuthorityController"/> -->
+	<!-- <bean name="/visit" class="com.xh.media.controller.VisitCountController"/>
+	<bean name="/visit_search" class="com.xh.media.controller.VisitSearchController"/> 
+	<bean name="/login" class="com.xh.media.controller.LoginController"/>
+	<bean name="/sysusers" class="com.xh.media.controller.SysUsersController"/>
+	<bean name="/video_analysis" class="com.xh.media.controller.VideoAnalysisController"/>
+	<bean name="/program_analysis" class="com.xh.media.controller.ProgramAnalysisController"/>
+	<bean name="/newandolduser" class="com.xh.media.controller.NewAndOldUserController"/>
+	<bean name="/interactive" class="com.xh.media.controller.InteractiveController"/>
+	<bean name="/origin" class="com.xh.media.controller.OriginController"/>
+	<bean name="/channel" class="com.xh.media.controller.ChannelController"/>
+	<bean name="/videoAndProgramDetail" class="com.xh.media.controller.VideoAndProgramDetailController"/> -->
+	
+</beans>

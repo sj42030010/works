@@ -1,0 +1,99 @@
+package com.xh.media.controller;
+
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.google.gson.Gson;
+import com.xh.media.model.LogDayXhMediaAppCount;
+import com.xh.media.model.LogXhMediaAppCount;
+import com.xh.media.service.LogDayXhMediaAppCountService;
+import com.xh.media.service.LogXhMediaAppCountService;
+
+@Controller
+public class AppDataController {
+	private Gson gson;
+	private ApplicationContext context;
+	private LogXhMediaAppCountService logXhMediaAppCountService;
+	private LogDayXhMediaAppCountService logDayXhMediaAppCountService;
+	public AppDataController() {
+		 gson=new Gson();
+	     context=new ClassPathXmlApplicationContext("applicationContext.xml");
+	     logXhMediaAppCountService=(LogXhMediaAppCountService) context.getBean("logXhMediaAppCountService");
+	     logDayXhMediaAppCountService=(LogDayXhMediaAppCountService) context.getBean("logDayXhMediaAppCountService");
+	}
+	
+	
+	@RequestMapping("/getAppData")
+	public void getAppData(HttpServletRequest request,HttpServletResponse response) throws IOException{
+		List<LogDayXhMediaAppCount> appData=new ArrayList<LogDayXhMediaAppCount>();
+		if (request.getParameter("originId")!=null&&!"".equals(request.getParameter("originId"))) {
+		 appData = logDayXhMediaAppCountService.getAppDataByOriginId(request.getParameter("originId"));
+		}else{
+		  appData = logDayXhMediaAppCountService.getAppData();
+	    }
+		if (appData.size()>0) {
+			for (LogDayXhMediaAppCount logDayXhMediaAppCount : appData) {
+				logDayXhMediaAppCount.setNonLocal(logDayXhMediaAppCount.getLocal()+logDayXhMediaAppCount.getNonLocal());
+			}
+			Map map=new HashMap();
+			map.put("rows", appData);
+			map.put("total", appData.size());
+			String result = gson.toJson(map);
+			response.setCharacterEncoding("utf-8");
+			response.getWriter().write(result);
+			response.getWriter().close();
+		}
+  }
+	
+	@RequestMapping("/getAppDataDetail")
+	public void getAPPDetail(HttpServletRequest request,HttpServletResponse response) throws IOException{
+		List<LogXhMediaAppCount> detailList=new ArrayList<LogXhMediaAppCount>();
+		if (request.getParameter("startTime")==null&&request.getParameter("endTime")==null) {
+			if (request.getParameter("originId")!=null&&!"".equals(request.getParameter("originId"))){
+				detailList=logXhMediaAppCountService.getAppDataDetail(request.getParameter("originId"));
+			}
+		}else{
+			LogXhMediaAppCount appDetail=new LogXhMediaAppCount();
+			if (request.getParameter("startTime")==null||"".equals(request.getParameter("startTime"))){
+				appDetail.setStartTime("1900-01-01");
+			}else{
+				appDetail.setStartTime(request.getParameter("startTime"));
+			}
+			if (request.getParameter("endTime")==null||"".equals(request.getParameter("endTime"))) {
+				Timestamp ts = new Timestamp(System.currentTimeMillis());
+				String nowTime = ts+"";
+				appDetail.setEndTime(nowTime.substring(0,10));
+			}else{
+				appDetail.setEndTime(request.getParameter("endTime"));
+			}
+			if (request.getParameter("originId")!=null&&!"".equals(request.getParameter("originId"))){
+				appDetail.setOriginId(request.getParameter("originId"));
+			}
+			detailList=logXhMediaAppCountService.searchAppDataDetail(appDetail);
+		}
+			for (LogXhMediaAppCount logXhMediaAppCount : detailList) {
+				logXhMediaAppCount.setNonLocal(logXhMediaAppCount.getLocal()+logXhMediaAppCount.getNonLocal());
+			}
+			
+			
+			Map map=new HashMap();
+			map.put("rows", detailList);
+			map.put("total", detailList.size());
+			String result = gson.toJson(map);
+			response.setCharacterEncoding("utf-8");
+			response.getWriter().write(result);
+			response.getWriter().close();
+		}
+}

@@ -1,0 +1,25 @@
+package com.xh.media.dao;
+
+import java.util.List;
+
+import com.xh.media.model.IndexXhMediaOrigin;
+
+public interface IndexXhMediaOriginMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(IndexXhMediaOrigin record);
+
+    int insertSelective(IndexXhMediaOrigin record);
+
+    IndexXhMediaOrigin selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(IndexXhMediaOrigin record);
+
+    int updateByPrimaryKey(IndexXhMediaOrigin record);
+    
+    List<IndexXhMediaOrigin> getAllOrigin();
+    
+    List<IndexXhMediaOrigin> getAllOriginBySiteCode(String siteCode);
+    
+    String getOriginNameByOriginId(String originId);
+}

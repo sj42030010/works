@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xh.media.dao.LogDayXhMediaInteractiveMapper" >
+  <resultMap id="BaseResultMap" type="com.xh.media.model.LogDayXhMediaInteractive" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="DATE" property="date" jdbcType="VARCHAR" />
+    <result column="ORIGIN_ID" property="originId" jdbcType="VARCHAR" />
+    <result column="ORIGIN_NAME" property="originName" jdbcType="VARCHAR" />
+    <result column="CHANNEL_ID" property="channelId" jdbcType="VARCHAR" />
+    <result column="CHANNEL_NAME" property="channelName" jdbcType="VARCHAR" />
+    <result column="GLOBAL_ID" property="globalId" jdbcType="VARCHAR" />
+    <result column="CHINESE_NAME" property="chineseName" jdbcType="VARCHAR" />
+    <result column="SOURCE" property="source" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="SMALLINT" />
+    <result column="COMMENT_NUMBER" property="commentNumber" jdbcType="INTEGER" />
+    <result column="TOPIC_NUMBER" property="topicNumber" jdbcType="INTEGER" />
+    <result column="SHARE_NUMBER" property="shareNumber" jdbcType="INTEGER" />
+    <result column="COLLECTION_NUMBER" property="collectionNumber" jdbcType="INTEGER" />
+    <result column="SITE_CODE" property="siteCode" jdbcType="VARCHAR" />
+    <result column="PART_ID" property="partId" jdbcType="VARCHAR" />
+    <result column="PART_NAME" property="partName" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="endTime" property="endTime" jdbcType="VARCHAR" />
+    <result column="siteName" property="siteName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, DATE, ORIGIN_ID, ORIGIN_NAME, CHANNEL_ID, CHANNEL_NAME, GLOBAL_ID, CHINESE_NAME, 
+    SOURCE, TYPE, COMMENT_NUMBER, TOPIC_NUMBER, SHARE_NUMBER, COLLECTION_NUMBER, SITE_CODE, 
+    PART_ID, PART_NAME, CREATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from log_day_xh_media_interactive
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from log_day_xh_media_interactive
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.xh.media.model.LogDayXhMediaInteractive" >
+    insert into log_day_xh_media_interactive (ID, DATE, ORIGIN_ID, 
+      ORIGIN_NAME, CHANNEL_ID, CHANNEL_NAME, 
+      GLOBAL_ID, CHINESE_NAME, SOURCE, 
+      TYPE, COMMENT_NUMBER, TOPIC_NUMBER, 
+      SHARE_NUMBER, COLLECTION_NUMBER, SITE_CODE, 
+      PART_ID, PART_NAME, CREATE_TIME
+      )
+    values (#{id,jdbcType=INTEGER}, #{date,jdbcType=VARCHAR}, #{originId,jdbcType=VARCHAR}, 
+      #{originName,jdbcType=VARCHAR}, #{channelId,jdbcType=VARCHAR}, #{channelName,jdbcType=VARCHAR}, 
+      #{globalId,jdbcType=VARCHAR}, #{chineseName,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, 
+      #{type,jdbcType=SMALLINT}, #{commentNumber,jdbcType=INTEGER}, #{topicNumber,jdbcType=INTEGER}, 
+      #{shareNumber,jdbcType=INTEGER}, #{collectionNumber,jdbcType=INTEGER}, #{siteCode,jdbcType=VARCHAR}, 
+      #{partId,jdbcType=VARCHAR}, #{partName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.xh.media.model.LogDayXhMediaInteractive" >
+    insert into log_day_xh_media_interactive
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="date != null" >
+        DATE,
+      </if>
+      <if test="originId != null" >
+        ORIGIN_ID,
+      </if>
+      <if test="originName != null" >
+        ORIGIN_NAME,
+      </if>
+      <if test="channelId != null" >
+        CHANNEL_ID,
+      </if>
+      <if test="channelName != null" >
+        CHANNEL_NAME,
+      </if>
+      <if test="globalId != null" >
+        GLOBAL_ID,
+      </if>
+      <if test="chineseName != null" >
+        CHINESE_NAME,
+      </if>
+      <if test="source != null" >
+        SOURCE,
+      </if>
+      <if test="type != null" >
+        TYPE,
+      </if>
+      <if test="commentNumber != null" >
+        COMMENT_NUMBER,
+      </if>
+      <if test="topicNumber != null" >
+        TOPIC_NUMBER,
+      </if>
+      <if test="shareNumber != null" >
+        SHARE_NUMBER,
+      </if>
+      <if test="collectionNumber != null" >
+        COLLECTION_NUMBER,
+      </if>
+      <if test="siteCode != null" >
+        SITE_CODE,
+      </if>
+      <if test="partId != null" >
+        PART_ID,
+      </if>
+      <if test="partName != null" >
+        PART_NAME,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="date != null" >
+        #{date,jdbcType=VARCHAR},
+      </if>
+      <if test="originId != null" >
+        #{originId,jdbcType=VARCHAR},
+      </if>
+      <if test="originName != null" >
+        #{originName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelId != null" >
+        #{channelId,jdbcType=VARCHAR},
+      </if>
+      <if test="channelName != null" >
+        #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="globalId != null" >
+        #{globalId,jdbcType=VARCHAR},
+      </if>
+      <if test="chineseName != null" >
+        #{chineseName,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=SMALLINT},
+      </if>
+      <if test="commentNumber != null" >
+        #{commentNumber,jdbcType=INTEGER},
+      </if>
+      <if test="topicNumber != null" >
+        #{topicNumber,jdbcType=INTEGER},
+      </if>
+      <if test="shareNumber != null" >
+        #{shareNumber,jdbcType=INTEGER},
+      </if>
+      <if test="collectionNumber != null" >
+        #{collectionNumber,jdbcType=INTEGER},
+      </if>
+      <if test="siteCode != null" >
+        #{siteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="partId != null" >
+        #{partId,jdbcType=VARCHAR},
+      </if>
+      <if test="partName != null" >
+        #{partName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xh.media.model.LogDayXhMediaInteractive" >
+    update log_day_xh_media_interactive
+    <set >
+      <if test="date != null" >
+        DATE = #{date,jdbcType=VARCHAR},
+      </if>
+      <if test="originId != null" >
+        ORIGIN_ID = #{originId,jdbcType=VARCHAR},
+      </if>
+      <if test="originName != null" >
+        ORIGIN_NAME = #{originName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelId != null" >
+        CHANNEL_ID = #{channelId,jdbcType=VARCHAR},
+      </if>
+      <if test="channelName != null" >
+        CHANNEL_NAME = #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="globalId != null" >
+        GLOBAL_ID = #{globalId,jdbcType=VARCHAR},
+      </if>
+      <if test="chineseName != null" >
+        CHINESE_NAME = #{chineseName,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        SOURCE = #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        TYPE = #{type,jdbcType=SMALLINT},
+      </if>
+      <if test="commentNumber != null" >
+        COMMENT_NUMBER = #{commentNumber,jdbcType=INTEGER},
+      </if>
+      <if test="topicNumber != null" >
+        TOPIC_NUMBER = #{topicNumber,jdbcType=INTEGER},
+      </if>
+      <if test="shareNumber != null" >
+        SHARE_NUMBER = #{shareNumber,jdbcType=INTEGER},
+      </if>
+      <if test="collectionNumber != null" >
+        COLLECTION_NUMBER = #{collectionNumber,jdbcType=INTEGER},
+      </if>
+      <if test="siteCode != null" >
+        SITE_CODE = #{siteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="partId != null" >
+        PART_ID = #{partId,jdbcType=VARCHAR},
+      </if>
+      <if test="partName != null" >
+        PART_NAME = #{partName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xh.media.model.LogDayXhMediaInteractive" >
+    update log_day_xh_media_interactive
+    set DATE = #{date,jdbcType=VARCHAR},
+      ORIGIN_ID = #{originId,jdbcType=VARCHAR},
+      ORIGIN_NAME = #{originName,jdbcType=VARCHAR},
+      CHANNEL_ID = #{channelId,jdbcType=VARCHAR},
+      CHANNEL_NAME = #{channelName,jdbcType=VARCHAR},
+      GLOBAL_ID = #{globalId,jdbcType=VARCHAR},
+      CHINESE_NAME = #{chineseName,jdbcType=VARCHAR},
+      SOURCE = #{source,jdbcType=VARCHAR},
+      TYPE = #{type,jdbcType=SMALLINT},
+      COMMENT_NUMBER = #{commentNumber,jdbcType=INTEGER},
+      TOPIC_NUMBER = #{topicNumber,jdbcType=INTEGER},
+      SHARE_NUMBER = #{shareNumber,jdbcType=INTEGER},
+      COLLECTION_NUMBER = #{collectionNumber,jdbcType=INTEGER},
+      SITE_CODE = #{siteCode,jdbcType=VARCHAR},
+      PART_ID = #{partId,jdbcType=VARCHAR},
+      PART_NAME = #{partName,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  
+   <select id="findInteractiveList" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from log_day_xh_media_interactive
+  </select>
+  <select id="findSumInteractiveList" resultMap="BaseResultMap">
+<!-- SELECT DATE,origin_id,origin_name,channel_id,channel_name,GLOBAL_ID,CHINESE_NAME,SOURCE,TYPE, COMMENT_NUMBER,TOPIC_NUMBER,SHARE_NUMBER ,COLLECTION_NUMBER , site_code ,name as siteName
+ FROM log_day_xh_media_interactive si INNER JOIN sys_groups sg ON si.site_code=sg.id -->
+   SELECT DATE,inter.origin_id,inter.origin_name,channel_id,channel_name,GLOBAL_ID,CHINESE_NAME,SOURCE,TYPE, 
+   COMMENT_NUMBER,TOPIC_NUMBER,SHARE_NUMBER ,COLLECTION_NUMBER , inter.site_code ,NAME AS siteName
+    FROM (log_day_xh_media_interactive  inter INNER JOIN sys_groups groups ON ( inter.site_code=groups.id))
+       INNER JOIN index_xh_media_origin origin
+   ON  ( inter.site_code=origin.site_code AND  inter.origin_id=origin.origin_id)
+ 
+    where inter.SITE_CODE in
+    <foreach collection="sitcodList" index="index" item="item" open="(" separator="," close=")">
+                #{item}       
+    </foreach> 
+ ORDER BY 
+  <foreach collection="orderList" index="index" item="item" separator=",">
+                ${item}       
+    </foreach>
+  </select>
+  
+  <select id="getInteractiveBySearch" resultMap="BaseResultMap">
+ <!--  	SELECT 
+     DATE,origin_id,origin_name,channel_id,channel_name,GLOBAL_ID,CHINESE_NAME,SOURCE,TYPE, COMMENT_NUMBER, TOPIC_NUMBER, SHARE_NUMBER , COLLECTION_NUMBER , site_code ,name as siteName
+    FROM log_day_xh_media_interactive si INNER JOIN sys_groups sg ON si.site_code=sg.id -->
+   SELECT DATE,inter.origin_id,inter.origin_name,channel_id,channel_name,GLOBAL_ID,CHINESE_NAME,SOURCE,TYPE, 
+   COMMENT_NUMBER,TOPIC_NUMBER,SHARE_NUMBER ,COLLECTION_NUMBER , inter.site_code ,NAME AS siteName
+    FROM (log_day_xh_media_interactive  inter INNER JOIN sys_groups groups ON ( inter.site_code=groups.id))
+       INNER JOIN index_xh_media_origin origin
+   ON  ( inter.site_code=origin.site_code AND  inter.origin_id=origin.origin_id)
+     WHERE 
+    <if test="siteCode != null" >
+        inter.site_code = #{siteCode,jdbcType=VARCHAR} AND 
+    </if>
+    <if test="channelId != null" >
+        channel_id = #{channelId,jdbcType=VARCHAR} AND 
+    </if>
+        inter.SITE_CODE in
+    <foreach collection="sitcodList" index="index" item="item" open="(" separator="," close=")">
+                #{item}       
+    </foreach>  AND
+    date between #{startTime,jdbcType=VARCHAR} AND #{endTime,jdbcType=VARCHAR}  ORDER BY 
+     <foreach collection="orderList" index="index" item="item" separator=",">
+                ${item}       
+    </foreach>
+  </select>
+  
+   <select id="getInteractiveBySearchOneDay" resultMap="BaseResultMap">
+  	SELECT 
+     DATE,hour,origin_id,origin_name,channel_id,channel_name,GLOBAL_ID,CHINESE_NAME,SOURCE,TYPE, COMMENT_NUMBER, TOPIC_NUMBER,SHARE_NUMBER , COLLECTION_NUMBER , site_code 
+    FROM log_day_xh_media_interactive WHERE 
+    <if test="siteCode != null" >
+        site_code = #{siteCode,jdbcType=VARCHAR} AND 
+    </if>
+    <if test="channelId != null" >
+        channel_id = #{channelId,jdbcType=VARCHAR} AND 
+    </if>
+    date between #{startTime,jdbcType=VARCHAR} AND #{endTime,jdbcType=VARCHAR}  ORDER BY HOUR DESC ,COMMENT_NUMBER DESC
+  </select>
+  
+   <select id="findSumInteractiveListForChart" resultMap="BaseResultMap">
+SELECT DATE,origin_id,origin_name,channel_id,channel_name,GLOBAL_ID,CHINESE_NAME,SOURCE,TYPE,SUM(COMMENT_NUMBER) AS COMMENT_NUMBER, SUM(TOPIC_NUMBER) AS TOPIC_NUMBER,SUM(SHARE_NUMBER) AS SHARE_NUMBER , SUM(COLLECTION_NUMBER) AS COLLECTION_NUMBER , site_code FROM log_day_xh_media_interactive
+    where SITE_CODE in
+    <foreach collection="sitcodList" index="index" item="item" open="(" separator="," close=")">
+                #{item}       
+    </foreach> 
+ GROUP BY date ORDER BY date ASC,COMMENT_NUMBER DESC
+  
+  </select>
+  
+  <select id="getInteractiveBySearchForChart" resultMap="BaseResultMap">
+  	SELECT 
+     DATE,origin_id,origin_name,channel_id,channel_name,GLOBAL_ID,CHINESE_NAME,SOURCE,TYPE,SUM(COMMENT_NUMBER) AS COMMENT_NUMBER, SUM(TOPIC_NUMBER) AS TOPIC_NUMBER,SUM(SHARE_NUMBER) AS SHARE_NUMBER , SUM(COLLECTION_NUMBER) AS COLLECTION_NUMBER , site_code 
+    FROM log_day_xh_media_interactive WHERE 
+    <if test="siteCode != null" >
+        site_code = #{siteCode,jdbcType=VARCHAR} AND 
+    </if>
+    <if test="channelId != null" >
+        channel_id = #{channelId,jdbcType=VARCHAR} AND 
+    </if>
+    	    SITE_CODE in
+    <foreach collection="sitcodList" index="index" item="item" open="(" separator="," close=")">
+                #{item}       
+    </foreach>  AND
+    date between #{startTime,jdbcType=VARCHAR} AND #{endTime,jdbcType=VARCHAR}  GROUP BY date ORDER BY date ,COMMENT_NUMBER DESC
+  </select>
+  
+   <select id="getInteractiveBySearchOneDayForChart" resultMap="BaseResultMap">
+  	SELECT 
+     DATE,hour,origin_id,origin_name,channel_id,channel_name,GLOBAL_ID,CHINESE_NAME,SOURCE,TYPE,SUM(COMMENT_NUMBER) AS COMMENT_NUMBER, SUM(TOPIC_NUMBER) AS TOPIC_NUMBER,SUM(SHARE_NUMBER) AS SHARE_NUMBER , SUM(COLLECTION_NUMBER) AS COLLECTION_NUMBER , site_code 
+    FROM log_day_xh_media_interactive WHERE 
+    <if test="siteCode != null" >
+        site_code = #{siteCode,jdbcType=VARCHAR} AND 
+    </if>
+    <if test="channelId != null" >
+        channel_id = #{channelId,jdbcType=VARCHAR} AND 
+    </if>
+    date between #{startTime,jdbcType=VARCHAR} AND #{endTime,jdbcType=VARCHAR}  GROUP BY date ORDER BY hour ,COMMENT_NUMBER DESC
+  </select>
+  
+  <select id="selectInteractiveDataSum" resultMap="BaseResultMap">
+   SELECT SUM(COMMENT_NUMBER) AS COMMENT_NUMBER,SUM(TOPIC_NUMBER) AS TOPIC_NUMBER,SUM(SHARE_NUMBER) AS SHARE_NUMBER,SUM(COLLECTION_NUMBER) AS COLLECTION_NUMBER FROM log_xh_media_interactive  
+  </select>
+</mapper>

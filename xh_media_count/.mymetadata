@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="xh_media_count"
+  id="myeclipse.1494812249118"
+  context-root="/xh_media_count"
+  j2ee-spec="6.0"
+  archive="xh_media_count.war">
+  <attributes>
+    <attribute name="webrootdir" value="WebRoot" />
+  </attributes>
+</project-module>
+

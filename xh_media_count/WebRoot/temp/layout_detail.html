@@ -1,0 +1,150 @@
+$(function(){ 
+    //渠道 
+     $('#originId_detail').combobox({
+            valueField:'id', //值字段
+            textField:'name', //显示的字段
+            url:'origin',
+            panelHeight:'300',
+            editable:true,//不可编辑，只能选择
+            onChange:function(originId){
+                $('#channelId_detail').combobox({
+                valueField:'originId', //值字段
+                textField:'originName', //显示的字段
+                url:'channel?action=2&originId='+originId,
+                panelHeight:'300',
+                editable:true,//不可编辑，只能选择
+            });
+            }
+         });
+    //频道 
+    $('#channelId_detail').combobox({
+            valueField:'originId', //值字段
+            textField:'originName', //显示的字段
+            url:'channel?action=2&originId=${user.originId}',
+            panelHeight:'300',
+            editable:true,//不可编辑，只能选择
+         });
+    });
+</script>
+
+<div class="easyui-layout" data-options="fit:true">
+    <!-- Begin of toolbar -->
+    <div id="wu-toolbar-detail">
+         <div class="wu-toolbar-search">
+         	<label>站点：</label>
+        	<input type="text" id="originId_detail" name="originId_detail" style="width: 128px" class="easyui-validatebox" validtype="selectValid['--请选择--']">
+            <label>渠道：</label> 
+            <input type="text" id="channelId_detail" name="channelId_detail" style="width: 128px" class="easyui-validatebox" validtype="selectValid['--请选择--']">
+            <label>起始时间：</label><input id="startTime_detail" name="startTime" class="easyui-datebox" style="width:100px">
+            <label>结束时间：</label><input id="endTime_detail" name="endTime"class="easyui-datebox" style="width:100px">
+            
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="javascript:searchUserCountRecord($('#originId_detail').combobox('getValue'),$('#channelId_detail').combobox('getValue'),$('#startTime_detail').datebox('getValue'),$('#endTime_detail').datebox('getValue'));">开始检索</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-undo" onclick="javascript:clearSearchdetail();">清空</a>
+        </div> 
+    </div>
+    <!-- End of toolbar -->
+    <table id="wu-datagrid-detail" class="easyui-datagrid" toolbar="#wu-toolbar-detail"></table>
+</div>
+<!-- Begin of easyui-dialog -->
+<!-- End of easyui-dialog -->
+<script type="text/javascript">
+	
+	
+	/**
+	* Name 分页过滤器
+	*/
+	function pagerFilter(data){            
+		if (typeof data.length == 'number' && typeof data.splice == 'function'){// is array                
+			data = {                   
+				total: data.length,                   
+				rows: data               
+			}            
+		}        
+		var dg = $(this);         
+		var opts = dg.datagrid('options');          
+		var pager = dg.datagrid('getPager');          
+		pager.pagination({                
+			onSelectPage:function(pageNum, pageSize){                 
+				opts.pageNumber = pageNum;                   
+				opts.pageSize = pageSize;                
+				pager.pagination('refresh',{pageNumber:pageNum,pageSize:pageSize});                  
+				dg.datagrid('loadData',data);                
+			}          
+		});           
+		if (!data.originalRows){               
+			data.originalRows = (data.rows);       
+		}         
+		var start = (opts.pageNumber-1)*parseInt(opts.pageSize);          
+		var end = start + parseInt(opts.pageSize);        
+		data.rows = (data.originalRows.slice(start, end));         
+		return data;       
+	}
+	
+	/**
+	* Name 载入数据
+	*/
+	$('#wu-datagrid-detail').datagrid({
+		url:'',
+		loadFilter:pagerFilter,		
+		rownumbers:true,
+		singleSelect:false,
+		pageSize:20,           
+		pagination:true,
+		
+		
+		
+		multiSort:true,
+		fitColumns:true,
+		fit:true,
+		columns:[[
+			{ field:'date',title:'日期',width:60,sortable:true},
+			{ field:'originName',title:'渠道名称',width:60,sortable:true},
+			{ field:'channelName',title:'频道名称',width:60,sortable:true},
+			{ field:'useLength',title:'人均使用时长(秒)',width:60,sortable:true},
+			{ field:'newUser',title:'新增用户数',width:60,sortable:true},
+			{ field:'activeUser',title:'活跃用户数',width:60,sortable:true},
+		]]
+	});
+	
+		/**
+	* Name 搜索
+	*/
+	function searchUserCountRecord(originId,channelId,startTime,endTime){
+		$('#wu-datagrid-detail').datagrid('options').url = "newandolduser?originId="+""+"&channelId="+""+"&startTime="+startTime+"&endTime="+endTime;
+		if(startTime!=''&endTime!=''&startTime==endTime){
+			$('#wu-datagrid-detail').datagrid({
+			columns:[[
+				{ field:'date',title:'日期',width:60,sortable:true},
+				{ field:'hour',title:'小时',width:60,sortable:true},
+				{ field:'originName',title:'渠道名称',width:60,sortable:true},
+				{ field:'channelName',title:'频道名称',width:60,sortable:true},
+				{ field:'useLength',title:'人均使用时长(秒)',width:60,sortable:true},
+				{ field:'newUser',title:'新增用户数',width:60,sortable:true},
+				{ field:'activeUser',title:'活跃用户数',width:60,sortable:true},
+			      ]]
+		      });
+		}else{
+		$('#wu-datagrid-detail').datagrid({
+			columns:[[
+				{ field:'date',title:'日期',width:60,sortable:true},
+				{ field:'originName',title:'渠道名称',width:60,sortable:true},
+				{ field:'channelName',title:'频道名称',width:60,sortable:true},
+				{ field:'useLength',title:'人均使用时长(秒)',width:60,sortable:true},
+				{ field:'newUser',title:'新增用户数',width:60,sortable:true},
+				{ field:'activeUser',title:'活跃用户数',width:60,sortable:true},
+			      ]]
+		      });
+		}
+		$('#wu-datagrid-detail').datagrid('reload'); 
+	}
+	
+	/**
+	* Name 清空搜索框
+	*/
+	function clearSearchdetail(){
+		$('#originId_detail').combobox('clear');
+		$('#channelId_detail').combobox('clear');
+		$('#startTime_detail').datebox('setValue','');
+		$('#endTime_detail').datebox('setValue','');
+	}
+</script>

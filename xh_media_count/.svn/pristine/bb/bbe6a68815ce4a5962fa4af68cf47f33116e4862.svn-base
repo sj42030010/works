@@ -1,0 +1,786 @@
+<script type="text/javascript">
+$(function(){ 
+   //发布人 即站点
+     $('#siteCode_5').combobox({
+            valueField:'id', //值字段
+            textField:'name', //显示的字段
+            url:'siteCode',
+            panelHeight:'300',
+            editable:true,//不可编辑，只能选择
+            onChange:function(siteCode){
+                $('#originId_5').combobox({
+                valueField:'originId', //值字段
+                textField:'originName', //显示的字段
+                url:'getOrigin?siteCode='+siteCode,
+                panelHeight:'300',
+                editable:true,//不可编辑，只能选择
+            });
+            }
+         });
+    //渠道 即发布终端
+    $('#originId_5').combobox({
+            valueField:'originId', //值字段
+            textField:'originName', //显示的字段
+            url:'getOrigin?siteCode=${user.siteCode}',
+            panelHeight:'300',
+            editable:true,//不可编辑，只能选择
+            onChange:function(originId){
+                $('#channelId_5').combobox({
+                valueField:'channelId', //值字段
+                textField:'channelName', //显示的字段
+                url:'getChannel?originId='+originId+'&siteCode='+$('#siteCode_5').combobox('getValue'),
+                panelHeight:'300',
+                editable:true,//不可编辑，只能选择
+            });
+            }
+         });
+         
+     //频道 即所属频道
+    $('#channelId_5').combobox({
+            valueField:'channelId', //值字段
+            textField:'channelName', //显示的字段
+            url:'getChannel?originId=${user.originId}'+'&siteCode='+$('#siteCode_5').combobox('getValue'),
+            panelHeight:'300',
+            editable:true,//不可编辑，只能选择
+            onChange:function(channelId){
+                $('#partId_5').combobox({
+                valueField:'parentId', //值字段
+                textField:'channelName', //显示的字段
+                url:'getParts?channelId='+channelId+'&originId='+$('#originId_5').combobox('getValue')+'&siteCode='+$('#siteCode_5').combobox('getValue'),
+                panelHeight:'300',
+                editable:true,//不可编辑，只能选择
+            });
+            }
+         });
+         
+           //频道 即所属频道
+    $('#partId_5').combobox({
+            valueField:'parentId', //值字段
+            textField:'channelName', //显示的字段 
+            url:'getParts?channelId='+$('#channelId_5').combobox('getValue')+'&originId='+$('#originId_5').combobox('getValue')+'&siteCode='+$('#siteCode_5').combobox('getValue'),
+            panelHeight:'300',
+            editable:true,//不可编辑，只能选择
+         });   
+         
+    });
+</script>
+
+<div class="easyui-layout" data-options="fit:true" style="overflow:auto;width:400px;height:500px">
+
+ <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div id="echarts_5" style="height:400px;width: 1000px"></div>
+<!-- ECharts单文件引入 -->  
+<script src="js/dist/echarts.js"></script>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts图表
+    var myChart = echarts.init(document.getElementById("echarts_5"));
+    var option = {
+        title : {
+            text: '时间趋势图'
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:[]
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : []
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value',
+                axisLabel : {
+                    formatter: '{value}'
+                }
+            }
+        ],
+        series : [
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            }
+        ]
+    };
+
+    myChart.showLoading();    //数据加载完之前先显示一段简单的loading动画
+    $.ajax({
+         type : "post",
+         async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+         url : "interactive?action=2",    //请求发送到TestServlet处
+         data : {},
+         dataType : "json",        //返回数据形式为json
+         success : function(result) {
+         //alert(result);
+             //请求成功时执行该函数内容，result即为服务器返回的json对象
+             if (result) {
+                     for(var i=0;i<result.total;i++){ 
+                       //names.push(result[i].name);    //挨个取出类别并填入类别数组
+                       option.xAxis[0].data.push(result.rows[i].date);
+                     }
+                    for(var i=0;i<result.total;i++){
+                        option.series[0].data.push(result.rows[i].topicNumber);
+                        option.series[1].data.push(result.rows[i].commentNumber);
+                        option.series[2].data.push(result.rows[i].shareNumber);
+                        option.series[3].data.push(result.rows[i].collectionNumber);
+                          } 
+                          option.series[0].name='话题';
+                           option.series[1].name='评论';
+                           option.series[2].name='分享';
+                           option.series[3].name='收藏';
+                           option.series[0].type='line';
+                           option.series[1].type='line';
+                           option.series[2].type='line';
+                           option.series[3].type='line';
+                      var legendarray=[];
+                      legendarray.push('话题');
+                      legendarray.push('评论');
+                      legendarray.push('分享');
+                       legendarray.push('收藏');
+                      option.legend.data=legendarray;
+                    myChart.clear();
+                    myChart.hideLoading();    //隐藏加载动画
+                    myChart.setOption(option,true); 
+                    
+             }else{
+             	//alert("result false!");
+             }
+         
+        },
+         error : function(errorMsg) {
+             //请求失败时执行该函数
+         alert("图表请求数据失败!");
+         myChart.hideLoading();
+         }
+    })
+
+</script>
+
+    <!-- Begin of toolbar -->
+      <p id="dataSum_5"></p>
+    <div id="wu-toolbar-5">
+        <div class="wu-toolbar-search">
+        	<label>发布人：</label>
+        	<input type="text" id="siteCode_5" name="siteCode_5" style="width: 100px" class="easyui-validatebox" validtype="selectValid['--请选择--']">
+        	<label>发布终端：</label>
+        	<input type="text" id="originId_5" name="originId_5" style="width: 100px" class="easyui-validatebox" validtype="selectValid['--请选择--']">
+            <label>所属频道：</label> 
+            <input type="text" id="channelId_5" name="channelId_5" style="width: 100px" class="easyui-validatebox" validtype="selectValid['--请选择--']">
+            <label>所属栏目：</label> 
+            <input type="text" id="partId_5" name="partId_5" style="width: 100px" class="easyui-validatebox" validtype="selectValid['--请选择--']">
+            <label>起始时间：</label><input id="startTime_5" name="startTime" class="easyui-datebox" style="width:100px">
+            <label>结束时间：</label><input id="endTime_5" name="endTime"class="easyui-datebox" style="width:100px">
+            
+            <!-- <label>关键词：</label><input class="wu-text" style="width:100px"> -->
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="javascript:searchInteractiveCountRecord($('#siteCode_5').combobox('getValue'),$('#originId_5').combobox('getValue'),$('#channelId_5').combobox('getValue'),$('#partId_5').combobox('getValue'),$('#startTime_5').datebox('getValue'),$('#endTime_5').datebox('getValue'));">开始检索</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-undo" onclick="javascript:clearSearch5();">清空</a>
+            <!-- <a href="#" class="easyui-linkbutton" iconCls="icon-save" onclick="javascript:export2EXcel_5($('#originId_5').combobox('getValue'),$('#channelId_5').combobox('getValue'),$('#startTime_5').datebox('getValue'),$('#endTime_5').datebox('getValue'));">导出数据</a> -->
+        </div>   
+    </div>
+    <!-- End of toolbar -->
+    <table id="wu-datagrid-5" class="easyui-datagrid" toolbar="#wu-toolbar-5"></table>
+</div>
+
+<div id="win_d5" class="easyui-window"  title="详情" maximizable="false" resizable="false" collapsible="false" minimizable="false" style="width:1200px;height:600px"data-options="closed:true,iconCls:'icon-save',modal:true">
+<div class="easyui-layout" data-options="fit:true" style="overflow:auto;width:400px;height:500px">
+
+ <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div id="echarts_d5" style="height:400px;width: 1000px"></div>
+<!-- ECharts单文件引入 -->  
+<script src="js/dist/echarts.js"></script>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts图表
+    var myChart_d5 = echarts.init(document.getElementById("echarts_d5"));
+    var option_d5 = {
+        title : {
+            text: '时间趋势图'
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:[]
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : []
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value',
+                axisLabel : {
+                    formatter: '{value}'
+                }
+            }
+        ],
+        series : [
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            }
+        ]
+    };
+
+    
+
+</script>
+
+    <!-- Begin of toolbar -->
+      <p id="dataSum_d5"></p>
+<!--     <div id="wu-toolbar-d5">
+        <div class="wu-toolbar-search">
+        	<label>站点：</label>
+        	<input class="easyui-combobox"  style="width:100px;"  id="originId" > 
+        	<input type="text" id="originId_d5" name="originId_d5" style="width: 128px" class="easyui-validatebox" validtype="selectValid['--请选择--']">
+            <label>频道：</label> 
+            <input class="easyui-combobox"  style="width:100px;"  id="channelId">
+            <input type="text" id="channelId_d5" name="originId_d5" style="width: 128px" class="easyui-validatebox" validtype="selectValid['--请选择--']">
+            <label>起始时间：</label><input id="startTime_d5" name="startTime" class="easyui-datebox" style="width:100px">
+            <label>结束时间：</label><input id="endTime_d5" name="endTime"class="easyui-datebox" style="width:100px">
+            
+            <label>关键词：</label><input class="wu-text" style="width:100px">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="javascript:searchInteractiveDetail($('#originId_d5').combobox('getValue'),$('#channelId_d5').combobox('getValue'),$('#startTime_d5').datebox('getValue'),$('#endTime_d5').datebox('getValue'));">开始检索</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-undo" onclick="javascript:clearSearch_d5();">清空</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-save" onclick="javascript:export2EXcel_5($('#originId_5').combobox('getValue'),$('#channelId_5').combobox('getValue'),$('#startTime_5').datebox('getValue'),$('#endTime_5').datebox('getValue'));">导出数据</a>
+        </div>   
+    </div> -->
+    <!-- End of toolbar --><!--  toolbar="#wu-toolbar-5"-->
+    <table id="wu-datagrid-d5" class="easyui-datagrid" ></table>
+</div>
+
+<script type="text/javascript">
+	
+	/**
+	* Name 分页过滤器
+	*/
+	function pagerFilter(data){            
+		if (typeof data.length == 'number' && typeof data.splice == 'function'){// is array                
+			data = {                   
+				total: data.length,                   
+				rows: data               
+			}            
+		}        
+		var dg = $(this);         
+		var opts = dg.datagrid('options');          
+		var pager = dg.datagrid('getPager');          
+		pager.pagination({                
+			onSelectPage:function(pageNum, pageSize){                 
+				opts.pageNumber = pageNum;                   
+				opts.pageSize = pageSize;                
+				pager.pagination('refresh',{pageNumber:pageNum,pageSize:pageSize});                  
+				dg.datagrid('loadData',data);                
+			}          
+		});           
+		if (!data.originalRows){               
+			data.originalRows = (data.rows);       
+		}         
+		var start = (opts.pageNumber-1)*parseInt(opts.pageSize);          
+		var end = start + parseInt(opts.pageSize);        
+		data.rows = (data.originalRows.slice(start, end));         
+		return data;       
+	}
+	
+		 $.ajax({
+         type : "post",
+         async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+         url:'interactive?action=4',
+         data : {},
+         dataType : "json",        //返回数据形式为json
+         success : function(result) {
+        // var datasum="";
+          var datasum  =$("<h3 style='margin:10px;float:left'>数据汇总</h3>"+
+                          "<h3 style='margin:10px;float:left'>评论："+result.rows[0].commentNumber+"</h3>"+
+                          "<h3 style='margin:10px;float:left'>话题："+result.rows[0].topicNumber+"</h3>"+
+                          "<h3 style='margin:10px;float:left'>收藏："+result.rows[0].collectionNumber+"</h3>"+
+                          "<h3 style='margin:10px;float:left'>分享："+result.rows[0].shareNumber+"</h3>"
+                          );
+         $(dataSum_5).append(datasum);
+         }
+        });
+	
+	/**
+	* Name 载入数据
+	*/
+	$('#wu-datagrid-5').datagrid({
+		url:'interactive?action=1',
+		loadFilter:pagerFilter,		
+		rownumbers:true,
+		singleSelect:false,
+		pageList : [20],//可以选择的分页集合
+		pageSize:20,           
+		pagination:true,
+		multiSort:true,
+		fitColumns:true,
+		fit:true,
+		columns:[[
+			{ field:'date',title:'日期',width:20,sortable:'true'},
+			{ field:'siteName',title:'发布人',width:20},
+			{ field:'originName',title:'发布终端',width:20},
+			{ field:'channelName',title:'所属频道',width:20},
+			{ field:'chineseName',title:'节目名称',width:40},
+			{ field:'commentNumber',title:'评论',width:20,sortable:'true'},
+			{ field:'topicNumber',title:'话题',width:20,sortable:'true'},
+			{ field:'collectionNumber',title:'收藏',width:20,sortable:'true'},
+			{ field:'shareNumber',title:'分享',width:20,sortable:'true'},
+			
+		]]
+	});
+	
+		/**
+	* Name 搜索
+	*/
+	function searchInteractiveCountRecord(originId,channelId,startTime,endTime){
+	var start=new Date(startTime.replace("-", "/").replace("-", "/")); 
+		var end=new Date(endTime.replace("-", "/").replace("-", "/"));
+		if(end<start){
+			$.messager.alert('','结束时间不能小于起始时间','info');
+			}else{
+	    clearOption();
+		$('#wu-datagrid-5').datagrid('options').url = "interactive?action=1&originId="+originId+"&channelId="+channelId+"&startTime="+startTime+"&endTime="+endTime;
+		if(startTime!=''&endTime!=''&startTime==endTime){
+		searchChartsForOneDay(originId, channelId, startTime, endTime);
+		
+		$('#wu-datagrid-5').datagrid({
+				columns:[[
+					{ field:'date',title:'日期',width:20,sortable:'true'},
+					//{ field:'hour',title:'小时',width:20,sortable:'true'},
+					{ field:'siteName',title:'发布人',width:20},
+					{ field:'originName',title:'发布终端',width:20},
+					{ field:'channelName',title:'所属频道',width:20},
+					{ field:'chineseName',title:'节目名称',width:40},
+					{ field:'commentNumber',title:'评论',width:20,sortable:'true'},
+					{ field:'topicNumber',title:'话题',width:20,sortable:'true'},
+					{ field:'collectionNumber',title:'收藏',width:20,sortable:'true'},
+					{ field:'shareNumber',title:'分享',width:20,sortable:'true'},
+				]]
+			});
+		}else{
+		searchCharts(originId, channelId, startTime, endTime);
+		$('#wu-datagrid-5').datagrid({
+				columns:[[
+						{ field:'date',title:'日期',width:20,sortable:'true'},
+						{ field:'siteName',title:'发布人',width:20},
+						{ field:'originName',title:'发布终端',width:20},
+						{ field:'channelName',title:'所属频道',width:20},
+						{ field:'chineseName',title:'节目名称',width:40},
+						{ field:'commentNumber',title:'评论',width:20,sortable:'true'},
+						{ field:'topicNumber',title:'话题',width:20,sortable:'true'},
+						{ field:'collectionNumber',title:'收藏',width:20,sortable:'true'},
+						{ field:'shareNumber',title:'分享',width:20,sortable:'true'},
+						
+					]]
+			});
+		}
+		$('#wu-datagrid-5').datagrid('reload'); 
+	  }
+	}
+	
+	function clearOption(){
+	   option=null;
+          option = {
+        title : {
+            text: '时间趋势图'
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:[]
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : []
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value',
+                axisLabel : {
+                    formatter: '{value}'
+                }
+            }
+        ],
+        series : [
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            }
+        ]
+    };
+	}
+	/**
+	* Name 图表搜索
+	*/
+	function searchCharts(originId,channelId,startTime,endTime){
+	    $.ajax({
+         type : "post",
+         async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+         url : "interactive?action=2&originId="+originId+"&channelId="+channelId+"&startTime="+startTime+"&endTime="+endTime,    //请求发送到TestServlet处
+         data : {},
+         dataType : "json",        //返回数据形式为json
+         success : function(result) {
+         // alert(result);
+             //请求成功时执行该函数内容，result即为服务器返回的json对象
+             if (result.total>0) {
+             		//alert("result true!"+result.rows[0].pv);
+                     for(var i=0;i<result.total;i++){ 
+                       //names.push(result[i].name);    //挨个取出类别并填入类别数组
+                       option.xAxis[0].data.push(result.rows[i].date);
+                     }
+                 for(var i=0;i<result.total;i++){
+                        option.series[0].data.push(result.rows[i].topicNumber);
+                        option.series[1].data.push(result.rows[i].commentNumber);
+                        option.series[2].data.push(result.rows[i].shareNumber);
+                        option.series[3].data.push(result.rows[i].collectionNumber);
+                          } 
+                          option.series[0].name='话题';
+                           option.series[1].name='评论';
+                           option.series[2].name='分享';
+                           option.series[3].name='收藏';
+                           option.series[0].type='line';
+                           option.series[1].type='line';
+                           option.series[2].type='line';
+                           option.series[3].type='line';
+                      var legendarray=[];
+                      legendarray.push('话题');
+                      legendarray.push('评论');
+                      legendarray.push('分享');
+                      legendarray.push('收藏');
+                      option.legend.data=legendarray;   
+                    myChart.hideLoading();    //隐藏加载动画
+                    myChart.clear();
+                    myChart.setOption(option,true); 
+                    
+             }else{
+              
+             myChart.hideLoading();    //隐藏加载动画
+             myChart.setOption(option,true);
+             }
+         
+        },
+         error : function(errorMsg) {
+             //请求失败时执行该函数
+         alert("图表请求数据失败!");
+         myChart.hideLoading();
+         }
+    }) 
+	}
+	
+	/**
+	* Name 图表搜索（针对同一天）
+	*/
+	function searchChartsForOneDay(originId,channelId,startTime,endTime){
+	    $.ajax({
+         type : "post",
+         async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+         url : "interactive?action=2&originId="+originId+"&channelId="+channelId+"&startTime="+startTime+"&endTime="+endTime,    //请求发送到TestServlet处
+         data : {},
+         dataType : "json",        //返回数据形式为json
+         success : function(result) {
+         // alert(result);
+             //请求成功时执行该函数内容，result即为服务器返回的json对象
+             if (result.total>0) {
+             		//alert("result true!"+result.rows[0].pv);
+                     for(var i=0;i<result.total;i++){ 
+                       //names.push(result[i].name);    //挨个取出类别并填入类别数组
+                       option.xAxis[0].data.push(result.rows[i].hour);
+                     }
+                 for(var i=0;i<result.total;i++){
+                        option.series[0].data.push(result.rows[i].topicNumber);
+                        option.series[1].data.push(result.rows[i].commentNumber);
+                        option.series[2].data.push(result.rows[i].shareNumber);
+                        option.series[3].data.push(result.rows[i].collectionNumber);
+                          } 
+                          option.series[0].name='话题';
+                           option.series[1].name='评论';
+                           option.series[2].name='分享';
+                           option.series[3].name='收藏';
+                           option.series[0].type='line';
+                           option.series[1].type='line';
+                           option.series[2].type='line';
+                           option.series[3].type='line';
+                      var legendarray=[];
+                      legendarray.push('话题');
+                      legendarray.push('评论');
+                      legendarray.push('分享');
+                       legendarray.push('收藏');
+                      option.legend.data=legendarray;   
+                    myChart.hideLoading();    //隐藏加载动画
+                    myChart.clear();
+                    myChart.setOption(option,true); 
+                    
+             }else{
+              
+             myChart.hideLoading();    //隐藏加载动画
+             myChart.setOption(option,true);
+             }
+         
+        },
+         error : function(errorMsg) {
+             //请求失败时执行该函数
+         alert("图表请求数据失败!");
+         myChart.hideLoading();
+         }
+    }) 
+	}
+	
+	/**
+	* Name 清空搜索框
+	*/
+	function clearSearch5(){
+		$('#siteCode_5').combobox('clear');
+		$('#originId_5').combobox('clear');
+		$('#channelId_5').combobox('clear');
+		$('#partId_5').combobox('clear');
+		$('#startTime_5').datebox('setValue','');
+		$('#endTime_5').datebox('setValue','');
+	}
+	
+  /**
+	* Name 载入详情页数据数据
+	*/
+	var siteCode;
+	var date;
+	var channelId;
+	$('#wu-datagrid-5').datagrid({
+	onDblClickRow: function (rowIndex, rowData) {
+	      siteCode=rowData.siteCode;
+          channelId=rowData.channelId;
+          date=rowData.date;
+	   $('#wu-datagrid-d5').datagrid({
+		url:'detailData?date='+date+'&siteCode='+siteCode+'&channelId='+channelId,
+		loadFilter:pagerFilter,		
+		rownumbers:true,
+		singleSelect:false,
+		pageList : [20],//可以选择的分页集合
+		pageSize:20,           
+		pagination:true,
+		multiSort:true,
+		fitColumns:true,
+		fit:true,
+		columns:[[
+			{ field:'date',title:'日期',width:20,sortable:'true'},
+			{ field:'hour',title:'小时',width:20,sortable:'true'},
+			{ field:'siteName',title:'发布人',width:20},
+			{ field:'originName',title:'发布终端',width:20},
+			{ field:'channelName',title:'所属频道',width:20},
+			{ field:'chineseName',title:'节目名称',width:40},
+			{ field:'commentNumber',title:'评论',width:20,sortable:'true'},
+			{ field:'topicNumber',title:'话题',width:20,sortable:'true'},
+			{ field:'collectionNumber',title:'收藏',width:20,sortable:'true'},
+			{ field:'shareNumber',title:'分享',width:20,sortable:'true'},
+		]]
+	});
+	showChartDetail(date,siteCode,channelId);
+	 $('#win_d5').window('open'); // open a window  
+	}
+	});
+	
+	/**
+	* 显示详情折线图
+	*/
+	function showChartDetail(date,siteCode,channelId){
+	
+	myChart_d5.showLoading();    //数据加载完之前先显示一段简单的loading动画
+	clearDetailOption();
+    $.ajax({
+         type : "post",
+         async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+         url:'chartDetail?date='+date+'&siteCode='+siteCode+'&channelId='+channelId,
+         data : {},
+         dataType : "json",        //返回数据形式为json
+         success : function(result) {
+         //alert(result);
+             //请求成功时执行该函数内容，result即为服务器返回的json对象
+             if (result) {
+                     for(var i=0;i<result.total;i++){ 
+                       //names.push(result[i].name);    //挨个取出类别并填入类别数组
+                       option_d5.xAxis[0].data.push(result.rows[i].hour);
+                     }
+                    for(var i=0;i<result.total;i++){
+                        option_d5.series[0].data.push(result.rows[i].topicNumber);
+                        option_d5.series[1].data.push(result.rows[i].commentNumber);
+                        option_d5.series[2].data.push(result.rows[i].shareNumber);
+                        option_d5.series[3].data.push(result.rows[i].collectionNumber);
+                          } 
+                          option_d5.series[0].name='话题';
+                           option_d5.series[1].name='评论';
+                           option_d5.series[2].name='分享';
+                           option_d5.series[3].name='收藏';
+                           option_d5.series[0].type='line';
+                           option_d5.series[1].type='line';
+                           option_d5.series[2].type='line';
+                           option_d5.series[3].type='line';
+                      var legendarray=[];
+                      legendarray.push('话题');
+                      legendarray.push('评论');
+                      legendarray.push('分享');
+                       legendarray.push('收藏');
+                      option_d5.legend.data=legendarray;
+                    myChart_d5.clear();
+                    myChart_d5.hideLoading();    //隐藏加载动画
+                    myChart_d5.setOption(option_d5,true); 
+                    
+             }else{
+             }
+         
+        },
+         error : function(errorMsg) {
+             //请求失败时执行该函数
+         alert("图表请求数据失败!");
+         myChart_d5.hideLoading();
+         }
+    })
+	}
+	
+	function clearDetailOption(){
+	   option_d5=null;
+	   option_d5 = {
+        title : {
+            text: '时间趋势图'
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:[]
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : []
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value',
+                axisLabel : {
+                    formatter: '{value}'
+                }
+            }
+        ],
+        series : [
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            }
+        ]
+    };
+	}
+	/**
+	* 把数据导到Excel 表格中
+	*/
+	function export2EXcel_5(originId,channelId,startTime,endTime){
+	window.location.href="interactive?action=3&originId="+originId+"&channelId="+channelId+"&startTime="+startTime+"&endTime="+endTime;
+	}
+</script>

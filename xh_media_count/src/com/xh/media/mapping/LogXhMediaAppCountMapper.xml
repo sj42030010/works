@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xh.media.dao.LogXhMediaAppCountMapper" >
+  <resultMap id="BaseResultMap" type="com.xh.media.model.LogXhMediaAppCount" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="DATE" property="date" jdbcType="VARCHAR" />
+    <result column="HOUR" property="hour" jdbcType="VARCHAR" />
+    <result column="MINUTE" property="minute" jdbcType="VARCHAR" />
+    <result column="SITE_CODE" property="siteCode" jdbcType="VARCHAR" />
+    <result column="ORIGIN_ID" property="originId" jdbcType="VARCHAR" />
+    <result column="START_PV" property="startPv" jdbcType="INTEGER" />
+    <result column="START_UV" property="startUv" jdbcType="INTEGER" />
+    <result column="NEW_USER" property="newUser" jdbcType="INTEGER" />
+    <result column="LOCAL" property="local" jdbcType="INTEGER" />
+    <result column="NON_LOCAL" property="nonLocal" jdbcType="INTEGER" />
+    <result column="COMMENT_NUMBER" property="commentNumber" jdbcType="INTEGER" />
+    <result column="COLLECTION_NUMBER" property="collectionNumber" jdbcType="INTEGER" />
+    <result column="SHARE_NUMBER" property="shareNumber" jdbcType="INTEGER" />
+    <result column="IP" property="ip" jdbcType="INTEGER" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="startTime" property="startTime" jdbcType="VARCHAR" />
+    <result column="endTime" property="endTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, DATE, HOUR, MINUTE, SITE_CODE, ORIGIN_ID, START_PV, START_UV, NEW_USER, LOCAL, 
+    NON_LOCAL, COMMENT_NUMBER, COLLECTION_NUMBER, SHARE_NUMBER, IP, CREATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from log_xh_media_app_count
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from log_xh_media_app_count
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.xh.media.model.LogXhMediaAppCount" >
+    insert into log_xh_media_app_count (ID, DATE, HOUR, 
+      MINUTE, SITE_CODE, ORIGIN_ID, 
+      START_PV, START_UV, NEW_USER, 
+      LOCAL, NON_LOCAL, COMMENT_NUMBER, 
+      COLLECTION_NUMBER, SHARE_NUMBER, IP, 
+      CREATE_TIME)
+    values (#{id,jdbcType=INTEGER}, #{date,jdbcType=VARCHAR}, #{hour,jdbcType=VARCHAR}, 
+      #{minute,jdbcType=VARCHAR}, #{siteCode,jdbcType=VARCHAR}, #{originId,jdbcType=VARCHAR}, 
+      #{startPv,jdbcType=INTEGER}, #{startUv,jdbcType=INTEGER}, #{newUser,jdbcType=INTEGER}, 
+      #{local,jdbcType=INTEGER}, #{nonLocal,jdbcType=INTEGER}, #{commentNumber,jdbcType=INTEGER}, 
+      #{collectionNumber,jdbcType=INTEGER}, #{shareNumber,jdbcType=INTEGER}, #{ip,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xh.media.model.LogXhMediaAppCount" >
+    insert into log_xh_media_app_count
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="date != null" >
+        DATE,
+      </if>
+      <if test="hour != null" >
+        HOUR,
+      </if>
+      <if test="minute != null" >
+        MINUTE,
+      </if>
+      <if test="siteCode != null" >
+        SITE_CODE,
+      </if>
+      <if test="originId != null" >
+        ORIGIN_ID,
+      </if>
+      <if test="startPv != null" >
+        START_PV,
+      </if>
+      <if test="startUv != null" >
+        START_UV,
+      </if>
+      <if test="newUser != null" >
+        NEW_USER,
+      </if>
+      <if test="local != null" >
+        LOCAL,
+      </if>
+      <if test="nonLocal != null" >
+        NON_LOCAL,
+      </if>
+      <if test="commentNumber != null" >
+        COMMENT_NUMBER,
+      </if>
+      <if test="collectionNumber != null" >
+        COLLECTION_NUMBER,
+      </if>
+      <if test="shareNumber != null" >
+        SHARE_NUMBER,
+      </if>
+      <if test="ip != null" >
+        IP,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="date != null" >
+        #{date,jdbcType=VARCHAR},
+      </if>
+      <if test="hour != null" >
+        #{hour,jdbcType=VARCHAR},
+      </if>
+      <if test="minute != null" >
+        #{minute,jdbcType=VARCHAR},
+      </if>
+      <if test="siteCode != null" >
+        #{siteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="originId != null" >
+        #{originId,jdbcType=VARCHAR},
+      </if>
+      <if test="startPv != null" >
+        #{startPv,jdbcType=INTEGER},
+      </if>
+      <if test="startUv != null" >
+        #{startUv,jdbcType=INTEGER},
+      </if>
+      <if test="newUser != null" >
+        #{newUser,jdbcType=INTEGER},
+      </if>
+      <if test="local != null" >
+        #{local,jdbcType=INTEGER},
+      </if>
+      <if test="nonLocal != null" >
+        #{nonLocal,jdbcType=INTEGER},
+      </if>
+      <if test="commentNumber != null" >
+        #{commentNumber,jdbcType=INTEGER},
+      </if>
+      <if test="collectionNumber != null" >
+        #{collectionNumber,jdbcType=INTEGER},
+      </if>
+      <if test="shareNumber != null" >
+        #{shareNumber,jdbcType=INTEGER},
+      </if>
+      <if test="ip != null" >
+        #{ip,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xh.media.model.LogXhMediaAppCount" >
+    update log_xh_media_app_count
+    <set >
+      <if test="date != null" >
+        DATE = #{date,jdbcType=VARCHAR},
+      </if>
+      <if test="hour != null" >
+        HOUR = #{hour,jdbcType=VARCHAR},
+      </if>
+      <if test="minute != null" >
+        MINUTE = #{minute,jdbcType=VARCHAR},
+      </if>
+      <if test="siteCode != null" >
+        SITE_CODE = #{siteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="originId != null" >
+        ORIGIN_ID = #{originId,jdbcType=VARCHAR},
+      </if>
+      <if test="startPv != null" >
+        START_PV = #{startPv,jdbcType=INTEGER},
+      </if>
+      <if test="startUv != null" >
+        START_UV = #{startUv,jdbcType=INTEGER},
+      </if>
+      <if test="newUser != null" >
+        NEW_USER = #{newUser,jdbcType=INTEGER},
+      </if>
+      <if test="local != null" >
+        LOCAL = #{local,jdbcType=INTEGER},
+      </if>
+      <if test="nonLocal != null" >
+        NON_LOCAL = #{nonLocal,jdbcType=INTEGER},
+      </if>
+      <if test="commentNumber != null" >
+        COMMENT_NUMBER = #{commentNumber,jdbcType=INTEGER},
+      </if>
+      <if test="collectionNumber != null" >
+        COLLECTION_NUMBER = #{collectionNumber,jdbcType=INTEGER},
+      </if>
+      <if test="shareNumber != null" >
+        SHARE_NUMBER = #{shareNumber,jdbcType=INTEGER},
+      </if>
+      <if test="ip != null" >
+        IP = #{ip,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xh.media.model.LogXhMediaAppCount" >
+    update log_xh_media_app_count
+    set DATE = #{date,jdbcType=VARCHAR},
+      HOUR = #{hour,jdbcType=VARCHAR},
+      MINUTE = #{minute,jdbcType=VARCHAR},
+      SITE_CODE = #{siteCode,jdbcType=VARCHAR},
+      ORIGIN_ID = #{originId,jdbcType=VARCHAR},
+      START_PV = #{startPv,jdbcType=INTEGER},
+      START_UV = #{startUv,jdbcType=INTEGER},
+      NEW_USER = #{newUser,jdbcType=INTEGER},
+      LOCAL = #{local,jdbcType=INTEGER},
+      NON_LOCAL = #{nonLocal,jdbcType=INTEGER},
+      COMMENT_NUMBER = #{commentNumber,jdbcType=INTEGER},
+      COLLECTION_NUMBER = #{collectionNumber,jdbcType=INTEGER},
+      SHARE_NUMBER = #{shareNumber,jdbcType=INTEGER},
+      IP = #{ip,jdbcType=INTEGER},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  
+    <select id="getAppDataDetail" resultMap="BaseResultMap" parameterType="java.lang.String">
+  SELECT DATE,HOUR,site_code,origin_id,SUM(start_pv) AS start_pv,SUM(start_uv) AS start_uv,SUM(new_user) AS new_user,SUM(LOCAL) AS LOCAL,SUM(non_local+local) AS non_local,SUM(comment_number) AS comment_number,SUM(collection_number) AS collection_number,SUM(share_number) AS share_number,SUM(ip) AS ip
+
+FROM log_xh_media_app_count 
+
+WHERE site_code = #{0}
+  </select>
+  
+  <select id="searchAppDataDetail" resultMap="BaseResultMap">
+  SELECT DATE,HOUR,site_code,origin_id,SUM(start_pv) AS start_pv,SUM(start_uv) AS start_uv,SUM(new_user) AS new_user,SUM(LOCAL) AS LOCAL,SUM(non_local+local) AS non_local,SUM(comment_number) AS comment_number,SUM(collection_number) AS collection_number,SUM(share_number) AS share_number,SUM(ip) AS ip
+  FROM log_xh_media_app_count 
+  WHERE origin_id = #{originId,jdbcType=VARCHAR} AND DATE=#{date,jdbcType=VARCHAR} GROUP BY date,hour ORDER BY 
+  <foreach collection="orderList" index="index" item="item" separator=",">
+                ${item}       
+  </foreach>
+  </select>
+</mapper>

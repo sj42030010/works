@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<!--<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		<property name="url"
+			value="jdbc:mysql://db.ctv-cloud.com:3306/xh_media_count?characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull"></property>
+		<property name="username" value="tidecms"></property>
+		<property name="password" value="5Z8AHpWZRheaQ9wEqCbC"></property>
+		 
+		<property name="url"
+			value="jdbc:mysql://localhost:3306/xh_media_count?characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull"></property>
+		<property name="username" value="songjian"></property>
+		<property name="password" value="773726791231"></property>
+		<property name="maxActive" value="100"></property>
+		<property name="maxIdle" value="30"></property>
+		<property name="maxWait" value="500"></property>
+		<property name="defaultAutoCommit" value="false"></property>
+	</bean> -->
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName"
+			value="org.logicalcobwebs.proxool.ProxoolDriver">
+		</property>
+		<property name="url"
+			value="proxool.dbpool">
+		</property>
+		<!-- <property name="username" value="songjian"></property>
+		<property name="password" value="773726791231"></property> -->
+	</bean>
+	<!-- <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="configLocation" value="classpath:MyBatis-Configuration.xml"></property>
+		<property name="dataSource" ref="dataSource" />
+	</bean> -->
+	
+	<!-- data注入
+    <bean id="sysUsersMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.xh.media.dao.SysUsersMapper"></property>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean>
+    <bean id="sysMenuListMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.xh.media.dao.SysMenuListMapper"></property>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean>
+    <bean id="logXhMediaInteractiveMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.xh.media.dao.LogXhMediaInteractiveMapper"></property>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean>
+    <bean id="logXhMediaProgramAnalysisMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.xh.media.dao.LogXhMediaProgramAnalysisMapper"></property>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean>
+    <bean id="logXhMediaUserMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.xh.media.dao.LogXhMediaUserMapper"></property>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean>
+    <bean id="logXhMediaVisitMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.xh.media.dao.LogXhMediaVisitMapper"></property>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean>
+    <bean id="indexXhMediaOriginMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.xh.media.dao.IndexXhMediaOriginMapper"></property>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean>
+    <bean id="indexXhMediaChannelMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.xh.media.dao.IndexXhMediaChannelMapper"></property>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean>
+   	<bean id="sysGroupsMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.xh.media.dao.SysGroupsMapper"></property>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean>
+    <bean id="sysUserGroupMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.xh.media.dao.SysUserGroupMapper"></property>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean>
+     <bean id="logDayXhMediaVisitMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.xh.media.dao.LogDayXhMediaVisitMapper"></property>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean>
+     <bean id="logDayXhMediaUserMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.xh.media.dao.LogDayXhMediaUserMapper"></property>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean>
+    <bean id="logDayXhMediaInteractiveMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.xh.media.dao.LogDayXhMediaInteractiveMapper"></property>
+    <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean>
+    <bean id="logDayXhMediaProgramAnalysisMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+       <property name="mapperInterface" value="com.xh.media.dao.LogDayXhMediaProgramAnalysisMapper"></property>
+    <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean>
+    <bean id="indexXhMediaProgramMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+       <property name="mapperInterface" value="com.xh.media.dao.IndexXhMediaProgramMapper"></property>
+    <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean>
+    <bean id="countByHourMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+       <property name="mapperInterface" value="com.xh.media.dao.CountByHourMapper"></property>
+    <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean> -->
+    <!-- service注入 -->
+    <bean id="sysUsersService" class="com.xh.media.service.SysUsersServiceImpl">
+        <property name="sysUsersMapper" ref="sysUsersMapper"></property>
+    </bean>
+    <bean id="sysMenuListService" class="com.xh.media.service.SysMenuListServiceImpl">
+        <property name="sysMenuListMapper" ref="sysMenuListMapper"></property>
+    </bean>
+    <bean id="logXhMediaInteractiveService" class="com.xh.media.service.LogXhMediaInteractiveServiceImpl">
+        <property name="logXhMediaInteractiveMapper" ref="logXhMediaInteractiveMapper"></property>
+    </bean>
+    <bean id="logXhMediaProgramAnalysisService" class="com.xh.media.service.LogXhMediaProgramAnalysisServiceImpl">
+        <property name="logXhMediaProgramAnalysisMapper" ref="logXhMediaProgramAnalysisMapper"></property>
+    </bean>
+    <bean id="logXhMediaUserService" class="com.xh.media.service.LogXhMediaUserServiceImpl">
+        <property name="logXhMediaUserMapper" ref="logXhMediaUserMapper"></property>
+    </bean>
+    <bean id="logXhMediaVisitService" class="com.xh.media.service.LogXhMediaVisitServiceImpl">
+        <property name="logXhMediaVisitMapper" ref="logXhMediaVisitMapper"></property>
+    </bean>
+    <bean id="indexXhMediaOriginService" class="com.xh.media.service.IndexXhMediaOriginServiceImpl">
+        <property name="indexXhMediaOriginMapper" ref="indexXhMediaOriginMapper"></property>
+    </bean>
+    <bean id="indexXhMediaChannelService" class="com.xh.media.service.IndexXhMediaChannelServiceImpl">
+        <property name="indexXhMediaChannelMapper" ref="indexXhMediaChannelMapper"></property>
+    </bean>
+    <bean id="sysGroupsService" class="com.xh.media.service.SysGroupsServiceImpl">
+        <property name="sysGroupsMapper" ref="sysGroupsMapper"></property>
+    </bean>
+    <bean id="sysUserGroupService" class="com.xh.media.service.SysUserGroupServiceImpl">
+        <property name="sysUserGroupMapper" ref="sysUserGroupMapper"></property>
+    </bean>
+    <bean id="logDayXhMediaVisitService" class="com.xh.media.service.LogDayXhMediaVisitServiceImpl">
+        <property name="logDayXhMediaVisitMapper" ref="logDayXhMediaVisitMapper"></property>
+    </bean>
+    <bean id="logDayXhMediaUserService" class="com.xh.media.service.LogDayXhMediaUserServiceImpl">
+        <property name="logDayXhMediaUserMapper" ref="logDayXhMediaUserMapper"></property>
+    </bean>
+    <bean id="logDayXhMediaInteractiveService" class="com.xh.media.service.LogDayXhMediaInteractiveServiceImpl">
+       <property name="logDayXhMediaInteractiveMapper" ref="logDayXhMediaInteractiveMapper"></property>
+    </bean>
+    <bean id="logDayXhMediaProgramAnalysisService" class="com.xh.media.service.LogDayXhMediaProgramAnalysisServiceImpl">
+       <property name="logDayXhMediaProgramAnalysisMapper" ref="logDayXhMediaProgramAnalysisMapper"></property>    
+    </bean>
+    <bean id="indexXhMediaProgramService" class="com.xh.media.service.IndexXhMediaProgramServiceImpl">
+       <property name="indexXhMediaProgramMapper" ref="indexXhMediaProgramMapper"></property>
+    </bean>
+    <bean id="countByHourService" class="com.xh.media.service.CountByHourServiceImpl">
+       <property name="countByHourMapper" ref="countByHourMapper"></property>
+    </bean>
+    <bean id="sysUserLogService" class="com.xh.media.service.SysUserLogServiceImpl">
+        <property name="sysUseLogMapper" ref="sysUseLogMapper"></property>
+    </bean>
+     <bean id="logDayXhMediaAppCountService" class="com.xh.media.service.LogDayXhMediaAppCountServiceImpl">
+        <property name="logDayXhMediaAppCountMapper" ref="logDayXhMediaAppCountMapper"></property>
+    </bean>   
+     <bean id="logXhMediaAppCountService" class="com.xh.media.service.LogXhMediaAppCountServiceImpl">
+        <property name="logXhMediaAppCountMapper" ref="logXhMediaAppCountMapper"></property>
+    </bean>
+     <bean id="logDayXhMediaNewProgramService" class="com.xh.media.service.LogDayXhMediaNewProgramServiceImpl">
+        <property name="logDayXhMediaNewProgramMapper" ref="logDayXhMediaNewProgramMapper"></property>
+    </bean>  
+    <bean id="logXhMediaNewProgramService" class="com.xh.media.service.LogXhMediaNewProgramServiceImpl">
+        <property name="logXhMediaNewProgramMapper" ref="logXhMediaNewProgramMapper"></property>
+    </bean>         
+    <!-- 事务  -->  
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">  
+        <property name="dataSource" ref="dataSource" />  
+    </bean>    
+    <!-- 添加Mybatis支持 -->  
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
+        <property name="dataSource" ref="dataSource"/>  
+        <property name="configLocation" value="classpath:MyBatis-Configuration.xml"/>  
+        <!-- 无需配置ibatis-config.xml中的mapper 由spring自动扫描加入  --> 
+        <property name="mapperLocations" value="classpath:com/xh/media/mapping/*.xml"/>
+    </bean>
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">    
+            <constructor-arg index="0" ref="sqlSessionFactory" />    
+    </bean>
+    <!-- 自动将映射接口转换为bean  -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"   
+        p:basePackage="com.xh.media.dao"   
+        p:sqlSessionFactory-ref="sqlSessionFactory">  
+    </bean>  
+      
+    <!--<bean id="storageService" class="com.dhcc.exchange.storage.service.StorageService" /> -->
+</beans>

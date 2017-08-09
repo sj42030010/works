@@ -1,0 +1,364 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript">
+$(function(){ 
+  //发布人 即站点
+     $('#siteCode_10').combobox({
+            valueField:'id', //值字段
+            textField:'name', //显示的字段
+            url:'siteCode',
+            panelHeight:'300',
+            editable:true,//不可编辑，只能选择
+            onChange:function(siteCode){
+                $('#originId_10').combobox({
+                valueField:'originId', //值字段
+                textField:'originName', //显示的字段
+                url:'getOrigin?siteCode='+siteCode,
+                panelHeight:'300',
+                editable:true,//不可编辑，只能选择
+            });
+            }
+         });
+    //渠道 即发布终端
+    $('#originId_10').combobox({
+            valueField:'originId', //值字段
+            textField:'originName', //显示的字段
+            url:'getOrigin?siteCode='+$('#siteCode_10').combobox('getValue'),
+            panelHeight:'300',
+            editable:true,//不可编辑，只能选择
+            onChange:function(originId){
+                $('#channelId_10').combobox({
+                valueField:'channelId', //值字段
+                textField:'channelName', //显示的字段
+                url:'getChannel?originId='+originId+'&siteCode='+$('#siteCode_10').combobox('getValue'),
+                panelHeight:'300',
+                editable:true,//不可编辑，只能选择
+            });
+            }
+         });
+         
+     //频道 即所属频道
+    $('#channelId_10').combobox({
+            valueField:'channelId', //值字段
+            textField:'channelName', //显示的字段
+            url:'getChannel?originId=${user.originId}'+'&siteCode='+$('#siteCode_10').combobox('getValue'),
+            panelHeight:'300',
+            editable:true,//不可编辑，只能选择
+            onChange:function(channelId){
+                $('#partId_10').combobox({
+                valueField:'channelId', //值字段
+                textField:'channelName', //显示的字段
+                url:'getParts?channelId='+channelId+'&originId='+$('#originId_10').combobox('getValue')+'&siteCode='+$('#siteCode_10').combobox('getValue'),
+                panelHeight:'300',
+                editable:true,//不可编辑，只能选择
+            });
+            }
+         });
+         
+           //频道 即所属频道
+    $('#partId_10').combobox({
+            valueField:'channelId', //值字段
+            textField:'channelName', //显示的字段 
+            url:'getParts?channelId='+$('#channelId_10').combobox('getValue')+'&originId='+$('#originId_10').combobox('getValue')+'&siteCode='+$('#siteCode_10').combobox('getValue'),
+            panelHeight:'300',
+            editable:true,//不可编辑，只能选择
+            onChange:function(parentId){
+                $('#globalId_10').combobox({
+                valueField:'globalId', //值字段
+                textField:'chineseName', //显示的字段
+                url:'getProgram?channelId='+parentId+'&siteCode='+$('#siteCode_10').combobox('getValue'),
+                panelHeight:'300',
+                editable:true,//不可编辑，只能选择
+            });
+            }
+         });   
+    
+          //节目
+    $('#globalId_10').combobox({
+            valueField:'globalId', //值字段
+            textField:'chineseName', //显示的字段
+            url:'getProgram?&channelId='+$('#partId_10').combobox('getValue')+'&siteCode='+$('#siteCode_10').combobox('getValue'),
+            panelHeight:'300',
+            editable:true,//不可编辑，只能选择
+         });      
+    });
+    
+</script>
+<div class="easyui-layout" data-options="fit:true" style="overflow:auto;width:400px;height:500px">
+    <!-- Begin of toolbar -->
+    <div id="wu-toolbar-10">
+        <div class="wu-toolbar-search">
+        	<label>发布人：</label>
+        	<input type="text" id="siteCode_10" name="siteCode_10" style="width: 90px" class="easyui-validatebox" validtype="selectValid['--请选择--']">
+        	<label>发布终端：</label>
+        	<input type="text" id="originId_10" name="originId_10" style="width: 90px" class="easyui-validatebox" validtype="selectValid['--请选择--']">
+            <label>所属频道：</label> 
+            <input type="text" id="channelId_10" name="channelId_10" style="width:90px" class="easyui-validatebox" validtype="selectValid['--请选择--']">
+            <label>所属栏目：</label> 
+            <input type="text" id="partId_10" name="partId_10" style="width: 90px" class="easyui-validatebox" validtype="selectValid['--请选择--']">
+            <label>节目：</label> 
+            <input type="text" id="globalId_10" name="globalId_10" style="width: 100px" class="easyui-validatebox" validtype="selectValid['--请选择--']">
+      <!--       <label>起始时间：</label><input id="startTime_10" name="startTime" class="easyui-datebox" style="width:90px">
+            <label>结束时间：</label><input id="endTime_10" name="endTime"class="easyui-datebox" style="width:90px"> -->
+            
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="javascript:searchNewProgram($('#siteCode_10').combobox('getValue'),$('#originId_10').combobox('getValue'),$('#channelId_10').combobox('getValue'),$('#partId_10').combobox('getValue'),$('#globalId_10').combobox('getValue'));">开始检索</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-undo" onclick="javascript:clearSearch10();">清空</a>
+            <!-- <a href="#" class="easyui-linkbutton" iconCls="icon-save" onclick="javascript:export2EXcel_2($('#originId').combobox('getValue'),$('#channelId').combobox('getValue'),$('#startTime_2').datebox('getValue'),$('#endTime_2').datebox('getValue'));">导出数据</a> -->
+        </div>
+    </div>
+    <!-- End of toolbar -->
+    <table id="wu-datagrid-10" class="easyui-datagrid" toolbar="#wu-toolbar-10"></table>
+</div>
+
+
+<div id="win_d10" class="easyui-window" title="详情" maximizable="false" resizable="false" collapsible="false" minimizable="false" style="width:1200px;height:600px"data-options="closed:true,iconCls:'icon-save',modal:true">
+  <div class="easyui-layout" data-options="fit:true" style="overflow:auto;width:400px;height:500px">
+    <!-- Begin of toolbar -->
+    <div id="wu-toolbar-d10">
+        <div class="wu-toolbar-search">
+            <label>起始时间：</label><input id="startTime_d10" name="startTime" class="easyui-datebox" style="width:120px">
+            <label>结束时间：</label><input id="endTime_d10" name="endTime"class="easyui-datebox" style="width:120px">
+            
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="javascript:searchNewProgramDetail($('#startTime_d10').datebox('getValue'),$('#endTime_d10').datebox('getValue'));">开始检索</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-undo" onclick="javascript:clearSearch_d10();">清空</a>
+        </div>
+    </div>
+    <!-- End of toolbar -->
+    <table id="wu-datagrid-d10" class="easyui-datagrid" toolbar="#wu-toolbar-d10"></table>
+</div>
+<script type="text/javascript">
+	/**
+	* Name 分页过滤器
+	*/
+	function pagerFilter(data){            
+		if (typeof data.length == 'number' && typeof data.splice == 'function'){// is array                
+			data = {                   
+				total: data.length,                   
+				rows: data               
+			}            
+		}        
+		var dg = $(this);         
+		var opts = dg.datagrid('options');          
+		var pager = dg.datagrid('getPager');          
+		pager.pagination({                
+			onSelectPage:function(pageNum, pageSize){                 
+				opts.pageNumber = pageNum;                   
+				opts.pageSize = pageSize;                
+				pager.pagination('refresh',{pageNumber:pageNum,pageSize:pageSize});                  
+				dg.datagrid('loadData',data);                
+			}          
+		});           
+		if (!data.originalRows){               
+			data.originalRows = (data.rows);       
+		}         
+		var start = (opts.pageNumber-1)*parseInt(opts.pageSize);          
+		var end = start + parseInt(opts.pageSize);        
+		data.rows = (data.originalRows.slice(start, end));         
+		return data;       
+	}
+	
+	
+	/**
+	* Name 载入数据
+	*/
+	$('#wu-datagrid-10').datagrid({
+		url:'getNewProgram',
+		loadFilter:pagerFilter,		
+		rownumbers:true,
+		singleSelect:false,
+		pageList : [20],//可以选择的分页集合
+		pageSize:20,           
+		pagination:true,
+		multiSort:true,
+		fitColumns:true,
+		fit:true,
+		columns:[[
+			{field:'programName',title:'节目名称',width:50,sortable:'true'},
+			{field:'playNumber',title:'播放次数',width:20,width:50,sortable:'true'},
+			{field:'playUserNumber',title:'播放人数',width:20,width:50,sortable:'true'},
+			{field:'alreadyPlay',title:'播放完成度',width:20,width:50},
+			{field:'commentNumber',title:'评论',width:20,sortable:'true'},
+			{field:'collectionNumber',title:'收藏',width:20,sortable:'true'},
+			{field:'shareNumber',title:'分享',width:20,sortable:'true'},
+			{field:'timeLength',title:'节目时长',width:20,sortable:'true'},
+			{field:'siteName',title:'发布人',width:40,width:50,sortable:'true'},
+			{field:'pubDate',title:'发布日期',width:50,sortable:'true'},
+			{field:'channelName',title:'所属频道',width:40,sortable:'true'},
+			{field:'partName',title:'所属栏目',width:40,sortable:'true'},
+			{field:'originName',title:'发布终端',width:40,sortable:'true'},
+		]],
+	});
+
+	
+	/**
+	 * 执行搜索
+	 */
+	function searchNewProgram(siteCode,originId,channelId,partId,globalId,startTime,endTime){
+/* 		var start=new Date(startTime.replace("-", "/").replace("-", "/")); 
+		var end=new Date(endTime.replace("-", "/").replace("-", "/"));
+		if(end<start){
+			$.messager.alert('','结束时间不能小于起始时间','info');
+			}else{ */
+	   $('#wu-datagrid-10').datagrid({
+		url:'getNewProgram?siteCode='+siteCode+'&originId='+originId+'&channelId='+channelId+'&partId='+partId+'&globalId='+globalId,
+		loadFilter:pagerFilter,		
+		rownumbers:true,
+		singleSelect:false,
+		pageList : [20],//可以选择的分页集合
+		pageSize:20,           
+		pagination:true,
+		multiSort:true,
+		fitColumns:true,
+		fit:true,
+		columns:[[
+			{field:'programName',title:'节目名称',width:50,sortable:'true'},
+			{field:'playNumber',title:'播放次数',width:20,sortable:'true'},
+			{field:'playUserNumber',title:'播放人数',width:20,sortable:'true'},
+			{field:'alreadyPlay',title:'播放完成度',width:20},
+			{field:'commentNumber',title:'评论',width:20,sortable:'true'},
+			{field:'collectionNumber',title:'收藏',width:20,sortable:'true'},
+			{field:'shareNumber',title:'分享',width:20,sortable:'true'},
+			{field:'timeLength',title:'节目时长',width:20,sortable:'true'},
+			{field:'siteName',title:'发布人',width:40,sortable:'true'},
+			{field:'pubDate',title:'发布日期',width:50,sortable:'true'},
+			{field:'channelName',title:'所属频道',width:40,sortable:'true'},
+			{field:'partName',title:'所属栏目',width:40,sortable:'true'},
+			{field:'originName',title:'发布终端',width:40,sortable:'true'},
+		]],
+	});
+}
+
+   /**
+   * 清空检索项
+   */
+   function clearSearch10(){
+		$('#siteCode_10').combobox('clear');
+		$('#originId_10').combobox('clear');
+		$('#channelId_10').combobox('clear');
+		$('#partId_10').combobox('clear');;
+		$('#globalId_10').combobox('clear');
+		$('#startTime_10').datebox('setValue','');
+		$('#endTime_10').datebox('setValue','');
+   }
+   
+  /**
+   * 清空检索项
+   */
+   function clearSearch_d10(){
+		$('#startTime_d10').datebox('setValue','');
+		$('#endTime_d10').datebox('setValue','');
+   }
+   
+    var globalId;
+	var siteCode;
+   $('#wu-datagrid-10').datagrid({
+        onDblClickRow: function (rowIndex, rowData) {
+        globalId=rowData.globalId;
+        siteCode=rowData.siteCode;
+        $('#startTime_d10').datebox('setValue','');
+		$('#endTime_d10').datebox('setValue','');
+        $('#wu-datagrid-d10').datagrid({
+		url:'getDayNewProgramDetail?globalId='+globalId+'&siteCode='+siteCode,
+		loadFilter:pagerFilter,		
+		rownumbers:true,
+		singleSelect:false,
+		pageList : [20],//可以选择的分页集合
+		pageSize:20,           
+		pagination:true,
+		multiSort:true,
+		fitColumns:true,
+		fit:true,
+		columns:[[
+			{field:'date',title:'日期',width:20,sortable:'true'},
+			{field:'programName',title:'节目名称',width:50,sortable:'true'},
+			{field:'playNumber',title:'播放次数',width:20,sortable:'true'},
+			{field:'playUserNumber',title:'播放人数',width:20,sortable:'true'},
+			{field:'alreadyPlay',title:'播放完成度',width:20},
+			{field:'commentNumber',title:'评论',width:20,sortable:'true'},
+			{field:'collectionNumber',title:'收藏',width:20,sortable:'true'},
+			{field:'shareNumber',title:'分享',width:20,sortable:'true'},
+			{field:'timeLength',title:'节目时长',width:20,sortable:'true'},
+			{field:'siteName',title:'发布人',width:40,sortable:'true'},
+			{field:'pubDate',title:'发布日期',width:50,sortable:'true'},
+			{field:'channelName',title:'所属频道',width:40,sortable:'true'},
+			{field:'partName',title:'所属栏目',width:40,sortable:'true'},
+			{field:'originName',title:'发布终端',width:40,sortable:'true'},
+		]]
+	});
+		 $('#win_d10').window('open'); // open a window		
+		        }
+		    })
+		    
+		    /**
+		    *筛选详情页
+		    */
+  function searchNewProgramDetail(startTime,endTime){
+  		var start=new Date(startTime.replace("-", "/").replace("-", "/")); 
+		var end=new Date(endTime.replace("-", "/").replace("-", "/"));
+		if(end<start){
+			$.messager.alert('','结束时间不能小于起始时间','info');
+		}else{
+		    if(startTime == endTime){
+		        $('#wu-datagrid-d10').datagrid({
+		url:'getNewProgramDetail?globalId='+globalId+'&siteCode='+siteCode+'&startTime='+startTime+'&endTime='+endTime,
+		loadFilter:pagerFilter,		
+		rownumbers:true,
+		singleSelect:false,
+		pageList : [20],//可以选择的分页集合
+		pageSize:20,           
+		pagination:true,
+		multiSort:true,
+		fitColumns:true,
+		fit:true,
+		columns:[[
+			{field:'date',title:'日期',width:60},
+			{field:'hour',title:'小时',width:60,sortable:'true'},
+			{field:'programName',title:'节目名称',width:50,sortable:'true'},
+			{field:'playNumber',title:'播放次数',width:20,sortable:'true'},
+			{field:'playUserNumber',title:'播放人数',width:20,sortable:'true'},
+			{field:'alreadyPlay',title:'播放完成度',width:20},
+			{field:'commentNumber',title:'评论',width:20,sortable:'true'},
+			{field:'collectionNumber',title:'收藏',width:20,sortable:'true'},
+			{field:'shareNumber',title:'分享',width:20,sortable:'true'},
+			{field:'timeLength',title:'节目时长',width:20,sortable:'true'},
+			{field:'siteName',title:'发布人',width:40,sortable:'true'},
+			{field:'pubDate',title:'发布日期',width:50,sortable:'true'},
+			{field:'channelName',title:'所属频道',width:40,sortable:'true'},
+			{field:'partName',title:'所属栏目',width:40,sortable:'true'},
+			{field:'originName',title:'发布终端',width:40,sortable:'true'},
+		]],
+	});
+		    }else{
+		$('#wu-datagrid-d10').datagrid({
+		url:'getDayNewProgramDetail?globalId='+globalId+'&siteCode='+siteCode+'&startTime='+startTime+'&endTime='+endTime,
+		loadFilter:pagerFilter,		
+		rownumbers:true,
+		singleSelect:false,
+		pageList : [20],//可以选择的分页集合
+		pageSize:20,           
+		pagination:true,
+		multiSort:true,
+		fitColumns:true,
+		fit:true,
+		columns:[[
+			{field:'date',title:'日期',width:60,sortable:'true'},
+			{field:'programName',title:'节目名称',width:50,sortable:'true'},
+			{field:'playNumber',title:'播放次数',width:20,sortable:'true'},
+			{field:'playUserNumber',title:'播放人数',width:20,sortable:'true'},
+			{field:'alreadyPlay',title:'播放完成度',width:20},
+			{field:'commentNumber',title:'评论',width:20,sortable:'true'},
+			{field:'collectionNumber',title:'收藏',width:20,sortable:'true'},
+			{field:'shareNumber',title:'分享',width:20,sortable:'true'},
+			{field:'timeLength',title:'节目时长',width:20,sortable:'true'},
+			{field:'siteName',title:'发布人',width:40,sortable:'true'},
+			{field:'pubDate',title:'发布日期',width:50,sortable:'true'},
+			{field:'channelName',title:'所属频道',width:40,sortable:'true'},
+			{field:'partName',title:'所属栏目',width:40,sortable:'true'},
+			{field:'originName',title:'发布终端',width:40,sortable:'true'},
+		]],
+	});
+	}
+		}  
+		  }  
+		    
+   
+</script>

@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xh.media.dao.LogXhMediaUserMapper" >
+  <resultMap id="BaseResultMap" type="com.xh.media.model.LogXhMediaUser" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="DATE" property="date" jdbcType="VARCHAR" />
+    <result column="HOUR" property="hour" jdbcType="VARCHAR" />
+    <result column="MINUTE" property="minute" jdbcType="VARCHAR" />
+    <result column="ORIGIN_ID" property="originId" jdbcType="VARCHAR" />
+    <result column="ORIGIN_NAME" property="originName" jdbcType="VARCHAR" />
+    <result column="CHANNEL_ID" property="channelId" jdbcType="VARCHAR" />
+    <result column="CHANNEL_NAME" property="channelName" jdbcType="VARCHAR" />
+    <result column="NEW_USER" property="newUser" jdbcType="INTEGER" />
+    <result column="ACTIVE_USER" property="activeUser" jdbcType="INTEGER" />
+    <result column="USE_LENGTH" property="useLength" jdbcType="INTEGER" />
+    <result column="SITE_CODE" property="siteCode" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="startTime" property="startTime" jdbcType="VARCHAR" />
+    <result column="endTime" property="endTime" jdbcType="VARCHAR" />
+    <result column="siteName" property="siteName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, DATE, HOUR, MINUTE, ORIGIN_ID, ORIGIN_NAME, CHANNEL_ID, CHANNEL_NAME, NEW_USER, 
+    ACTIVE_USER, USE_LENGTH, SITE_CODE, CREATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from log_xh_media_user
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from log_xh_media_user
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.xh.media.model.LogXhMediaUser" >
+    insert into log_xh_media_user (ID, DATE, HOUR, 
+      MINUTE, ORIGIN_ID, ORIGIN_NAME, 
+      CHANNEL_ID, CHANNEL_NAME, NEW_USER, 
+      ACTIVE_USER, USE_LENGTH, SITE_CODE, 
+      CREATE_TIME)
+    values (#{id,jdbcType=INTEGER}, #{date,jdbcType=VARCHAR}, #{hour,jdbcType=VARCHAR}, 
+      #{minute,jdbcType=VARCHAR}, #{originId,jdbcType=VARCHAR}, #{originName,jdbcType=VARCHAR}, 
+      #{channelId,jdbcType=VARCHAR}, #{channelName,jdbcType=VARCHAR}, #{newUser,jdbcType=INTEGER}, 
+      #{activeUser,jdbcType=INTEGER}, #{useLength,jdbcType=INTEGER}, #{siteCode,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xh.media.model.LogXhMediaUser" >
+    insert into log_xh_media_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="date != null" >
+        DATE,
+      </if>
+      <if test="hour != null" >
+        HOUR,
+      </if>
+      <if test="minute != null" >
+        MINUTE,
+      </if>
+      <if test="originId != null" >
+        ORIGIN_ID,
+      </if>
+      <if test="originName != null" >
+        ORIGIN_NAME,
+      </if>
+      <if test="channelId != null" >
+        CHANNEL_ID,
+      </if>
+      <if test="channelName != null" >
+        CHANNEL_NAME,
+      </if>
+      <if test="newUser != null" >
+        NEW_USER,
+      </if>
+      <if test="activeUser != null" >
+        ACTIVE_USER,
+      </if>
+      <if test="useLength != null" >
+        USE_LENGTH,
+      </if>
+      <if test="siteCode != null" >
+        SITE_CODE,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="date != null" >
+        #{date,jdbcType=VARCHAR},
+      </if>
+      <if test="hour != null" >
+        #{hour,jdbcType=VARCHAR},
+      </if>
+      <if test="minute != null" >
+        #{minute,jdbcType=VARCHAR},
+      </if>
+      <if test="originId != null" >
+        #{originId,jdbcType=VARCHAR},
+      </if>
+      <if test="originName != null" >
+        #{originName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelId != null" >
+        #{channelId,jdbcType=VARCHAR},
+      </if>
+      <if test="channelName != null" >
+        #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="newUser != null" >
+        #{newUser,jdbcType=INTEGER},
+      </if>
+      <if test="activeUser != null" >
+        #{activeUser,jdbcType=INTEGER},
+      </if>
+      <if test="useLength != null" >
+        #{useLength,jdbcType=INTEGER},
+      </if>
+      <if test="siteCode != null" >
+        #{siteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xh.media.model.LogXhMediaUser" >
+    update log_xh_media_user
+    <set >
+      <if test="date != null" >
+        DATE = #{date,jdbcType=VARCHAR},
+      </if>
+      <if test="hour != null" >
+        HOUR = #{hour,jdbcType=VARCHAR},
+      </if>
+      <if test="minute != null" >
+        MINUTE = #{minute,jdbcType=VARCHAR},
+      </if>
+      <if test="originId != null" >
+        ORIGIN_ID = #{originId,jdbcType=VARCHAR},
+      </if>
+      <if test="originName != null" >
+        ORIGIN_NAME = #{originName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelId != null" >
+        CHANNEL_ID = #{channelId,jdbcType=VARCHAR},
+      </if>
+      <if test="channelName != null" >
+        CHANNEL_NAME = #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="newUser != null" >
+        NEW_USER = #{newUser,jdbcType=INTEGER},
+      </if>
+      <if test="activeUser != null" >
+        ACTIVE_USER = #{activeUser,jdbcType=INTEGER},
+      </if>
+      <if test="useLength != null" >
+        USE_LENGTH = #{useLength,jdbcType=INTEGER},
+      </if>
+      <if test="siteCode != null" >
+        SITE_CODE = #{siteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xh.media.model.LogXhMediaUser" >
+    update log_xh_media_user
+    set DATE = #{date,jdbcType=VARCHAR},
+      HOUR = #{hour,jdbcType=VARCHAR},
+      MINUTE = #{minute,jdbcType=VARCHAR},
+      ORIGIN_ID = #{originId,jdbcType=VARCHAR},
+      ORIGIN_NAME = #{originName,jdbcType=VARCHAR},
+      CHANNEL_ID = #{channelId,jdbcType=VARCHAR},
+      CHANNEL_NAME = #{channelName,jdbcType=VARCHAR},
+      NEW_USER = #{newUser,jdbcType=INTEGER},
+      ACTIVE_USER = #{activeUser,jdbcType=INTEGER},
+      USE_LENGTH = #{useLength,jdbcType=INTEGER},
+      SITE_CODE = #{siteCode,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="findUserList" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from log_xh_media_user
+  </select>
+  
+  <select id="findSumUserList" resultMap="BaseResultMap">
+  SELECT DATE, origin_id,origin_name,channel_id,channel_name,SUM(NEW_USER) AS NEW_USER,SUM(ACTIVE_USER) AS ACTIVE_USER,SUM(USE_LENGTH) AS USE_LENGTH , site_code FROM log_xh_media_user GROUP BY date,origin_id,site_code ORDER BY date DESC,NEW_USER DESC
+  </select>
+  
+  <select id="getUserListBySearch" resultMap="BaseResultMap">
+  	SELECT 
+   DATE, origin_id,origin_name,channel_id,channel_name,SUM(NEW_USER) AS NEW_USER,SUM(ACTIVE_USER) AS ACTIVE_USER,SUM(USE_LENGTH) AS USE_LENGTH , site_code
+    FROM log_xh_media_user WHERE 
+    <if test="siteCode != null" >
+        site_code = #{siteCode,jdbcType=VARCHAR} AND 
+    </if>
+    <if test="originId != null" >
+        origin_id = #{originId,jdbcType=VARCHAR} AND 
+    </if>
+    date between #{startTime,jdbcType=VARCHAR} AND #{endTime,jdbcType=VARCHAR} GROUP BY date,origin_id ORDER BY date DESC ,NEW_USER DESC
+  </select>
+  
+  <select id="getUserListBySearchOneDay" resultMap="BaseResultMap">
+  	SELECT 
+   DATE,hour,origin_id,origin_name,channel_id,channel_name,SUM(NEW_USER) AS NEW_USER,SUM(ACTIVE_USER) AS ACTIVE_USER,SUM(USE_LENGTH) AS USE_LENGTH , site_code ,name as siteName
+    FROM log_xh_media_user si INNER JOIN sys_groups sg ON si.site_code=sg.id WHERE 
+    <if test="siteCode != null" >
+        site_code = #{siteCode,jdbcType=VARCHAR} AND 
+    </if>
+    <if test="originId != null" >
+        origin_id = #{originId,jdbcType=VARCHAR} AND 
+    </if>
+        SITE_CODE in
+    <foreach collection="sitcodList" index="index" item="item" open="(" separator="," close=")">
+                #{item}       
+    </foreach>  AND
+    date between #{startTime,jdbcType=VARCHAR} AND #{endTime,jdbcType=VARCHAR} GROUP BY date,hour,origin_id ORDER BY
+     <foreach collection="orderList" index="index" item="item" separator=",">
+                ${item}       
+    </foreach>
+  </select>
+  
+    <select id="findSumUserListForCharts" resultMap="BaseResultMap">
+  SELECT DATE, origin_id,origin_name,channel_id,channel_name,SUM(NEW_USER) AS NEW_USER,SUM(ACTIVE_USER) AS ACTIVE_USER,SUM(USE_LENGTH) AS USE_LENGTH , site_code FROM log_xh_media_user GROUP BY date ORDER BY date ,NEW_USER DESC
+  </select>
+  
+    <select id="getUserListBySearchForCharts" resultMap="BaseResultMap">
+  	SELECT 
+   DATE, origin_id,origin_name,channel_id,channel_name,SUM(NEW_USER) AS NEW_USER,SUM(ACTIVE_USER) AS ACTIVE_USER,SUM(USE_LENGTH) AS USE_LENGTH , site_code
+    FROM log_xh_media_user WHERE 
+    <if test="siteCode != null" >
+        site_code = #{siteCode,jdbcType=VARCHAR} AND 
+    </if>
+    <if test="originId != null" >
+        origin_id = #{originId,jdbcType=VARCHAR} AND 
+    </if>
+    date between #{startTime,jdbcType=VARCHAR} AND #{endTime,jdbcType=VARCHAR} GROUP BY date ORDER BY date,NEW_USER DESC
+  </select>
+  
+  <select id="getUserListBySearchOneDayForCharts" resultMap="BaseResultMap">
+  	SELECT 
+   DATE,hour,minute,origin_id,origin_name,channel_id,channel_name,SUM(NEW_USER) AS NEW_USER,SUM(ACTIVE_USER) AS ACTIVE_USER,SUM(USE_LENGTH) AS USE_LENGTH , site_code
+    FROM log_xh_media_user WHERE 
+    <if test="siteCode != null" >
+        site_code = #{siteCode,jdbcType=VARCHAR} AND 
+    </if>
+    <if test="originId != null" >
+        origin_id = #{originId,jdbcType=VARCHAR} AND 
+    </if>
+        SITE_CODE in
+    <foreach collection="sitcodList" index="index" item="item" open="(" separator="," close=")">
+                #{item}       
+    </foreach>  AND
+    date between #{startTime,jdbcType=VARCHAR} AND #{endTime,jdbcType=VARCHAR} GROUP BY HOUR,MINUTE ORDER BY HOUR ASC,MINUTE ASC ,NEW_USER DESC
+  </select>
+  
+    <select id="getUserListBySearchOneDayForChartsPie" resultMap="BaseResultMap">
+  	SELECT 
+   DATE,hour,origin_id,origin_name,channel_id,channel_name,SUM(NEW_USER) AS NEW_USER,SUM(ACTIVE_USER) AS ACTIVE_USER,SUM(USE_LENGTH) AS USE_LENGTH , site_code
+    FROM log_xh_media_user WHERE 
+    <if test="siteCode != null" >
+        site_code = #{siteCode,jdbcType=VARCHAR} AND 
+    </if>
+    <if test="originId != null" >
+        origin_id = #{originId,jdbcType=VARCHAR} AND 
+    </if>
+        SITE_CODE in
+    <foreach collection="sitcodList" index="index" item="item" open="(" separator="," close=")">
+                #{item}       
+    </foreach>  AND
+    date between #{startTime,jdbcType=VARCHAR} AND #{endTime,jdbcType=VARCHAR} GROUP BY ORIGIN_ID  ORDER BY NEW_USER DESC
+  </select>
+  
+  
+  <select id="getUserListDetail" resultMap="BaseResultMap">
+<!--   	SELECT 
+   DATE,hour,origin_id,origin_name,channel_id,channel_name,SUM(NEW_USER) AS NEW_USER,SUM(ACTIVE_USER) AS ACTIVE_USER,
+   SUM(USE_LENGTH) AS USE_LENGTH , site_code ,name as siteName
+    FROM log_xh_media_user si INNER JOIN sys_groups sg ON si.site_code=sg.id  -->
+  
+     SELECT DATE,hour, u.origin_id, u.origin_name,channel_id,channel_name, SUM(NEW_USER) AS NEW_USER,SUM(ACTIVE_USER) AS ACTIVE_USER,
+   SUM(USE_LENGTH) AS USE_LENGTH, u.site_code,NAME AS siteName
+    FROM (log_xh_media_user  u INNER JOIN sys_groups groups ON ( u.site_code=groups.id))
+       INNER JOIN index_xh_media_origin origin
+   ON  ( u.site_code=origin.site_code AND  u.origin_id=origin.origin_id) 
+    WHERE 
+    <if test="siteCode != null" >
+        u.site_code = #{siteCode,jdbcType=VARCHAR} AND 
+    </if>
+    <if test="originId != null" >
+        u.origin_id = #{originId,jdbcType=VARCHAR} AND 
+    </if>
+    <if test="date != null" >
+       date= #{date,jdbcType=VARCHAR}
+    </if>
+     GROUP BY date,hour,u.origin_id ORDER BY
+     <foreach collection="orderList" index="index" item="item" separator=",">
+                ${item}       
+    </foreach>
+  </select>
+  
+  <select id="getUserChartLineDetail" resultMap="BaseResultMap">
+  	SELECT 
+   DATE,hour,minute,origin_id,origin_name,channel_id,channel_name,SUM(NEW_USER) AS NEW_USER,SUM(ACTIVE_USER) AS ACTIVE_USER,SUM(USE_LENGTH) AS USE_LENGTH , site_code
+    FROM log_xh_media_user WHERE 
+    <if test="siteCode != null" >
+        site_code = #{siteCode,jdbcType=VARCHAR} AND 
+    </if>
+    <if test="originId != null" >
+        origin_id = #{originId,jdbcType=VARCHAR} AND 
+    </if>
+    <if test="date != null" >
+        date= #{date,jdbcType=VARCHAR}
+    </if>
+    GROUP BY HOUR,MINUTE ORDER BY HOUR ASC,MINUTE ASC ,NEW_USER DESC
+  </select>
+  
+  <select id="getUserChartPieDetail" resultMap="BaseResultMap">
+    	SELECT 
+   DATE,hour,origin_id,origin_name,channel_id,channel_name,SUM(NEW_USER) AS NEW_USER,SUM(ACTIVE_USER) AS ACTIVE_USER,SUM(USE_LENGTH) AS USE_LENGTH , site_code
+    FROM log_xh_media_user WHERE 
+    <if test="siteCode != null" >
+        site_code = #{siteCode,jdbcType=VARCHAR} AND 
+    </if>
+    <if test="originId != null" >
+        origin_id = #{originId,jdbcType=VARCHAR} AND 
+    </if>
+    <if test="date != null" >
+        date= #{date,jdbcType=VARCHAR}
+    </if>
+    GROUP BY ORIGIN_ID  ORDER BY NEW_USER DESC
+  </select>
+  
+  <select id="selectDetailSumData" resultMap="BaseResultMap">
+  SELECT SUM(NEW_USER) AS NEW_USER,SUM(ACTIVE_USER) AS ACTIVE_USER,SUM(USE_LENGTH) AS USE_LENGTH FROM log_xh_media_user WHERE
+  
+  <if test="siteCode != null" >
+        site_code = #{siteCode,jdbcType=VARCHAR} AND 
+    </if>
+    <if test="originId != null" >
+        origin_id = #{originId,jdbcType=VARCHAR} AND 
+    </if>
+    <if test="date != null" >
+       date= #{date,jdbcType=VARCHAR}
+    </if>
+  </select>
+</mapper>

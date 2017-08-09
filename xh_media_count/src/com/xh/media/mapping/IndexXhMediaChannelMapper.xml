@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xh.media.dao.IndexXhMediaChannelMapper" >
+  <resultMap id="BaseResultMap" type="com.xh.media.model.IndexXhMediaChannel" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="CHANNEL_ID" property="channelId" jdbcType="VARCHAR" />
+    <result column="CHANNEL_NAME" property="channelName" jdbcType="VARCHAR" />
+    <result column="CHANNEL_PATH" property="channelPath" jdbcType="VARCHAR" />
+    <result column="ORIGIN_ID" property="originId" jdbcType="VARCHAR" />
+    <result column="SITE_CODE" property="siteCode" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="TINYINT" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="PARENT_ID" property="parentId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, CHANNEL_ID, CHANNEL_NAME, CHANNEL_PATH, ORIGIN_ID, SITE_CODE, STATUS, CREATE_TIME, 
+    PARENT_ID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from index_xh_media_channel
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from index_xh_media_channel
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.xh.media.model.IndexXhMediaChannel" >
+    insert into index_xh_media_channel (ID, CHANNEL_ID, CHANNEL_NAME, 
+      CHANNEL_PATH, ORIGIN_ID, SITE_CODE, 
+      STATUS, CREATE_TIME, PARENT_ID
+      )
+    values (#{id,jdbcType=INTEGER}, #{channelId,jdbcType=VARCHAR}, #{channelName,jdbcType=VARCHAR}, 
+      #{channelPath,jdbcType=VARCHAR}, #{originId,jdbcType=VARCHAR}, #{siteCode,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{parentId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.xh.media.model.IndexXhMediaChannel" >
+    insert into index_xh_media_channel
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="channelId != null" >
+        CHANNEL_ID,
+      </if>
+      <if test="channelName != null" >
+        CHANNEL_NAME,
+      </if>
+      <if test="channelPath != null" >
+        CHANNEL_PATH,
+      </if>
+      <if test="originId != null" >
+        ORIGIN_ID,
+      </if>
+      <if test="siteCode != null" >
+        SITE_CODE,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="parentId != null" >
+        PARENT_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="channelId != null" >
+        #{channelId,jdbcType=VARCHAR},
+      </if>
+      <if test="channelName != null" >
+        #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelPath != null" >
+        #{channelPath,jdbcType=VARCHAR},
+      </if>
+      <if test="originId != null" >
+        #{originId,jdbcType=VARCHAR},
+      </if>
+      <if test="siteCode != null" >
+        #{siteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xh.media.model.IndexXhMediaChannel" >
+    update index_xh_media_channel
+    <set >
+      <if test="channelId != null" >
+        CHANNEL_ID = #{channelId,jdbcType=VARCHAR},
+      </if>
+      <if test="channelName != null" >
+        CHANNEL_NAME = #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelPath != null" >
+        CHANNEL_PATH = #{channelPath,jdbcType=VARCHAR},
+      </if>
+      <if test="originId != null" >
+        ORIGIN_ID = #{originId,jdbcType=VARCHAR},
+      </if>
+      <if test="siteCode != null" >
+        SITE_CODE = #{siteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="parentId != null" >
+        PARENT_ID = #{parentId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xh.media.model.IndexXhMediaChannel" >
+    update index_xh_media_channel
+    set CHANNEL_ID = #{channelId,jdbcType=VARCHAR},
+      CHANNEL_NAME = #{channelName,jdbcType=VARCHAR},
+      CHANNEL_PATH = #{channelPath,jdbcType=VARCHAR},
+      ORIGIN_ID = #{originId,jdbcType=VARCHAR},
+      SITE_CODE = #{siteCode,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=TINYINT},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      PARENT_ID = #{parentId,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getChannelsByOrigin" resultMap="BaseResultMap">
+  	SELECT 
+    <include refid="Base_Column_List" />
+    FROM index_xh_media_channel
+    WHERE site_code = #{0}  GROUP BY channel_id ORDER BY channel_id
+  </select>
+  
+    <select id="getChannels" resultMap="BaseResultMap">
+  	SELECT 
+    <include refid="Base_Column_List" />
+    FROM index_xh_media_channel
+    WHERE ORIGIN_ID = #{0} AND SITE_CODE =#{1} AND PARENT_ID =-1 GROUP BY channel_id ORDER BY channel_id
+  </select>
+  
+  <select id="getParts" resultMap="BaseResultMap">
+  
+  	SELECT 
+    <include refid="Base_Column_List" />
+    FROM index_xh_media_channel
+    WHERE SITE_CODE = #{0} AND  ORIGIN_ID=#{1} AND PARENT_ID=#{2}  GROUP BY PARENT_ID ORDER BY PARENT_ID
+  
+  </select>
+  
+  <select id="getChannelByChannelIdAndSiteCode" resultMap="BaseResultMap">
+      SELECT id,channel_id,channel_name,channel_path,origin_id,parent_id,site_code,status,create_time FROM index_xh_media_channel WHERE channel_id=#{0} AND site_code=#{1} LIMIT 1
+  </select>
+</mapper>

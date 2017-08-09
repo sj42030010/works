@@ -1,0 +1,266 @@
+package com.xh.media.controller;
+
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.google.gson.Gson;
+import com.xh.media.model.LogDayXhMediaAppCount;
+import com.xh.media.model.LogXhMediaAppCount;
+import com.xh.media.model.SysGroups;
+import com.xh.media.service.LogDayXhMediaAppCountService;
+import com.xh.media.service.LogXhMediaAppCountService;
+import com.xh.media.service.SysGroupsService;
+
+@Controller
+public class AppDataController {
+	private Gson gson;
+	private ApplicationContext context;
+	private LogXhMediaAppCountService logXhMediaAppCountService;
+	private LogDayXhMediaAppCountService logDayXhMediaAppCountService;
+	private SysGroupsService sysGroupsService;
+	public AppDataController() {
+		 gson=new Gson();
+	     context=new ClassPathXmlApplicationContext("applicationContext.xml");
+	     logXhMediaAppCountService=(LogXhMediaAppCountService) context.getBean("logXhMediaAppCountService");
+	     logDayXhMediaAppCountService=(LogDayXhMediaAppCountService) context.getBean("logDayXhMediaAppCountService");
+	     sysGroupsService = (SysGroupsService)context.getBean("sysGroupsService");
+	}
+	
+	
+	@RequestMapping("/getAppData")
+	public void getAppData(HttpServletRequest request,HttpServletResponse response) throws IOException{
+		List<LogDayXhMediaAppCount> appData=new ArrayList<LogDayXhMediaAppCount>();
+		LogDayXhMediaAppCount ldxmac = new LogDayXhMediaAppCount();
+		List<SysGroups> groupList = (List<SysGroups>) request.getSession().getAttribute("groups");
+		List sitecodeList = new ArrayList();
+		for (SysGroups sysGroups : groupList) {
+			sitecodeList.add(sysGroups.getId());
+		}
+		String siteCode = "";
+		if (request.getParameter("siteCode")!=null && !"".equals(request.getParameter("siteCode"))) {
+			siteCode = request.getParameter("siteCode");
+			sitecodeList = new ArrayList();
+			sitecodeList.add(siteCode);
+		}
+		ldxmac.setSitcodList(sitecodeList);
+		String sort = "";
+		String order = "";
+		if(request.getParameter("sort")!=null){
+			sort = request.getParameter("sort");
+		}else{
+			sort = "start_pv";
+		}
+		if(request.getParameter("order")!=null){
+			order = request.getParameter("order");
+		}else{
+			order = "desc";
+		}
+		String[] soStr = sort.split(",");
+		String[] orStr = order.split(",");
+		List orderList=new ArrayList();
+		for(int i=0;i<soStr.length;i++){
+			if("startPv".equals(soStr[i])){
+				orderList.add("start_pv "+orStr[i]);
+			}else if("startUv".equals(soStr[i])){
+				orderList.add("start_uv "+orStr[i]);
+			}else if("newUser".equals(soStr[i])){
+				orderList.add("new_user "+orStr[i]);
+			}else if("commentNumber".equals(soStr[i])){
+				orderList.add("comment_number "+orStr[i]);
+			}else if("collectionNumber".equals(soStr[i])){
+				orderList.add("collection_number "+orStr[i]);
+			}else if("shareNumber".equals(soStr[i])){
+				orderList.add("share_number "+orStr[i]);
+			}else if("nonLocal".equals(soStr[i])){
+				orderList.add("non_local "+orStr[i]);
+			}else{
+				orderList.add(soStr[i]+" "+orStr[i]);
+			}
+		}
+		ldxmac.setOrderList(orderList);
+		appData = logDayXhMediaAppCountService.getAppDataNew(ldxmac);
+		if (appData.size()>0) {
+			for (LogDayXhMediaAppCount logDayXhMediaAppCount : appData) {
+				SysGroups sg = sysGroupsService.selectByPrimaryKey(Integer.parseInt(logDayXhMediaAppCount.getSiteCode()));
+				logDayXhMediaAppCount.setSiteName(sg.getName());
+//				logDayXhMediaAppCount.setNonLocal(logDayXhMediaAppCount.getLocal()+logDayXhMediaAppCount.getNonLocal());
+			}
+			Map map=new HashMap();
+			map.put("rows", appData);
+			map.put("total", appData.size());
+			String result = gson.toJson(map);
+			response.setCharacterEncoding("utf-8");
+			response.getWriter().write(result);
+			response.getWriter().close();
+		}
+  }
+	
+	@RequestMapping("/getDayAppDataDetail")
+	public void getDayAppDetail(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		// List<LogXhMediaAppCount> appDetailList = new
+		// ArrayList<LogXhMediaAppCount>();
+		List<LogDayXhMediaAppCount> dayAppDetailList = new ArrayList<LogDayXhMediaAppCount>();
+		LogDayXhMediaAppCount appDetail = new LogDayXhMediaAppCount();
+		String siteCode = request.getParameter("siteCode");
+		String startTime = "1900-01-01";
+		String endTime = "";
+		Timestamp ts = new Timestamp(System.currentTimeMillis());
+		String nowTime = String.valueOf(ts);
+		endTime = nowTime.substring(0, 10);
+		if (request.getParameter("startTime") != null
+				&& !"".equals(request.getParameter("startTime"))) {
+			startTime = request.getParameter("startTime");
+		}
+		if (request.getParameter("endTime") != null
+				&& !"".equals(request.getParameter("endTime"))) {
+			endTime = request.getParameter("endTime");
+		}
+
+		appDetail.setSiteCode(siteCode);
+		appDetail.setStartTime(startTime);
+		appDetail.setEndTime(endTime);
+
+		String sort = "";
+		String order = "";
+		if (request.getParameter("sort") != null) {
+			sort = request.getParameter("sort");
+		} else {
+			sort = "date";
+		}
+		if (request.getParameter("order") != null) {
+			order = request.getParameter("order");
+		} else {
+			order = "desc";
+		}
+		String[] soStr = sort.split(",");
+		String[] orStr = order.split(",");
+		List orderList = new ArrayList();
+		for (int i = 0; i < soStr.length; i++) {
+			if ("startPv".equals(soStr[i])) {
+				orderList.add("start_pv " + orStr[i]);
+			} else if ("startUv".equals(soStr[i])) {
+				orderList.add("start_uv " + orStr[i]);
+			} else if ("newUser".equals(soStr[i])) {
+				orderList.add("new_user " + orStr[i]);
+			} else if ("commentNumber".equals(soStr[i])) {
+				orderList.add("comment_number " + orStr[i]);
+			} else if ("collectionNumber".equals(soStr[i])) {
+				orderList.add("collection_number " + orStr[i]);
+			} else if ("shareNumber".equals(soStr[i])) {
+				orderList.add("share_number " + orStr[i]);
+			} else if ("nonLocal".equals(soStr[i])) {
+				orderList.add("non_local " + orStr[i]);
+			} else {
+				orderList.add(soStr[i] + " " + orStr[i]);
+			}
+		}
+		appDetail.setOrderList(orderList);
+
+		dayAppDetailList = logDayXhMediaAppCountService
+				.searchDayAppDataDetail(appDetail);
+
+		for (LogDayXhMediaAppCount appCount : dayAppDetailList) {
+			SysGroups sg = sysGroupsService.selectByPrimaryKey(Integer.parseInt(appCount.getSiteCode()));
+			appCount.setSiteName(sg.getName());
+		}
+
+		Map map = new HashMap();
+		map.put("rows", dayAppDetailList);
+		map.put("total", dayAppDetailList.size());
+		String result = gson.toJson(map);
+		response.setCharacterEncoding("utf-8");
+		response.getWriter().write(result);
+		response.getWriter().close();
+	}
+	
+	@RequestMapping("/getAppDataDetail")
+	public void getAppDetail(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		 List<LogXhMediaAppCount> appDetailList = new ArrayList<LogXhMediaAppCount>();
+//		List<LogDayXhMediaAppCount> dayAppDetailList = new ArrayList<LogDayXhMediaAppCount>();
+		LogXhMediaAppCount appDetail = new LogXhMediaAppCount();
+		String siteCode = request.getParameter("siteCode");
+		String startTime = "1900-01-01";
+		String endTime = "";
+		Timestamp ts = new Timestamp(System.currentTimeMillis());
+		String nowTime = String.valueOf(ts);
+		endTime = nowTime.substring(0, 10);
+		if (request.getParameter("startTime") != null
+				&& !"".equals(request.getParameter("startTime"))) {
+			startTime = request.getParameter("startTime");
+		}
+		if (request.getParameter("endTime") != null
+				&& !"".equals(request.getParameter("endTime"))) {
+			endTime = request.getParameter("endTime");
+		}
+
+		appDetail.setSiteCode(siteCode);
+		appDetail.setStartTime(startTime);
+		appDetail.setEndTime(endTime);
+
+		String sort = "";
+		String order = "";
+		if (request.getParameter("sort") != null) {
+			sort = request.getParameter("sort");
+		} else {
+			sort = "date";
+		}
+		if (request.getParameter("order") != null) {
+			order = request.getParameter("order");
+		} else {
+			order = "desc";
+		}
+		String[] soStr = sort.split(",");
+		String[] orStr = order.split(",");
+		List orderList = new ArrayList();
+		for (int i = 0; i < soStr.length; i++) {
+			if ("startPv".equals(soStr[i])) {
+				orderList.add("start_pv " + orStr[i]);
+			} else if ("startUv".equals(soStr[i])) {
+				orderList.add("start_uv " + orStr[i]);
+			} else if ("newUser".equals(soStr[i])) {
+				orderList.add("new_user " + orStr[i]);
+			} else if ("commentNumber".equals(soStr[i])) {
+				orderList.add("comment_number " + orStr[i]);
+			} else if ("collectionNumber".equals(soStr[i])) {
+				orderList.add("collection_number " + orStr[i]);
+			} else if ("shareNumber".equals(soStr[i])) {
+				orderList.add("share_number " + orStr[i]);
+			} else if ("nonLocal".equals(soStr[i])) {
+				orderList.add("non_local " + orStr[i]);
+			} else {
+				orderList.add(soStr[i] + " " + orStr[i]);
+			}
+		}
+		appDetail.setOrderList(orderList);
+
+		appDetailList = logXhMediaAppCountService
+				.searchAppDataDetail(appDetail);
+
+		for (LogXhMediaAppCount appCount : appDetailList) {
+			SysGroups sg = sysGroupsService.selectByPrimaryKey(Integer.parseInt(appCount.getSiteCode()));
+			appCount.setSiteName(sg.getName());
+		}
+
+		Map map = new HashMap();
+		map.put("rows", appDetailList);
+		map.put("total", appDetailList.size());
+		String result = gson.toJson(map);
+		response.setCharacterEncoding("utf-8");
+		response.getWriter().write(result);
+		response.getWriter().close();
+	}
+}

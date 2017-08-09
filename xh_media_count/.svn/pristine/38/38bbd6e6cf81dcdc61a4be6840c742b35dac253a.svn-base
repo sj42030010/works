@@ -1,0 +1,1149 @@
+<script type="text/javascript">
+    //发布人 即站点
+     $('#siteCode_2').combobox({
+            valueField:'id', //值字段
+            textField:'name', //显示的字段
+            url:'siteCode',
+            panelHeight:'300',
+            editable:true,//不可编辑，只能选择
+            onChange:function(siteCode){
+                $('#originId_2').combobox({
+                valueField:'originId', //值字段
+                textField:'originName', //显示的字段
+                url:'getOrigin?siteCode='+siteCode,
+                panelHeight:'300',
+                editable:true,//不可编辑，只能选择
+            });
+            }
+         });
+    //渠道 即发布终端
+    $('#originId_2').combobox({
+            valueField:'originId', //值字段
+            textField:'originName', //显示的字段
+            url:'getOrigin?siteCode=${user.siteCode}',
+            panelHeight:'300',
+            editable:true,//不可编辑，只能选择
+            onChange:function(originId){
+                $('#channelId_2').combobox({
+                valueField:'channelId', //值字段
+                textField:'channelName', //显示的字段
+                url:'getChannel?originId='+originId+'&siteCode='+$('#siteCode_2').combobox('getValue'),
+                panelHeight:'300',
+                editable:true,//不可编辑，只能选择
+            });
+            }
+         });
+         
+     //频道 即所属频道
+    $('#channelId_2').combobox({
+            valueField:'channelId', //值字段
+            textField:'channelName', //显示的字段
+            url:'getChannel?originId=${user.originId}'+'&siteCode='+$('#siteCode_2').combobox('getValue'),
+            panelHeight:'300',
+            editable:true,//不可编辑，只能选择
+            onChange:function(channelId){
+                $('#partId_2').combobox({
+                valueField:'parentId', //值字段
+                textField:'channelName', //显示的字段
+                url:'getParts?channelId='+channelId+'&originId='+$('#originId_2').combobox('getValue')+'&siteCode='+$('#siteCode_2').combobox('getValue'),
+                panelHeight:'300',
+                editable:true,//不可编辑，只能选择
+            });
+            }
+         });
+         
+           //频道 即所属频道
+    $('#partId_2').combobox({
+            valueField:'parentId', //值字段
+            textField:'channelName', //显示的字段 
+            url:'getParts?channelId='+$('#channelId_2').combobox('getValue')+'&originId='+$('#originId_2').combobox('getValue')+'&siteCode='+$('#siteCode_2').combobox('getValue'),
+            panelHeight:'300',
+            editable:true,//不可编辑，只能选择
+            onChange:function(parentId){
+                $('#globalId_2').combobox({
+                valueField:'globalId', //值字段
+                textField:'chineseName', //显示的字段
+                url:'getProgram?channelId='+parentId+'&siteCode='+$('#siteCode_2').combobox('getValue'),
+                panelHeight:'300',
+                editable:true,//不可编辑，只能选择
+            });
+            }
+         });   
+    
+          //节目
+    $('#globalId_2').combobox({
+            valueField:'globalId', //值字段
+            textField:'chineseName', //显示的字段
+            url:'getProgram?&channelId='+$('#partId_2').combobox('getValue')+'&siteCode='+$('#siteCode_2').combobox('getValue'),
+            panelHeight:'300',
+            editable:true,//不可编辑，只能选择
+         });      
+    
+</script>
+<div class="easyui-layout" data-options="fit:true" style="overflow:auto;width:400px;height:500px">
+ <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div id="echarts_2" style="height:400px;width: 1000px"></div>
+<!-- ECharts单文件引入 -->  
+<script src="js/dist/echarts.js"></script>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts图表
+    var myChart = echarts.init(document.getElementById("echarts_2"));
+    var option = {
+        title : {
+            text: '时间趋势图'
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:[]
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : []
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value',
+                axisLabel : {
+                    formatter: '{value}'
+                }
+            }
+        ],
+        series : [
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            }
+        ]
+    };
+
+    myChart.showLoading();    //数据加载完之前先显示一段简单的loading动画
+    $.ajax({
+         type : "post",
+         async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+         url : "video_analysis?action=2",    //请求发送到TestServlet处
+         data : {},
+         dataType : "json",        //返回数据形式为json
+         success : function(result) {
+             //请求成功时执行该函数内容，result即为服务器返回的json对象
+             if (result) {
+             		//alert("result true!"+result.rows[0].pv);
+                     for(var i=0;i<result.total;i++){ 
+                       option.xAxis[0].data.push(result.rows[i].date);
+                     }
+                    for(var i=0;i<result.total;i++){
+                        option.series[0].data.push(result.rows[i].playNumber);
+                        option.series[1].data.push(result.rows[i].playTime);
+                        option.series[2].data.push(result.rows[i].playUserNumber);
+                        option.series[3].data.push(result.rows[i].timeLength);
+                        option.series[4].data.push(result.rows[i].pv);
+                        option.series[5].data.push(result.rows[i].uv);
+                        option.series[6].data.push(result.rows[i].ip);
+                          } 
+                          option.series[0].name='播放次数';
+                          option.series[1].name='播放总时长(秒)';
+                          option.series[2].name='播放人数';
+                          option.series[3].name='节目总时长(秒)'; 
+                          option.series[4].name='pv'; 
+                          option.series[5].name='uv'; 
+                          option.series[6].name='ip'; 
+                          option.series[0].type='line';
+                          option.series[1].type='line';
+                          option.series[2].type='line';
+                          option.series[3].type='line';
+                          option.series[4].type='line';
+                          option.series[5].type='line';
+                          option.series[6].type='line';
+                           var legendarray=[];
+                      legendarray.push('播放次数');
+                      legendarray.push('播放总时长(秒)');
+                      legendarray.push('播放人数');
+                      legendarray.push('节目总时长(秒)');
+                      legendarray.push('pv');
+                      legendarray.push('uv');
+                      legendarray.push('ip');
+                      option.legend.data=legendarray;  
+                    myChart.clear();
+                    myChart.hideLoading();    //隐藏加载动画
+                    myChart.setOption(option,true); 
+                    
+             }else{
+             	//alert("result false!");
+             }
+        },
+         error : function(errorMsg) {
+             //请求失败时执行该函数
+         alert("图表请求数据失败!");
+         myChart.hideLoading();
+         }
+    })
+
+</script>
+    <!-- Begin of toolbar -->
+    <p id="dataSum_2"></p>
+    <div id="wu-toolbar-2">
+        <div class="wu-toolbar-search">
+        	<label>发布人：</label>
+        	<input type="text" id="siteCode_2" name="siteCode_2" style="width: 85px" class="easyui-validatebox" validtype="selectValid['--请选择--']">
+        	<label>发布终端：</label>
+        	<input type="text" id="originId_2" name="originId_2" style="width: 85px" class="easyui-validatebox" validtype="selectValid['--请选择--']">
+            <label>所属频道：</label> 
+            <input type="text" id="channelId_2" name="channelId_2" style="width:85px" class="easyui-validatebox" validtype="selectValid['--请选择--']">
+            <label>所属栏目：</label> 
+            <input type="text" id="partId_2" name="partId_2" style="width: 85px" class="easyui-validatebox" validtype="selectValid['--请选择--']">
+            <label>节目：</label> 
+            <input type="text" id="globalId_2" name="globalId_2" style="width: 85px" class="easyui-validatebox" validtype="selectValid['--请选择--']">
+            <label>起始时间：</label><input id="startTime_2" name="startTime" class="easyui-datebox" style="width:90px">
+            <label>结束时间：</label><input id="endTime_2" name="endTime"class="easyui-datebox" style="width:90px">
+            
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="javascript:searchVideoCountRecord($('#siteCode_2').combobox('getValue'),$('#originId_2').combobox('getValue'),$('#channelId_2').combobox('getValue'),$('#partId_2').combobox('getValue'),$('#globalId_2').combobox('getValue'),$('#startTime_2').datebox('getValue'),$('#endTime_2').datebox('getValue'));">开始检索</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-undo" onclick="javascript:clearSearch2();">清空</a>
+            <!-- <a href="#" class="easyui-linkbutton" iconCls="icon-save" onclick="javascript:export2EXcel_2($('#originId').combobox('getValue'),$('#channelId').combobox('getValue'),$('#startTime_2').datebox('getValue'),$('#endTime_2').datebox('getValue'));">导出数据</a> -->
+        </div>
+    </div>
+    <!-- End of toolbar -->
+    <table id="wu-datagrid-2" class="easyui-datagrid" toolbar="#wu-toolbar-2"></table>
+</div>
+<!-- Begin of easyui-dialog -->
+<div id="win_d2" class="easyui-window" title="详情" maximizable="false" resizable="false" collapsible="false" minimizable="false" style="width:1200px;height:600px"data-options="closed:true,iconCls:'icon-save',modal:true">
+ <div class="easyui-layout" data-options="fit:true" style="overflow:auto;width:400px;height:500px">
+ <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div id="echarts_d2" style="height:400px;width: 1000px"></div>
+<script src="js/dist/echarts.js"></script>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts图表
+    var myChart_d2 = echarts.init(document.getElementById("echarts_d2"));
+    var option_d2 = {
+        title : {
+            text: '时间趋势图'
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+        orient: 'horizontal',
+        x: 'center',
+        y: 'top',  
+            data:[]
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : []
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value',
+                axisLabel : {
+                    formatter: '{value}'
+                }
+            }
+        ],
+        series : [
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            }
+        ]
+    };
+
+    myChart_d2.showLoading();    //数据加载完之前先显示一段简单的loading动画
+
+</script>
+<!-- ECharts单文件引入 -->  
+	<div id="wu-toolbar-d2">
+        <div class="wu-toolbar-search">
+        	<!-- <label>站点：</label>
+        	<input type="text" id="originId_d2" name="originId" style="width: 128px" class="easyui-validatebox" validtype="selectValid['--请选择--']">
+            <label>频道：</label> 
+            <input type="text" id="channelId_d2" name="channelId" style="width: 128px" class="easyui-validatebox" validtype="selectValid['--请选择--']"> -->
+            <label>起始时间：</label><input id="startTime_d2" name="startTime" class="easyui-datebox" style="width:100px">
+            <label>结束时间：</label><input id="endTime_d2" name="endTime"class="easyui-datebox" style="width:100px">
+            
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="javascript:searchDetail_d2($('#startTime_d2').datebox('getValue'),$('#endTime_d2').datebox('getValue'));">开始检索</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-undo" onclick="javascript:clearSearchDetail_d2();">清空</a>
+            <!-- <a href="#" class="easyui-linkbutton" iconCls="icon-save" onclick="javascript:export2EXcel_d2('','',$('#startTime_d2').datebox('getValue'),$('#endTime_d2').datebox('getValue'));">导出数据</a> -->
+        </div>
+    </div>
+     <table id="wu-datagrid-d2" class="easyui-datagrid" toolbar="#wu-toolbar-d2"></table>
+ </div>
+</div>
+
+<!-- End of easyui-dialog -->
+<script type="text/javascript">
+	
+	/**
+	* Name 分页过滤器
+	*/
+	function pagerFilter(data){            
+		if (typeof data.length == 'number' && typeof data.splice == 'function'){// is array                
+			data = {                   
+				total: data.length,                   
+				rows: data               
+			}            
+		}        
+		var dg = $(this);         
+		var opts = dg.datagrid('options');          
+		var pager = dg.datagrid('getPager');          
+		pager.pagination({                
+			onSelectPage:function(pageNum, pageSize){                 
+				opts.pageNumber = pageNum;                   
+				opts.pageSize = pageSize;                
+				pager.pagination('refresh',{pageNumber:pageNum,pageSize:pageSize});                  
+				dg.datagrid('loadData',data);                
+			}          
+		});           
+		if (!data.originalRows){               
+			data.originalRows = (data.rows);       
+		}         
+		var start = (opts.pageNumber-1)*parseInt(opts.pageSize);          
+		var end = start + parseInt(opts.pageSize);        
+		data.rows = (data.originalRows.slice(start, end));         
+		return data;       
+	}
+	
+	/**
+	*数据汇总
+	*/
+		 $.ajax({
+         type : "post",
+         async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+         url:'video_analysis?action=4',
+         data : {},
+         dataType : "json",        //返回数据形式为json
+         success : function(result) {
+         console.log(result.rows);
+          var datasum  =$("<h3 style='margin:10px;float:left'>数据汇总</h3>"+
+                          "<h3 style='margin:10px;float:left'>播放次数："+result.rows[0].playNumber+"</h3>"+
+                          "<h3 style='margin:10px;float:left'>播放总时长："+result.rows[0].playTime+"</h3>"+
+                          "<h3 style='margin:10px;float:left'>播放人数："+result.rows[0].playUserNumber+"</h3>"+
+                          "<h3 style='margin:10px;float:left'>节目总时长："+result.rows[0].timeLength+"</h3>"+
+                          "<h3 style='margin:10px;float:left'>pv总数："+result.rows[0].pv+"</h3>"+
+                          "<h3 style='margin:10px;float:left'>uv总数："+result.rows[0].uv+"</h3>"+
+                          "<h3 style='margin:10px;float:left'>ip总数："+result.rows[0].ip+"</h3>"
+
+                          );
+         $(dataSum_2).append(datasum);
+         }
+        });
+	/**
+	* Name 载入数据
+	*/
+	$('#wu-datagrid-2').datagrid({
+		url:'video_analysis?action=1',
+		loadFilter:pagerFilter,		
+		rownumbers:true,
+		singleSelect:false,
+		pageList : [20],//可以选择的分页集合
+		pageSize:20,           
+		pagination:true,
+		multiSort:true,
+		fitColumns:true,
+		fit:true,
+		columns:[[
+			//{ field:'date',title:'日期',width:20},
+			{ field:'siteName',title:'发布人',width:20},
+			{ field:'originName',title:'发布终端',width:20},
+			{ field:'channelName',title:'所属频道',width:20},
+			{ field:'chineseName',title:'节目名称',width:40},
+			{ field:'playNumber',title:'播放次数',width:20,sortable:'true'},
+			{ field:'playTime',title:'播放总时长(秒)',width:20,sortable:'true'},
+			{ field:'playUserNumber',title:'播放人数',width:20,sortable:'true'},
+			{ field:'timeLength',title:'节目总时长(秒)',width:20,sortable:'true'},
+			{ field:'alreadyPlay',title:'播放完成度(%)',width:20},
+			{ field:'pv',title:'PV',width:20,sortable:'true'},
+			{ field:'uv',title:'UV',width:20,sortable:'true'},
+			{ field:'ip',title:'IP',width:20,sortable:'true'},
+			{ field:'pubDate',title:'发布日期',width:40,sortable:'true'},
+		]]
+	});
+	
+	/**
+	* Name 分页过滤器
+	*/
+	function searchVideoCountRecord(siteCode,originId,channelId,partId,globalId,startTime,endTime){
+	var start=new Date(startTime.replace("-", "/").replace("-", "/")); 
+		var end=new Date(endTime.replace("-", "/").replace("-", "/"));
+		if(end<start){
+			$.messager.alert('','结束时间不能小于起始时间','info');
+			}else{
+	    clearOption();
+		$('#wu-datagrid-2').datagrid('options').url = "video_analysis?action=1&siteCode="+siteCode+"&originId="+originId+"&channelId="+channelId+"&partId="+partId+"&globalId="+globalId+"&startTime="+startTime+"&endTime="+endTime;
+		if(startTime!=''&&endTime!=''&&startTime==endTime){
+		searchChartsForOneDay(siteCode,originId,channelId,partId,globalId,startTime,endTime);
+		$('#wu-datagrid-2').datagrid({
+		columns:[[
+			//{ field:'date',title:'日期',width:20},
+			{ field:'hour',title:'小时',width:20,sortable:'true'},
+			{ field:'siteName',title:'发布人',width:20},
+			{ field:'originName',title:'发布终端',width:20},
+			{ field:'channelName',title:'所属频道',width:20},
+			{ field:'chineseName',title:'节目名称',width:40},
+			{ field:'playNumber',title:'播放次数',width:20,sortable:'true'},
+			{ field:'playTime',title:'播放总时长(秒)',width:20,sortable:'true'},
+			{ field:'playUserNumber',title:'播放人数',width:20,sortable:'true'},
+			{ field:'timeLength',title:'节目总时长(秒)',width:20,sortable:'true'},
+			{ field:'alreadyPlay',title:'播放完成度(%)',width:20},
+			{ field:'pv',title:'PV',width:20,sortable:'true'},
+			{ field:'uv',title:'UV',width:20,sortable:'true'},
+			{ field:'ip',title:'IP',width:20,sortable:'true'},
+			{ field:'pubDate',title:'发布日期',width:40,sortable:'true'},
+				]]
+			});
+		}else{
+		searchCharts(siteCode,originId,channelId,partId,globalId,startTime,endTime);
+		$('#wu-datagrid-2').datagrid({
+		columns:[[
+			//{ field:'date',title:'日期',width:20},
+			{ field:'siteName',title:'发布人',width:20,sortable:'true'},
+			{ field:'originName',title:'发布终端',width:20},
+			{ field:'channelName',title:'所属频道',width:20},
+			{ field:'chineseName',title:'节目名称',width:40},
+			{ field:'playNumber',title:'播放次数',width:20,sortable:'true'},
+			{ field:'playTime',title:'播放总时长(秒)',width:20,sortable:'true'},
+			{ field:'playUserNumber',title:'播放人数',width:20,sortable:'true'},
+			{ field:'timeLength',title:'节目总时长(秒)',width:20,sortable:'true'},
+			{ field:'alreadyPlay',title:'播放完成度(%)',width:20},
+			{ field:'pv',title:'PV',width:20,sortable:'true'},
+			{ field:'uv',title:'UV',width:20,sortable:'true'},
+			{ field:'ip',title:'IP',width:20,sortable:'true'},
+			{ field:'pubDate',title:'发布日期',width:40,sortable:'true'},
+		]]
+			});
+		}
+		
+		$('#wu-datagrid-2').datagrid('reload'); 
+		}
+		
+	}
+	
+	/**
+	* Name 清空option中的数据
+	*/
+		function clearOption(){
+	   option=null;
+          option = {
+        title : {
+            text: '时间趋势图'
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:[]
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : []
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value',
+                axisLabel : {
+                    formatter: '{value}'
+                }
+            }
+        ],
+        series : [
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            }
+        ]
+    };
+	}
+	/**
+	* Name 图表搜索
+	*/
+	function searchCharts(siteCode,originId,channelId,partId,globalId,startTime,endTime){
+	    $.ajax({
+         type : "post",
+         async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+         url : "video_analysis?action=2&siteCode="+siteCode+"&originId="+originId+"&channelId="+channelId+"&partId="+partId+"&globalId="+globalId+"&startTime="+startTime+"&endTime="+endTime,    //请求发送到TestServlet处
+         data : {},
+         dataType : "json",        //返回数据形式为json
+         success : function(result) {
+         // alert(result);
+             //请求成功时执行该函数内容，result即为服务器返回的json对象
+             if (result.total>0) {
+             		//alert("result true!"+result.rows[0].playNumber);
+                     for(var i=0;i<result.total;i++){ 
+                       //names.push(result[i].name);    //挨个取出类别并填入类别数组
+                       option.xAxis[0].data.push(result.rows[i].date);
+                     }
+                     for(var i=0;i<result.total;i++){
+                        option.series[0].data.push(result.rows[i].playNumber);
+                        option.series[1].data.push(result.rows[i].playTime);
+                        option.series[2].data.push(result.rows[i].playUserNumber);
+                        option.series[3].data.push(result.rows[i].timeLength);
+                        option.series[4].data.push(result.rows[i].pv);
+                        option.series[5].data.push(result.rows[i].uv);
+                        option.series[6].data.push(result.rows[i].ip);
+                          } 
+                          option.series[0].name='播放次数';
+                          option.series[1].name='播放总时长(秒)';
+                          option.series[2].name='播放人数';
+                          option.series[3].name='节目总时长(秒)'; 
+                          option.series[4].name='pv'; 
+                          option.series[5].name='uv'; 
+                          option.series[6].name='ip'; 
+                          option.series[0].type='line';
+                          option.series[1].type='line';
+                          option.series[2].type='line';
+                          option.series[3].type='line';
+                          option.series[4].type='line';
+                          option.series[5].type='line';
+                          option.series[6].type='line';
+                           var legendarray=[];
+                      legendarray.push('播放次数');
+                      legendarray.push('播放总时长(秒)');
+                      legendarray.push('播放人数');
+                      legendarray.push('节目总时长(秒)');
+                      legendarray.push('pv');
+                      legendarray.push('uv');
+                      legendarray.push('ip');
+                      option.legend.data=legendarray;  
+                      myChart.clear();
+                    myChart.hideLoading();    //隐藏加载动画
+                    myChart.setOption(option,true); 
+             }else{
+              
+             myChart.hideLoading();    //隐藏加载动画
+             myChart.setOption(option,true);
+             }
+         
+        },
+         error : function(errorMsg) {
+             //请求失败时执行该函数
+         alert("图表请求数据失败!");
+         myChart.hideLoading();
+         }
+    }) 
+	}
+	
+	/**
+	* Name 图表搜索（针对同一天）
+	*/
+	function searchChartsForOneDay(siteCode,originId,channelId,partId,globalId,startTime,endTime){
+	    $.ajax({
+         type : "post",
+         async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+         url : "video_analysis?action=2&siteCode="+siteCode+"&originId="+originId+"&channelId="+channelId+"&partId="+partId+"&globalId="+globalId+"&startTime="+startTime+"&endTime="+endTime,    //请求发送到TestServlet处
+         data : {},
+         dataType : "json",        //返回数据形式为json
+         success : function(result) {
+             if (result.total>0) {
+                     for(var i=0;i<result.total;i++){ 
+                       option.xAxis[0].data.push(result.rows[i].hour);
+                     }
+                      for(var i=0;i<result.total;i++){
+                        option.series[0].data.push(result.rows[i].playNumber);
+                        option.series[1].data.push(result.rows[i].playTime);
+                        option.series[2].data.push(result.rows[i].playUserNumber);
+                        option.series[3].data.push(result.rows[i].timeLength);
+                        option.series[4].data.push(result.rows[i].pv);
+                        option.series[5].data.push(result.rows[i].uv);
+                        option.series[6].data.push(result.rows[i].ip);
+                          } 
+                          option.series[0].name='播放次数';
+                          option.series[1].name='播放总时长(秒)';
+                          option.series[2].name='播放人数';
+                          option.series[3].name='节目总时长(秒)'; 
+                          option.series[4].name='pv'; 
+                          option.series[5].name='uv'; 
+                          option.series[6].name='ip'; 
+                          option.series[0].type='line';
+                          option.series[1].type='line';
+                          option.series[2].type='line';
+                          option.series[3].type='line';
+                          option.series[4].type='line';
+                          option.series[5].type='line';
+                          option.series[6].type='line';
+                           var legendarray=[];
+                      legendarray.push('播放次数');
+                      legendarray.push('播放总时长(秒)');
+                      legendarray.push('播放人数');
+                      legendarray.push('节目总时长(秒)');
+                      legendarray.push('pv');
+                      legendarray.push('uv');
+                      legendarray.push('ip');
+                      option.legend.data=legendarray;   
+                      myChart.clear();
+                    myChart.hideLoading();    //隐藏加载动画
+                    myChart.setOption(option,true); 
+             }else{
+              
+             myChart.hideLoading();    //隐藏加载动画
+             myChart.setOption(option,true);
+             }
+         
+        },
+         error : function(errorMsg) {
+             //请求失败时执行该函数
+         alert("图表请求数据失败!");
+         myChart.hideLoading();
+         }
+    }) 
+	}
+	/**
+	* Name 清空搜索
+	*/
+	function clearSearch2(){
+		$('#siteCode_2').combobox('clear');
+		$('#originId_2').combobox('clear');
+		$('#channelId_2').combobox('clear');
+		$('#partId_2').combobox('clear');;
+		$('#globalId_2').combobox('clear');
+		$('#startTime_2').datebox('setValue','');
+		$('#endTime_2').datebox('setValue','');
+	}
+	
+	/**
+	* Name 清空详情搜索
+	*/
+	function clearSearchDetail_d2(){
+		$('#originId_d2').combobox('clear');
+		$('#channelId_d2').combobox('clear');
+		$('#startTime_d2').datebox('setValue','');
+		$('#endTime_d2').datebox('setValue','');
+	}
+	/**
+	* Name 双击弹出弹窗
+	*/
+	var globalId;
+	var siteCode;
+   $('#wu-datagrid-2').datagrid({
+        onDblClickRow: function (rowIndex, rowData) {
+          globalId=rowData.globalId;
+          siteCode=rowData.siteCode;
+        $('#wu-datagrid-d2').datagrid({
+		url:'videoAndProgramDetail?action=1&globalId='+globalId+'&from=2'+'&siteCode='+siteCode,
+		loadFilter:pagerFilter,		
+		rownumbers:true,
+		singleSelect:false,
+		pageList : [20],//可以选择的分页集合
+		pageSize:20,           
+		pagination:true,
+		multiSort:true,
+		fitColumns:true,
+		fit:true,
+		columns:[[
+			{ field:'date',title:'日期',width:60,sortable:'true'},
+			{ field:'siteName',title:'发布人',width:20},
+			{ field:'originName',title:'发布终端',width:20},
+			{ field:'channelName',title:'所属频道',width:20},
+			{ field:'chineseName',title:'节目名称',width:40},
+			{ field:'playNumber',title:'播放次数',width:20,sortable:'true'},
+			{ field:'playTime',title:'播放总时长(秒)',width:40,sortable:'true'},
+			{ field:'playUserNumber',title:'播放人数',width:20,sortable:'true'},
+			{ field:'timeLength',title:'节目总时长(秒)',width:40,sortable:'true'},
+			{ field:'alreadyPlay',title:'播放完成度(%)',width:40},
+		    { field:'pv',title:'PV',width:20,sortable:'true'},
+			{ field:'uv',title:'UV',width:20,sortable:'true'},
+			{ field:'ip',title:'IP',width:20,sortable:'true'},
+			{ field:'pubDate',title:'发布日期',width:40,sortable:'true'},
+		]]
+	});
+	   
+	    showDetailCharts(globalId,siteCode);
+	    clearSearchDetail_d2();
+        $('#win_d2').window('open'); // open a window
+	   }
+	 })
+	 
+	/**
+	* Name 详情搜索
+	*/
+	 function searchDetail_d2(startTime,endTime){
+	    var start=new Date(startTime.replace("-", "/").replace("-", "/")); 
+		var end=new Date(endTime.replace("-", "/").replace("-", "/"));
+		if(end<start){
+			$.messager.alert('','结束时间不能小于起始时间','info');
+			}else{
+		$('#wu-datagrid-d2').datagrid('options').url = "videoAndProgramDetail?action=1&from=2"+"&startTime="+startTime+"&endTime="+endTime+"&globalId="+globalId+"&siteCode="+siteCode;
+		if(startTime!=''&&endTime!=''&&startTime==endTime){
+		searchDetailChartsForOneDay(startTime, endTime);
+		$('#wu-datagrid-d2').datagrid({
+		columns:[[
+			{ field:'date',title:'日期',width:60,sortable:'true'},
+			{ field:'hour',title:'小时',width:20,sortable:'true'},
+			{ field:'siteName',title:'发布人',width:20},
+			{ field:'originName',title:'发布终端',width:20},
+			{ field:'channelName',title:'所诉频道',width:20},
+			{ field:'chineseName',title:'节目名称',width:40},
+			{ field:'playNumber',title:'播放次数',width:20,sortable:'true'},
+			{ field:'playTime',title:'播放总时长(秒)',width:40,sortable:'true'},
+			{ field:'playUserNumber',title:'播放人数',width:20,sortable:'true'},
+			{ field:'timeLength',title:'节目总时长(秒)',width:40,sortable:'true'},
+			{ field:'alreadyPlay',title:'播放完成度(%)',width:40},
+			{ field:'pv',title:'PV',width:20,sortable:'true'},
+			{ field:'uv',title:'UV',width:20,sortable:'true'},
+			{ field:'ip',title:'IP',width:20,sortable:'true'},
+			{ field:'pubDate',title:'发布日期',width:40,sortable:'true'},
+				]]
+			});
+		}else{
+		searchDetailCharts(startTime, endTime);
+		$('#wu-datagrid-d2').datagrid({
+		columns:[[
+			{ field:'date',title:'日期',width:60,sortable:'true'},
+			{ field:'siteName',title:'发布人',width:20},
+			{ field:'originName',title:'发布终端',width:20},
+			{ field:'channelName',title:'所属频道',width:20},
+			{ field:'chineseName',title:'节目名称',width:40},
+			{ field:'playNumber',title:'播放次数',width:20,sortable:'true'},
+			{ field:'playTime',title:'播放总时长(秒)',width:40,sortable:'true'},
+			{ field:'playUserNumber',title:'播放人数',width:20,sortable:'true'},
+			{ field:'timeLength',title:'节目总时长(秒)',width:40,sortable:'true'},
+			{ field:'alreadyPlay',title:'播放完成度(%)',width:40},
+			{ field:'pv',title:'PV',width:20,sortable:'true'},
+			{ field:'uv',title:'UV',width:20,sortable:'true'},
+			{ field:'ip',title:'IP',width:20,sortable:'true'},
+			{ field:'pubDate',title:'发布日期',width:40,sortable:'true'},
+				]]
+			});
+		}
+		
+		$('#wu-datagrid-d2').datagrid('reload'); 
+		}
+	}
+	
+	function showDetailCharts(globalId,siteCode){
+	myChart_d2 = echarts.init(document.getElementById("echarts_d2"));
+	clearOption_d2();
+	    $.ajax({
+         type : "post",
+         async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+         url : "videoAndProgramDetail?action=2&from=2&globalId="+globalId+'&siteCode='+siteCode,    //请求发送到TestServlet处
+         data : {},
+         dataType : "json",        //返回数据形式为json
+         success : function(result) {
+             //请求成功时执行该函数内容，result即为服务器返回的json对象
+             if (result) {
+             		//alert("result true!"+result.total);
+                     for(var i=0;i<result.total;i++){ 
+                       option_d2.xAxis[0].data.push(result.rows[i].date);
+                     }
+                    for(var i=0;i<result.total;i++){
+                        option_d2.series[0].data.push(result.rows[i].playNumber);
+                        option_d2.series[1].data.push(result.rows[i].playTime);
+                        option_d2.series[2].data.push(result.rows[i].playUserNumber);
+                        option_d2.series[3].data.push(result.rows[i].timeLength);
+                        option_d2.series[4].data.push(result.rows[i].pv);
+                        option_d2.series[5].data.push(result.rows[i].uv);
+                        option_d2.series[6].data.push(result.rows[i].ip);
+                          } 
+                          option_d2.series[0].name='播放次数';
+                          option_d2.series[1].name='播放总时长(秒)';
+                          option_d2.series[2].name='播放人数';
+                          option_d2.series[3].name='节目总时长(秒)';
+                          option_d2.series[4].name='pv';
+                          option_d2.series[5].name='uv';
+                          option_d2.series[6].name='ip';
+                          
+                          option_d2.series[0].type='line';
+                          option_d2.series[1].type='line';
+                          option_d2.series[2].type='line';
+                          option_d2.series[3].type='line';
+                          option_d2.series[4].type='line';
+                          option_d2.series[5].type='line';
+                          option_d2.series[6].type='line';
+                           var legendarray=[];
+                      legendarray.push('播放次数');
+                      legendarray.push('播放总时长(秒)');
+                      legendarray.push('播放人数');
+                      legendarray.push('节目总时长(秒)');
+                      legendarray.push('pv');
+                      legendarray.push('uv');
+                      legendarray.push('ip');
+                      option_d2.legend.data=legendarray;  
+                    myChart_d2.clear();
+                    myChart_d2.hideLoading();    //隐藏加载动画
+                    myChart_d2.setOption(option_d2,true); 
+                    
+             }else{
+             	//alert("result false!");
+             }
+         
+        },
+         error : function(errorMsg) {
+             //请求失败时执行该函数
+         alert("图表请求数据失败!");
+         myChart_d2.hideLoading();
+         }
+    })
+	}
+	
+	function clearOption_d2(){
+	option_d2=null;
+	 option_d2 = {
+        title : {
+            text: '时间趋势图'
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+        orient: 'horizontal',
+        x: 'center',
+        y: 'top',  
+            data:[]
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : []
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value',
+                axisLabel : {
+                    formatter: '{value}'
+                }
+            }
+        ],
+        series : [
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            }
+        ]
+    };
+	}
+	
+	function searchDetailCharts(startTime,endTime){
+	 clearOption_d2();
+	    $.ajax({
+         type : "post",
+         async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+         url : "videoAndProgramDetail?action=2&from=2"+"&startTime="+startTime+"&endTime="+endTime+"&globalId="+globalId+'&siteCode='+siteCode,    //请求发送到TestServlet处
+         data : {},
+         dataType : "json",        //返回数据形式为json
+         success : function(result) {
+             if (result) {
+             		//alert("result true!"+result.total);
+                     for(var i=0;i<result.total;i++){ 
+                       option_d2.xAxis[0].data.push(result.rows[i].date);
+                     }
+                     for(var i=0;i<result.total;i++){
+                        option_d2.series[0].data.push(result.rows[i].playNumber);
+                        option_d2.series[1].data.push(result.rows[i].playTime);
+                        option_d2.series[2].data.push(result.rows[i].playUserNumber);
+                        option_d2.series[3].data.push(result.rows[i].timeLength);
+                        option_d2.series[4].data.push(result.rows[i].pv);
+                        option_d2.series[5].data.push(result.rows[i].uv);
+                        option_d2.series[6].data.push(result.rows[i].ip);
+                          } 
+                          option_d2.series[0].name='播放次数';
+                          option_d2.series[1].name='播放总时长(秒)';
+                          option_d2.series[2].name='播放人数';
+                          option_d2.series[3].name='节目总时长(秒)';
+                          option_d2.series[4].name='pv';
+                          option_d2.series[5].name='uv';
+                          option_d2.series[6].name='ip';
+                          option_d2.series[0].type='line';
+                          option_d2.series[1].type='line';
+                          option_d2.series[2].type='line';
+                          option_d2.series[3].type='line';
+                          option_d2.series[4].type='line';
+                          option_d2.series[5].type='line';
+                          option_d2.series[6].type='line';
+                           var legendarray=[];
+                      legendarray.push('播放次数');
+                      legendarray.push('播放总时长(秒)');
+                      legendarray.push('播放人数');
+                      legendarray.push('节目总时长(秒)');
+                      legendarray.push('pv');
+                      legendarray.push('uv');
+                      legendarray.push('ip');
+                      option_d2.legend.data=legendarray;  
+                    myChart_d2.clear();
+                    myChart_d2.hideLoading();    //隐藏加载动画
+                    myChart_d2.setOption(option_d2,true); 
+                    
+             }else{
+             	//alert("result false!");
+             }
+         
+        },
+         error : function(errorMsg) {
+             //请求失败时执行该函数
+         alert("图表请求数据失败!");
+         myChart_d2.hideLoading();
+         }
+    })
+	}
+	
+	function searchDetailChartsForOneDay(startTime,endTime){
+	 clearOption_d2();
+	    $.ajax({
+         type : "post",
+         async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+         url : "videoAndProgramDetail?action=2&from=2"+"&startTime="+startTime+"&endTime="+endTime+"&globalId="+globalId+'&siteCode='+siteCode,    //请求发送到TestServlet处
+         data : {},
+         dataType : "json",        //返回数据形式为json
+         success : function(result) {
+             //请求成功时执行该函数内容，result即为服务器返回的json对象
+             if (result) {
+             		//alert("result true!"+result.total);
+                     for(var i=0;i<result.total;i++){ 
+                       option_d2.xAxis[0].data.push(result.rows[i].hour);
+                     }
+                    for(var i=0;i<result.total;i++){
+                        option_d2.series[0].data.push(result.rows[i].playNumber);
+                        option_d2.series[1].data.push(result.rows[i].playTime);
+                        option_d2.series[2].data.push(result.rows[i].playUserNumber);
+                        option_d2.series[3].data.push(result.rows[i].timeLength);
+                        option_d2.series[4].data.push(result.rows[i].pv);
+                        option_d2.series[5].data.push(result.rows[i].uv);
+                        option_d2.series[6].data.push(result.rows[i].ip);
+                          } 
+                          option_d2.series[0].name='播放次数';
+                          option_d2.series[1].name='播放总时长(秒)';
+                          option_d2.series[2].name='播放人数';
+                          option_d2.series[3].name='节目总时长(秒)';
+                          option_d2.series[4].name='pv';
+                          option_d2.series[5].name='uv';
+                          option_d2.series[6].name='ip';
+                          option_d2.series[0].type='line';
+                          option_d2.series[1].type='line';
+                          option_d2.series[2].type='line';
+                          option_d2.series[3].type='line';
+                          option_d2.series[4].type='line';
+                          option_d2.series[5].type='line';
+                          option_d2.series[6].type='line';
+                           var legendarray=[];
+                      legendarray.push('播放次数');
+                      legendarray.push('播放总时长(秒)');
+                      legendarray.push('播放人数');
+                      legendarray.push('节目总时长(秒)');
+                      legendarray.push('pv');
+                      legendarray.push('uv');
+                      legendarray.push('ip');
+                      option_d2.legend.data=legendarray;  
+                    myChart_d2.clear();
+                    myChart_d2.hideLoading();    //隐藏加载动画
+                    myChart_d2.setOption(option_d2,true); 
+                    
+             }else{
+             	//alert("result false!");
+             }
+         
+        },
+         error : function(errorMsg) {
+             //请求失败时执行该函数
+         alert("图表请求数据失败!");
+         myChart_d2.hideLoading();
+         }
+    })
+	}
+	/**
+	* 把数据导到Excel 表格中
+	*/
+	function export2EXcel_2(originId,channelId,startTime,endTime){
+	window.location.href="video_analysis?action=3&originId="+originId+"&channelId="+channelId+"&startTime="+startTime+"&endTime="+endTime;
+	}
+	
+  
+	/**
+	 * 把详情页数据导到Excel表格中
+	 */
+	function export2EXcel_d2(originId,channelId,startTime,endTime){
+	window.location.href="videoAndProgramDetail?action=4&from=2&originId="+originId+"&channelId="+channelId+"&startTime="+startTime+"&endTime="+endTime+"&globalId="+globalId;   //请求发送到TestServlet处
+	}
+</script>

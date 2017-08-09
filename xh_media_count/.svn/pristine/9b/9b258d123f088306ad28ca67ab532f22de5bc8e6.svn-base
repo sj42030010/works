@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xh.media.dao.SysUseLogMapper" >
+  <resultMap id="BaseResultMap" type="com.xh.media.model.SysUseLog" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="USER_ID" property="userId" jdbcType="INTEGER" />
+    <result column="SITE_CODE" property="siteCode" jdbcType="INTEGER" />
+    <result column="SITE_NAME" property="siteName" jdbcType="VARCHAR" />
+    <result column="MODEL_NAME" property="modelName" jdbcType="VARCHAR" />
+    <result column="OPERATION_TYPE" property="operationType" jdbcType="SMALLINT" />
+    <result column="OPERATION_NAME" property="operationName" jdbcType="VARCHAR" />
+    <result column="OPERATION_CONTENT" property="operationContent" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="startTime" property="startTime" jdbcType="VARCHAR" />
+    <result column="endTime" property="endTime" jdbcType="VARCHAR" />
+    <result column="USER_ACCOUNT" property="userAccount" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, USER_ID, SITE_CODE, SITE_NAME, MODEL_NAME, OPERATION_TYPE, OPERATION_NAME, 
+    OPERATION_CONTENT, CREATE_TIME, USER_ACCOUNT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_use_log
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_use_log
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.xh.media.model.SysUseLog" >
+    insert into sys_use_log (ID, USER_ID, SITE_CODE, 
+      SITE_NAME, MODEL_NAME, OPERATION_TYPE, 
+      OPERATION_NAME, OPERATION_CONTENT, CREATE_TIME
+      )
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{siteCode,jdbcType=INTEGER}, 
+      #{siteName,jdbcType=VARCHAR}, #{modelName,jdbcType=VARCHAR}, #{operationType,jdbcType=SMALLINT}, 
+      #{operationName,jdbcType=VARCHAR}, #{operationContent,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.xh.media.model.SysUseLog" >
+    insert into sys_use_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="siteCode != null" >
+        SITE_CODE,
+      </if>
+      <if test="siteName != null" >
+        SITE_NAME,
+      </if>
+      <if test="modelName != null" >
+        MODEL_NAME,
+      </if>
+      <if test="operationType != null" >
+        OPERATION_TYPE,
+      </if>
+      <if test="operationName != null" >
+        OPERATION_NAME,
+      </if>
+      <if test="operationContent != null" >
+        OPERATION_CONTENT,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="siteCode != null" >
+        #{siteCode,jdbcType=INTEGER},
+      </if>
+      <if test="siteName != null" >
+        #{siteName,jdbcType=VARCHAR},
+      </if>
+      <if test="modelName != null" >
+        #{modelName,jdbcType=VARCHAR},
+      </if>
+      <if test="operationType != null" >
+        #{operationType,jdbcType=SMALLINT},
+      </if>
+      <if test="operationName != null" >
+        #{operationName,jdbcType=VARCHAR},
+      </if>
+      <if test="operationContent != null" >
+        #{operationContent,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xh.media.model.SysUseLog" >
+    update sys_use_log
+    <set >
+      <if test="userId != null" >
+        USER_ID = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="siteCode != null" >
+        SITE_CODE = #{siteCode,jdbcType=INTEGER},
+      </if>
+      <if test="siteName != null" >
+        SITE_NAME = #{siteName,jdbcType=VARCHAR},
+      </if>
+      <if test="modelName != null" >
+        MODEL_NAME = #{modelName,jdbcType=VARCHAR},
+      </if>
+      <if test="operationType != null" >
+        OPERATION_TYPE = #{operationType,jdbcType=SMALLINT},
+      </if>
+      <if test="operationName != null" >
+        OPERATION_NAME = #{operationName,jdbcType=VARCHAR},
+      </if>
+      <if test="operationContent != null" >
+        OPERATION_CONTENT = #{operationContent,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xh.media.model.SysUseLog" >
+    update sys_use_log
+    set USER_ID = #{userId,jdbcType=INTEGER},
+      SITE_CODE = #{siteCode,jdbcType=INTEGER},
+      SITE_NAME = #{siteName,jdbcType=VARCHAR},
+      MODEL_NAME = #{modelName,jdbcType=VARCHAR},
+      OPERATION_TYPE = #{operationType,jdbcType=SMALLINT},
+      OPERATION_NAME = #{operationName,jdbcType=VARCHAR},
+      OPERATION_CONTENT = #{operationContent,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectAllData" resultMap="BaseResultMap">
+  SELECT  sul.id,sul.user_id,sul.site_code,sul.site_name,sul.model_name,sul.operation_type,sul.operation_name,sul.operation_content,sul.create_time,su.user_account
+    FROM sys_use_log sul INNER JOIN sys_users su ON sul.user_id=su.id ORDER BY sul.id
+  </select>
+  
+  <select id="searchUserLog" resultMap="BaseResultMap">
+    select  sul.id,sul.user_id,sul.site_code,sul.site_name,sul.model_name,sul.operation_type,sul.operation_name,sul.operation_content,sul.create_time,su.user_account
+    from sys_use_log sul INNER JOIN sys_users su ON sul.user_id=su.id where 
+    
+      <if test="siteCode != null" >
+        sul.SITE_CODE = #{siteCode,jdbcType=INTEGER} AND
+      </if>
+      <if test="userAccount != null" >
+        su.user_account = #{userAccount,jdbcType=VARCHAR} AND
+      </if>
+    sul.CREATE_TIME between #{startTime,jdbcType=VARCHAR} AND #{endTime,jdbcType=VARCHAR}
+  
+  </select>
+</mapper>

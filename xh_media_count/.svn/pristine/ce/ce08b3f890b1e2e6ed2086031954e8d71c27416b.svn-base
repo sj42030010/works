@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xh.media.dao.LogXhMediaNewProgramMapper" >
+  <resultMap id="BaseResultMap" type="com.xh.media.model.LogXhMediaNewProgram" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="DATE" property="date" jdbcType="VARCHAR" />
+    <result column="HOUR" property="hour" jdbcType="VARCHAR" />
+    <result column="MINUTE" property="minute" jdbcType="VARCHAR" />
+    <result column="SITE_CODE" property="siteCode" jdbcType="VARCHAR" />
+    <result column="ORIGIN_ID" property="originId" jdbcType="VARCHAR" />
+    <result column="CHANNEL_ID" property="channelId" jdbcType="VARCHAR" />
+    <result column="PART_ID" property="partId" jdbcType="VARCHAR" />
+    <result column="GLOBAL_ID" property="globalId" jdbcType="VARCHAR" />
+    <result column="PLAY_NUMBER" property="playNumber" jdbcType="INTEGER" />
+    <result column="PLAY_USER_NUMBER" property="playUserNumber" jdbcType="INTEGER" />
+    <result column="COMMENT_NUMBER" property="commentNumber" jdbcType="INTEGER" />
+    <result column="COLLECTION_NUMBER" property="collectionNumber" jdbcType="INTEGER" />
+    <result column="SHARE_NUMBER" property="shareNumber" jdbcType="INTEGER" />
+    <result column="TIME_LENGTH" property="timeLength" jdbcType="INTEGER" />
+    <result column="PLAY_TIME" property="playTime" jdbcType="INTEGER" />
+    <result column="PUB_DATE" property="pubDate" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, DATE, HOUR, MINUTE, SITE_CODE, ORIGIN_ID, CHANNEL_ID, PART_ID, GLOBAL_ID, PLAY_NUMBER, 
+    PLAY_USER_NUMBER, COMMENT_NUMBER, COLLECTION_NUMBER, SHARE_NUMBER, TIME_LENGTH, PLAY_TIME, 
+    PUB_DATE, CREATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from log_xh_media_program_new_summary
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from log_xh_media_program_new_summary
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.xh.media.model.LogXhMediaNewProgram" >
+    insert into log_xh_media_program_new_summary (ID, DATE, HOUR, 
+      MINUTE, SITE_CODE, ORIGIN_ID, 
+      CHANNEL_ID, PART_ID, GLOBAL_ID, 
+      PLAY_NUMBER, PLAY_USER_NUMBER, COMMENT_NUMBER, 
+      COLLECTION_NUMBER, SHARE_NUMBER, TIME_LENGTH, 
+      PLAY_TIME, PUB_DATE, CREATE_TIME
+      )
+    values (#{id,jdbcType=INTEGER}, #{date,jdbcType=VARCHAR}, #{hour,jdbcType=VARCHAR}, 
+      #{minute,jdbcType=VARCHAR}, #{siteCode,jdbcType=VARCHAR}, #{originId,jdbcType=VARCHAR}, 
+      #{channelId,jdbcType=VARCHAR}, #{partId,jdbcType=VARCHAR}, #{globalId,jdbcType=VARCHAR}, 
+      #{playNumber,jdbcType=INTEGER}, #{playUserNumber,jdbcType=INTEGER}, #{commentNumber,jdbcType=INTEGER}, 
+      #{collectionNumber,jdbcType=INTEGER}, #{shareNumber,jdbcType=INTEGER}, #{timeLength,jdbcType=INTEGER}, 
+      #{playTime,jdbcType=INTEGER}, #{pubDate,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.xh.media.model.LogXhMediaNewProgram" >
+    insert into log_xh_media_program_new_summary
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="date != null" >
+        DATE,
+      </if>
+      <if test="hour != null" >
+        HOUR,
+      </if>
+      <if test="minute != null" >
+        MINUTE,
+      </if>
+      <if test="siteCode != null" >
+        SITE_CODE,
+      </if>
+      <if test="originId != null" >
+        ORIGIN_ID,
+      </if>
+      <if test="channelId != null" >
+        CHANNEL_ID,
+      </if>
+      <if test="partId != null" >
+        PART_ID,
+      </if>
+      <if test="globalId != null" >
+        GLOBAL_ID,
+      </if>
+      <if test="playNumber != null" >
+        PLAY_NUMBER,
+      </if>
+      <if test="playUserNumber != null" >
+        PLAY_USER_NUMBER,
+      </if>
+      <if test="commentNumber != null" >
+        COMMENT_NUMBER,
+      </if>
+      <if test="collectionNumber != null" >
+        COLLECTION_NUMBER,
+      </if>
+      <if test="shareNumber != null" >
+        SHARE_NUMBER,
+      </if>
+      <if test="timeLength != null" >
+        TIME_LENGTH,
+      </if>
+      <if test="playTime != null" >
+        PLAY_TIME,
+      </if>
+      <if test="pubDate != null" >
+        PUB_DATE,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="date != null" >
+        #{date,jdbcType=VARCHAR},
+      </if>
+      <if test="hour != null" >
+        #{hour,jdbcType=VARCHAR},
+      </if>
+      <if test="minute != null" >
+        #{minute,jdbcType=VARCHAR},
+      </if>
+      <if test="siteCode != null" >
+        #{siteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="originId != null" >
+        #{originId,jdbcType=VARCHAR},
+      </if>
+      <if test="channelId != null" >
+        #{channelId,jdbcType=VARCHAR},
+      </if>
+      <if test="partId != null" >
+        #{partId,jdbcType=VARCHAR},
+      </if>
+      <if test="globalId != null" >
+        #{globalId,jdbcType=VARCHAR},
+      </if>
+      <if test="playNumber != null" >
+        #{playNumber,jdbcType=INTEGER},
+      </if>
+      <if test="playUserNumber != null" >
+        #{playUserNumber,jdbcType=INTEGER},
+      </if>
+      <if test="commentNumber != null" >
+        #{commentNumber,jdbcType=INTEGER},
+      </if>
+      <if test="collectionNumber != null" >
+        #{collectionNumber,jdbcType=INTEGER},
+      </if>
+      <if test="shareNumber != null" >
+        #{shareNumber,jdbcType=INTEGER},
+      </if>
+      <if test="timeLength != null" >
+        #{timeLength,jdbcType=INTEGER},
+      </if>
+      <if test="playTime != null" >
+        #{playTime,jdbcType=INTEGER},
+      </if>
+      <if test="pubDate != null" >
+        #{pubDate,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xh.media.model.LogXhMediaNewProgram" >
+    update log_xh_media_program_new_summary
+    <set >
+      <if test="date != null" >
+        DATE = #{date,jdbcType=VARCHAR},
+      </if>
+      <if test="hour != null" >
+        HOUR = #{hour,jdbcType=VARCHAR},
+      </if>
+      <if test="minute != null" >
+        MINUTE = #{minute,jdbcType=VARCHAR},
+      </if>
+      <if test="siteCode != null" >
+        SITE_CODE = #{siteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="originId != null" >
+        ORIGIN_ID = #{originId,jdbcType=VARCHAR},
+      </if>
+      <if test="channelId != null" >
+        CHANNEL_ID = #{channelId,jdbcType=VARCHAR},
+      </if>
+      <if test="partId != null" >
+        PART_ID = #{partId,jdbcType=VARCHAR},
+      </if>
+      <if test="globalId != null" >
+        GLOBAL_ID = #{globalId,jdbcType=VARCHAR},
+      </if>
+      <if test="playNumber != null" >
+        PLAY_NUMBER = #{playNumber,jdbcType=INTEGER},
+      </if>
+      <if test="playUserNumber != null" >
+        PLAY_USER_NUMBER = #{playUserNumber,jdbcType=INTEGER},
+      </if>
+      <if test="commentNumber != null" >
+        COMMENT_NUMBER = #{commentNumber,jdbcType=INTEGER},
+      </if>
+      <if test="collectionNumber != null" >
+        COLLECTION_NUMBER = #{collectionNumber,jdbcType=INTEGER},
+      </if>
+      <if test="shareNumber != null" >
+        SHARE_NUMBER = #{shareNumber,jdbcType=INTEGER},
+      </if>
+      <if test="timeLength != null" >
+        TIME_LENGTH = #{timeLength,jdbcType=INTEGER},
+      </if>
+      <if test="playTime != null" >
+        PLAY_TIME = #{playTime,jdbcType=INTEGER},
+      </if>
+      <if test="pubDate != null" >
+        PUB_DATE = #{pubDate,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xh.media.model.LogXhMediaNewProgram" >
+    update log_xh_media_program_new_summary
+    set DATE = #{date,jdbcType=VARCHAR},
+      HOUR = #{hour,jdbcType=VARCHAR},
+      MINUTE = #{minute,jdbcType=VARCHAR},
+      SITE_CODE = #{siteCode,jdbcType=VARCHAR},
+      ORIGIN_ID = #{originId,jdbcType=VARCHAR},
+      CHANNEL_ID = #{channelId,jdbcType=VARCHAR},
+      PART_ID = #{partId,jdbcType=VARCHAR},
+      GLOBAL_ID = #{globalId,jdbcType=VARCHAR},
+      PLAY_NUMBER = #{playNumber,jdbcType=INTEGER},
+      PLAY_USER_NUMBER = #{playUserNumber,jdbcType=INTEGER},
+      COMMENT_NUMBER = #{commentNumber,jdbcType=INTEGER},
+      COLLECTION_NUMBER = #{collectionNumber,jdbcType=INTEGER},
+      SHARE_NUMBER = #{shareNumber,jdbcType=INTEGER},
+      TIME_LENGTH = #{timeLength,jdbcType=INTEGER},
+      PLAY_TIME = #{playTime,jdbcType=INTEGER},
+      PUB_DATE = #{pubDate,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getNewProgramDetail"  resultMap="BaseResultMap">
+    SELECT program.DATE,program.HOUR ,program.SITE_CODE,program.ORIGIN_ID,program.CHANNEL_ID,program.PART_ID,program.GLOBAL_ID,PLAY_NUMBER,PLAY_USER_NUMBER,COMMENT_NUMBER,COLLECTION_NUMBER,SHARE_NUMBER,program.TIME_LENGTH,PLAY_TIME,FROM_UNIXTIME(program.pub_date) AS pub_date,
+NAME AS siteName, ORIGIN_NAME AS originName, channel.CHANNEL_NAME AS channelName ,part.CHANNEL_NAME AS partName ,CHINESE_NAME AS programName 
+FROM 
+((((log_xh_media_program_new_summary program INNER JOIN sys_groups groups ON (program.site_code=groups.id))
+   INNER JOIN index_xh_media_origin origin   
+   ON  (program.site_code=origin.site_code AND program.origin_id=origin.origin_id)) INNER JOIN  index_xh_media_channel channel 
+   ON  (program.site_code=channel.site_code AND program.origin_id=channel.origin_id AND program.CHANNEL_ID=channel.CHANNEL_ID AND channel.PARENT_ID=-1))
+   INNER JOIN index_xh_media_channel part
+   ON (program.site_code=part.site_code AND program.origin_id=part.origin_id AND program.CHANNEL_ID=part.PARENT_ID))
+   INNER JOIN index_xh_media_program indexprogram
+   ON (program.site_code=indexprogram.site_code AND program.CHANNEL_ID=indexprogram.CHANNEL_ID AND program.GLOBAL_ID=indexprogram.GLOBAL_ID)
+  WHERE
+       <if test="siteCode != null" >
+        program.SITE_CODE = #{siteCode,jdbcType=VARCHAR} 
+      </if>
+      <if test="globalId != null" >
+        AND  program.GLOBAL_ID = #{globalId,jdbcType=VARCHAR}
+      </if>
+  </select>
+  
+    <select id="searchNewProgramDetail"  resultMap="BaseResultMap">
+    SELECT program.DATE,program.HOUR ,program.SITE_CODE,program.ORIGIN_ID,program.CHANNEL_ID,program.PART_ID,program.GLOBAL_ID,PLAY_NUMBER,PLAY_USER_NUMBER,COMMENT_NUMBER,COLLECTION_NUMBER,SHARE_NUMBER,program.TIME_LENGTH,PLAY_TIME,FROM_UNIXTIME(program.pub_date) AS pub_date,
+NAME AS siteName, ORIGIN_NAME AS originName, channel.CHANNEL_NAME AS channelName ,part.CHANNEL_NAME AS partName ,CHINESE_NAME AS programName 
+FROM 
+((((log_xh_media_program_new_summary program INNER JOIN sys_groups groups ON (program.site_code=groups.id))
+   INNER JOIN index_xh_media_origin origin   
+   ON  (program.site_code=origin.site_code AND program.origin_id=origin.origin_id)) INNER JOIN  index_xh_media_channel channel 
+   ON  (program.site_code=channel.site_code AND program.origin_id=channel.origin_id AND program.CHANNEL_ID=channel.CHANNEL_ID AND channel.PARENT_ID=-1))
+   INNER JOIN index_xh_media_channel part
+   ON (program.site_code=part.site_code AND program.origin_id=part.origin_id AND program.CHANNEL_ID=part.PARENT_ID))
+   INNER JOIN index_xh_media_program indexprogram
+   ON (program.site_code=indexprogram.site_code AND program.CHANNEL_ID=indexprogram.CHANNEL_ID AND program.GLOBAL_ID=indexprogram.GLOBAL_ID)
+  WHERE
+        program.SITE_CODE = #{siteCode,jdbcType=VARCHAR} AND
+        program.GLOBAL_ID = #{globalId,jdbcType=VARCHAR} AND
+        program.DATE between #{startTime,jdbcType=VARCHAR} AND #{endTime,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="searchNewProgramListNew" resultMap="BaseResultMap">
+      SELECT date,hour,site_code,origin_id,channel_id,part_id,global_id,SUM(play_number) AS play_number, SUM(play_user_number) AS play_user_number, SUM(comment_number) AS comment_number,SUM(collection_number) AS collection_number,SUM(share_number) AS share_number, SUM(play_time) AS play_time, FROM_UNIXTIME(pub_date) AS pub_date,time_length 
+      FROM log_xh_media_program_new_summary 
+      WHERE site_code = #{siteCode,jdbcType=VARCHAR} AND global_id = #{globalId,jdbcType=VARCHAR} 
+      GROUP BY date,hour,site_code,origin_id,channel_id,part_id,global_id ORDER BY 
+      <foreach collection="orderList" index="index" item="item" separator=",">
+                ${item}       
+      </foreach>
+  </select>
+</mapper>

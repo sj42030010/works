@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xh.media.dao.SysMenuListMapper" >
+  <resultMap id="BaseResultMap" type="com.xh.media.model.SysMenuList" >
+    <id column="MENU_ID" property="menuId" jdbcType="SMALLINT" />
+    <result column="MENU_NAME" property="menuName" jdbcType="VARCHAR" />
+    <result column="MENU_TAG" property="menuTag" jdbcType="VARCHAR" />
+    <result column="MENU_LEVEL" property="menuLevel" jdbcType="SMALLINT" />
+    <result column="PARENT_ID" property="parentId" jdbcType="SMALLINT" />
+    <result column="URL" property="url" jdbcType="VARCHAR" />
+    <result column="ICON" property="icon" jdbcType="VARCHAR" />
+    <result column="MODEL_ID" property="modelId" jdbcType="SMALLINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    MENU_ID, MENU_NAME, MENU_TAG, MENU_LEVEL, PARENT_ID, URL, ICON, MODEL_ID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Short" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_menu_list
+    where MENU_ID = #{menuId,jdbcType=SMALLINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Short" >
+    delete from sys_menu_list
+    where MENU_ID = #{menuId,jdbcType=SMALLINT}
+  </delete>
+  <insert id="insert" parameterType="com.xh.media.model.SysMenuList" >
+    insert into sys_menu_list (MENU_ID, MENU_NAME, MENU_TAG, 
+      MENU_LEVEL, PARENT_ID, URL, 
+      ICON, MODEL_ID)
+    values (#{menuId,jdbcType=SMALLINT}, #{menuName,jdbcType=VARCHAR}, #{menuTag,jdbcType=VARCHAR}, 
+      #{menuLevel,jdbcType=SMALLINT}, #{parentId,jdbcType=SMALLINT}, #{url,jdbcType=VARCHAR}, 
+      #{icon,jdbcType=VARCHAR}, #{modelId,jdbcType=SMALLINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xh.media.model.SysMenuList" >
+    insert into sys_menu_list
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="menuId != null" >
+        MENU_ID,
+      </if>
+      <if test="menuName != null" >
+        MENU_NAME,
+      </if>
+      <if test="menuTag != null" >
+        MENU_TAG,
+      </if>
+      <if test="menuLevel != null" >
+        MENU_LEVEL,
+      </if>
+      <if test="parentId != null" >
+        PARENT_ID,
+      </if>
+      <if test="url != null" >
+        URL,
+      </if>
+      <if test="icon != null" >
+        ICON,
+      </if>
+      <if test="modelId != null" >
+        MODEL_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="menuId != null" >
+        #{menuId,jdbcType=SMALLINT},
+      </if>
+      <if test="menuName != null" >
+        #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuTag != null" >
+        #{menuTag,jdbcType=VARCHAR},
+      </if>
+      <if test="menuLevel != null" >
+        #{menuLevel,jdbcType=SMALLINT},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=SMALLINT},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null" >
+        #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="modelId != null" >
+        #{modelId,jdbcType=SMALLINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xh.media.model.SysMenuList" >
+    update sys_menu_list
+    <set >
+      <if test="menuName != null" >
+        MENU_NAME = #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuTag != null" >
+        MENU_TAG = #{menuTag,jdbcType=VARCHAR},
+      </if>
+      <if test="menuLevel != null" >
+        MENU_LEVEL = #{menuLevel,jdbcType=SMALLINT},
+      </if>
+      <if test="parentId != null" >
+        PARENT_ID = #{parentId,jdbcType=SMALLINT},
+      </if>
+      <if test="url != null" >
+        URL = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null" >
+        ICON = #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="modelId != null" >
+        MODEL_ID = #{modelId,jdbcType=SMALLINT},
+      </if>
+    </set>
+    where MENU_ID = #{menuId,jdbcType=SMALLINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xh.media.model.SysMenuList" >
+    update sys_menu_list
+    set MENU_NAME = #{menuName,jdbcType=VARCHAR},
+      MENU_TAG = #{menuTag,jdbcType=VARCHAR},
+      MENU_LEVEL = #{menuLevel,jdbcType=SMALLINT},
+      PARENT_ID = #{parentId,jdbcType=SMALLINT},
+      URL = #{url,jdbcType=VARCHAR},
+      ICON = #{icon,jdbcType=VARCHAR},
+      MODEL_ID = #{modelId,jdbcType=SMALLINT}
+    where MENU_ID = #{menuId,jdbcType=SMALLINT}
+  </update>
+  
+  <select id="getMenuList" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List" /> FROM sys_menu_list WHERE menu_tag=1 ORDER BY menu_level ASC
+  </select>
+  
+  <select id="getAllMenuList" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List" /> FROM sys_menu_list WHERE menu_tag&gt;=#{0} ORDER BY menu_level ASC
+  </select>
+</mapper>

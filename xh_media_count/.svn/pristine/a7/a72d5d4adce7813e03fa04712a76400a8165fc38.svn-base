@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xh.media.dao.IndexXhMediaProgramMapper" >
+  <resultMap id="BaseResultMap" type="com.xh.media.model.IndexXhMediaProgram" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="GLOBAL_ID" property="globalId" jdbcType="VARCHAR" />
+    <result column="CHINESE_NAME" property="chineseName" jdbcType="VARCHAR" />
+    <result column="CHANNEL_ID" property="channelId" jdbcType="VARCHAR" />
+    <result column="TIME_LENGTH" property="timeLength" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="SMALLINT" />
+    <result column="PUB_DATE" property="pubDate" jdbcType="VARCHAR" />
+    <result column="SOURCE" property="source" jdbcType="VARCHAR" />
+    <result column="SITE_CODE" property="siteCode" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="TINYINT" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, GLOBAL_ID, CHINESE_NAME, CHANNEL_ID, TIME_LENGTH, TYPE, PUB_DATE, 
+    SOURCE, SITE_CODE, STATUS, CREATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from index_xh_media_program
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from index_xh_media_program
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.xh.media.model.IndexXhMediaProgram" >
+    insert into index_xh_media_program (ID, GLOBAL_ID, CHINESE_NAME, 
+       CHANNEL_ID, TIME_LENGTH, 
+      TYPE, PUB_DATE, SOURCE, 
+      SITE_CODE, STATUS, CREATE_TIME
+      )
+    values (#{id,jdbcType=INTEGER}, #{globalId,jdbcType=VARCHAR}, #{chineseName,jdbcType=VARCHAR}, 
+      #{originId,jdbcType=VARCHAR}, #{channelId,jdbcType=VARCHAR}, #{timeLength,jdbcType=VARCHAR}, 
+      #{type,jdbcType=SMALLINT}, #{pubDate,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, 
+      #{siteCode,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.xh.media.model.IndexXhMediaProgram" >
+    insert into index_xh_media_program
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="globalId != null" >
+        GLOBAL_ID,
+      </if>
+      <if test="chineseName != null" >
+        CHINESE_NAME,
+      </if>
+      <if test="channelId != null" >
+        CHANNEL_ID,
+      </if>
+      <if test="timeLength != null" >
+        TIME_LENGTH,
+      </if>
+      <if test="type != null" >
+        TYPE,
+      </if>
+      <if test="pubDate != null" >
+        PUB_DATE,
+      </if>
+      <if test="source != null" >
+        SOURCE,
+      </if>
+      <if test="siteCode != null" >
+        SITE_CODE,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="globalId != null" >
+        #{globalId,jdbcType=VARCHAR},
+      </if>
+      <if test="chineseName != null" >
+        #{chineseName,jdbcType=VARCHAR},
+      </if>
+      <if test="originId != null" >
+        #{originId,jdbcType=VARCHAR},
+      </if>
+      <if test="channelId != null" >
+        #{channelId,jdbcType=VARCHAR},
+      </if>
+      <if test="timeLength != null" >
+        #{timeLength,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=SMALLINT},
+      </if>
+      <if test="pubDate != null" >
+        #{pubDate,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="siteCode != null" >
+        #{siteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xh.media.model.IndexXhMediaProgram" >
+    update index_xh_media_program
+    <set >
+      <if test="globalId != null" >
+        GLOBAL_ID = #{globalId,jdbcType=VARCHAR},
+      </if>
+      <if test="chineseName != null" >
+        CHINESE_NAME = #{chineseName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelId != null" >
+        CHANNEL_ID = #{channelId,jdbcType=VARCHAR},
+      </if>
+      <if test="timeLength != null" >
+        TIME_LENGTH = #{timeLength,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        TYPE = #{type,jdbcType=SMALLINT},
+      </if>
+      <if test="pubDate != null" >
+        PUB_DATE = #{pubDate,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        SOURCE = #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="siteCode != null" >
+        SITE_CODE = #{siteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xh.media.model.IndexXhMediaProgram" >
+    update index_xh_media_program
+    set GLOBAL_ID = #{globalId,jdbcType=VARCHAR},
+      CHINESE_NAME = #{chineseName,jdbcType=VARCHAR},
+      CHANNEL_ID = #{channelId,jdbcType=VARCHAR},
+      TIME_LENGTH = #{timeLength,jdbcType=VARCHAR},
+      TYPE = #{type,jdbcType=SMALLINT},
+      PUB_DATE = #{pubDate,jdbcType=VARCHAR},
+      SOURCE = #{source,jdbcType=VARCHAR},
+      SITE_CODE = #{siteCode,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=TINYINT},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="getProgramByChannel" resultMap="BaseResultMap">
+  	SELECT 
+    <include refid="Base_Column_List" />
+    From index_xh_media_program where SITE_CODE = #{siteCode,jdbcType=VARCHAR} AND channel_id = #{channelId,jdbcType=VARCHAR} GROUP BY GLOBAL_ID 
+  </select>
+  
+  <select id="getProgramByGlobalIdAndSiteCode" resultMap="BaseResultMap">
+      SELECT id,global_id,chinese_name,origin_id,channel_id,time_length,type,pub_date,source,site_code,status,create_time FROM index_xh_media_program WHERE global_id=#{0} AND site_code=#{1} LIMIT 1
+  </select>
+</mapper>

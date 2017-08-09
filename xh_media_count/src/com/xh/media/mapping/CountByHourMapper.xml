@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xh.media.dao.CountByHourMapper" >
+  <resultMap id="BaseResultMap" type="com.xh.media.model.CountByHour" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="DATE" property="date" jdbcType="VARCHAR" />
+    <result column="HOUR" property="hour" jdbcType="VARCHAR" />
+    <result column="SORT" property="sort" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="GLOBAL_ID" property="globalId" jdbcType="VARCHAR" />
+    <result column="ORDER_NUMBER" property="orderNumber" jdbcType="INTEGER" />
+    <result column="COMPLETE_NUMBER" property="completeNumber" jdbcType="INTEGER" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="FEE" property="fee" jdbcType="DECIMAL" />
+    <result column="URL" property="url" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="startTime" property="startTime" jdbcType="VARCHAR" />
+    <result column="endTime" property="endTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, DATE, HOUR, SORT, NAME, GLOBAL_ID, ORDER_NUMBER, COMPLETE_NUMBER, PRICE, FEE, 
+    URL, CREATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from count_by_hour
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from count_by_hour
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.xh.media.model.CountByHour" >
+    insert into count_by_hour (ID, DATE, HOUR, 
+      SORT, NAME, GLOBAL_ID, 
+      ORDER_NUMBER, COMPLETE_NUMBER, PRICE, 
+      FEE, URL, CREATE_TIME
+      )
+    values (#{id,jdbcType=INTEGER}, #{date,jdbcType=VARCHAR}, #{hour,jdbcType=VARCHAR}, 
+      #{sort,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{globalId,jdbcType=VARCHAR}, 
+      #{orderNumber,jdbcType=INTEGER}, #{completeNumber,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL}, 
+      #{fee,jdbcType=DECIMAL}, #{url,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.xh.media.model.CountByHour" >
+    insert into count_by_hour
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="date != null" >
+        DATE,
+      </if>
+      <if test="hour != null" >
+        HOUR,
+      </if>
+      <if test="sort != null" >
+        SORT,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="globalId != null" >
+        GLOBAL_ID,
+      </if>
+      <if test="orderNumber != null" >
+        ORDER_NUMBER,
+      </if>
+      <if test="completeNumber != null" >
+        COMPLETE_NUMBER,
+      </if>
+      <if test="price != null" >
+        PRICE,
+      </if>
+      <if test="fee != null" >
+        FEE,
+      </if>
+      <if test="url != null" >
+        URL,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="date != null" >
+        #{date,jdbcType=VARCHAR},
+      </if>
+      <if test="hour != null" >
+        #{hour,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="globalId != null" >
+        #{globalId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNumber != null" >
+        #{orderNumber,jdbcType=INTEGER},
+      </if>
+      <if test="completeNumber != null" >
+        #{completeNumber,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="fee != null" >
+        #{fee,jdbcType=DECIMAL},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xh.media.model.CountByHour" >
+    update count_by_hour
+    <set >
+      <if test="date != null" >
+        DATE = #{date,jdbcType=VARCHAR},
+      </if>
+      <if test="hour != null" >
+        HOUR = #{hour,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        SORT = #{sort,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="globalId != null" >
+        GLOBAL_ID = #{globalId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNumber != null" >
+        ORDER_NUMBER = #{orderNumber,jdbcType=INTEGER},
+      </if>
+      <if test="completeNumber != null" >
+        COMPLETE_NUMBER = #{completeNumber,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        PRICE = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="fee != null" >
+        FEE = #{fee,jdbcType=DECIMAL},
+      </if>
+      <if test="url != null" >
+        URL = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xh.media.model.CountByHour" >
+    update count_by_hour
+    set DATE = #{date,jdbcType=VARCHAR},
+      HOUR = #{hour,jdbcType=VARCHAR},
+      SORT = #{sort,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      GLOBAL_ID = #{globalId,jdbcType=VARCHAR},
+      ORDER_NUMBER = #{orderNumber,jdbcType=INTEGER},
+      COMPLETE_NUMBER = #{completeNumber,jdbcType=INTEGER},
+      PRICE = #{price,jdbcType=DECIMAL},
+      FEE = #{fee,jdbcType=DECIMAL},
+      URL = #{url,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getCountByHourList" resultMap="BaseResultMap">
+       select 
+    <include refid="Base_Column_List" />
+    from count_by_hour 
+      ORDER BY
+      <foreach collection="orderList" index="index" item="item" separator=",">
+                ${item}       
+      </foreach>
+  </select>
+  
+  <select id="getSortList" resultMap="BaseResultMap">
+    SELECT SORT FROM count_by_hour GROUP BY SORT  ORDER BY DATE
+  </select>
+  
+  <select id="getProgramNameList" resultMap="BaseResultMap">
+  SELECT NAME ,GLOBAL_ID FROM count_by_hour WHERE 
+        <if test="sort != null" >
+        SORT = #{sort,jdbcType=VARCHAR}
+      </if>
+    ORDER BY DATE
+  </select>
+  
+  <select id="searchProgram" resultMap="BaseResultMap">
+     select 
+    <include refid="Base_Column_List" />
+    from count_by_hour where 
+      <if test="sort != null" >
+        SORT = #{sort,jdbcType=VARCHAR} AND 
+      </if>
+      <if test="globalId != null" >
+        GLOBAL_ID = #{globalId,jdbcType=VARCHAR} AND
+      </if>
+       date between #{startTime,jdbcType=VARCHAR} AND #{endTime,jdbcType=VARCHAR} 
+         ORDER BY
+      <foreach collection="orderList" index="index" item="item" separator=",">
+                ${item}       
+      </foreach>
+  </select>
+  
+  <select id="selectCountByHourDataSum" resultMap="BaseResultMap">
+ SELECT SUM(ORDER_NUMBER) AS ORDER_NUMBER ,SUM(COMPLETE_NUMBER) AS COMPLETE_NUMBER,SUM(FEE) AS FEE FROM count_by_hour
+  </select>
+</mapper>

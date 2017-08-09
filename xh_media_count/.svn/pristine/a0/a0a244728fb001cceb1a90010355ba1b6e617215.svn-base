@@ -1,0 +1,275 @@
+<script type="text/javascript">
+$(function(){ 
+    //dept 
+     $('#dept').combobox({
+            valueField:'id', //值字段
+            textField:'name', //显示的字段
+            url:'getdeptlist',
+            panelHeight:'70',
+            editable:false,//不可编辑，只能选择
+            onLoadSuccess: function () {  //加载完成后,设置选中第一项               
+            }  
+         });
+         var data = [['0', '否'], ['1', '是']];
+         $('#isAdmin').combobox({
+         	data:data,
+            valueField:0, //值字段
+            textField:1, //显示的字段
+            editable:false,//不可编辑，只能选择
+         });
+         $('#isAdmin-modify').combobox({
+         	data:data,
+            valueField:0, //值字段
+            textField:1, //显示的字段
+            editable:false,//不可编辑，只能选择
+         });
+    });
+</script>
+<div class="easyui-layout" data-options="fit:true">
+<!-- Begin of toolbar -->
+    <div id="wu-toolbar-7">
+        <div class="wu-toolbar-button">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openAdd()" plain="true">添加</a>
+        </div>
+    </div>
+    <!-- End of toolbar -->
+    <table id="wu-datagrid-7" class="easyui-datagrid" toolbar="#wu-toolbar-7"></table>
+</div>
+<!-- Begin of easyui-dialog -->
+<div id="wu-dialog-7" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
+	<form id="wu-form-7" method="post">
+        <table>
+            <tr>
+                <td width="60" align="right">ID:</td>
+                <td><input type="text" name="userAccount" id="userAccount" class="wu-text" /></td>
+            </tr>
+            <tr>
+                <td align="right">名称:</td>
+                <td><input type="text" name="userName" id="userName" class="wu-text" /></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<!-- End of easyui-dialog -->
+<!-- Begin of easyui-dialog-modify -->
+<div id="wu-dialog-7-modify" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
+	<form id="wu-form-7-modify" method="post">
+        <table>
+            <tr>
+                <td width="60" align="right">ID:</td>
+                <td><input type="text" name="ID-modify" id="ID-modify" class="wu-text" /></td>
+            </tr>
+            <tr>
+                <td align="right">名称:</td>
+                <td><input type="text" name="Name-modify" id="Name-modify" class="wu-text" /></td>
+            </tr>
+        </table>
+        <input type="hidden" id="oldID-modify" name="oldID-modify" />
+    </form>
+</div>
+<!-- End of easyui-dialog-modify -->
+<script type="text/javascript">
+	/**
+	* Name 分页过滤器
+	*/
+	function pagerFilter(data){            
+		if (typeof data.length == 'number' && typeof data.splice == 'function'){// is array                
+			data = {                   
+				total: data.length,                   
+				rows: data               
+			}            
+		}        
+		var dg = $(this);         
+		var opts = dg.datagrid('options');          
+		var pager = dg.datagrid('getPager');          
+		pager.pagination({                
+			onSelectPage:function(pageNum, pageSize){                 
+				opts.pageNumber = pageNum;                   
+				opts.pageSize = pageSize;                
+				pager.pagination('refresh',{pageNumber:pageNum,pageSize:pageSize});                  
+				dg.datagrid('loadData',data);                
+			}          
+		});           
+		if (!data.originalRows){               
+			data.originalRows = (data.rows);       
+		}         
+		var start = (opts.pageNumber-1)*parseInt(opts.pageSize);          
+		var end = start + parseInt(opts.pageSize);        
+		data.rows = (data.originalRows.slice(start, end));         
+		return data;       
+	}
+	
+	/**
+	* Name 载入数据
+	*/
+	
+	$('#wu-datagrid-7').datagrid({
+		url:'sysGroupslist',
+		loadFilter:pagerFilter,		
+		rownumbers:true,
+		singleSelect:false,
+		pageList : [20],//可以选择的分页集合
+		pageSize:20,           
+		pagination:true,
+		multiSort:true,
+		fitColumns:true,
+		fit:true,
+		columns:[[
+			{field:'id',title:'ID',width:20},
+			{field:'name',title:'名称',width:20},
+			{field:'createDate',title:'创建时间',width:20,formatter: formatDatebox},
+		]],
+		onDblClickRow:function(rowIndex, rowData){
+			$('#wu-form-7').form('clear');
+			$('#wu-form-7-modify').form('clear');
+			$('#ID-modify').val(rowData.id);
+			$('#Name-modify').val(rowData.name);
+			$('#oldID-modify').val(rowData.id);
+			$('#wu-dialog-7-modify').dialog({
+				closed: false,
+				modal:true,
+	            title: "添加信息",
+	            buttons: [{
+	                text: '确定',
+	                iconCls: 'icon-ok',
+	                handler: update
+	            }, {
+	                text: '取消',
+	                iconCls: 'icon-cancel',
+	                handler: function () {
+	                    $('#wu-dialog-7-modify').dialog('close');                    
+	                }
+	            }]
+	        });
+		}
+	});
+	
+	/**
+	* Name 更新记录
+	*/
+	function update(){
+		var $userAccount = $('#ID-modify');
+		var $userName = $('#Name-modify');
+		var $oldID=$('#oldID-modify');
+            if ($userAccount.val() == '') {
+                $.messager.alert('系统提示', '请输ID！', 'warning');
+                return false;
+            }
+            if ($userName.val() == '') {
+                $.messager.alert('系统提示', '请输入名称！', 'warning');
+                return false;
+            }
+            $('#wu-form-7-modify').form('submit', {
+			url:'sysGroupsupdate',
+			success:function(data){
+				if(data){
+					if(data=='true'){
+						$.messager.alert('信息提示','提交成功！','info');
+						$('#wu-dialog-7-modify').dialog('close');
+						$('#wu-datagrid-7').datagrid('reload');
+					}else if(data=='repeat'){
+						$.messager.alert('信息提示','帐户名重复，请重新添加！','info');
+					}
+				}
+				else
+				{
+					$.messager.alert('信息提示','提交失败！','info');
+				}
+			}
+		});
+	}
+	
+	/**
+	* Name 添加记录
+	*/
+	function add(){
+		var $userAccount = $('#userAccount');
+		var $userName = $('#userName');
+            if ($userAccount.val() == '') {
+                $.messager.alert('系统提示', '请输入ID！', 'warning');
+                return false;
+            }
+            if ($userName.val() == '') {
+                $.messager.alert('系统提示', '请输入名称！', 'warning');
+                return false;
+            }
+            $('#wu-form-7').form('submit', {
+			url:'sysGroupsinsert',
+			success:function(data){
+				if(data){
+					if(data=='true'){
+						$.messager.alert('信息提示','提交成功！','info');
+						$('#wu-dialog-7').dialog('close');
+						$('#wu-datagrid-7').datagrid('reload');
+					}else if(data=='repeat'){
+						$.messager.alert('信息提示','帐户名重复，请重新添加！','info');
+					}
+				}
+				else
+				{
+					$.messager.alert('信息提示','提交失败！','info');
+				}
+			}
+		});
+	}
+	
+	/**
+	* Name 打开添加窗口
+	*/
+	function openAdd(){
+		$('#wu-form-7').form('clear');
+		$('#wu-dialog-7').dialog({
+			closed: false,
+			modal:true,
+            title: "添加信息",
+            buttons: [{
+                text: '确定',
+                iconCls: 'icon-ok',
+                handler: add
+            }, {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $('#wu-dialog-7').dialog('close');                    
+                }
+            }]
+        });
+        
+	}
+	
+	/**
+	*Name 删除操作
+	*/
+	function remove(){
+		var rows = $('#wu-datagrid-7').datagrid('getSelections');
+		var ids="";
+		for(var i=0;i<rows.length;i++){
+			ids += rows[i].id+",";
+		}
+		//alert(ids);
+		$.ajax({
+         type : "post",
+         async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+         url : "sysuserdelete?ids="+ids,    //请求发送到TestServlet处
+         data : {},
+         dataType : "text",        //返回数据形式为json
+         success : function(result) {
+         //alert(result);
+             //请求成功时执行该函数内容，result即为服务器返回的json对象
+             if (result) {
+             	if(result=='true'){
+             		alert("用户删除成功！");
+             		$('#wu-datagrid-7').datagrid('reload');
+             	}
+             }else{
+             	alert("用户无法删除!");
+             }
+         
+        },
+         error : function(errorMsg) {
+             //请求失败时执行该函数
+         alert("数据删除失败!");
+         }
+    })
+	}
+</script>

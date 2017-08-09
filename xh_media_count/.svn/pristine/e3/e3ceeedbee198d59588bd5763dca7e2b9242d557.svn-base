@@ -1,0 +1,228 @@
+package com.xh.media.controller;
+
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.google.gson.Gson;
+import com.xh.media.model.LogDayXhMediaNewProgram;
+import com.xh.media.model.LogXhMediaNewProgram;
+import com.xh.media.service.LogDayXhMediaNewProgramService;
+import com.xh.media.service.LogXhMediaNewProgramService;
+
+@Controller
+public class NewProgramController {
+	
+	private ApplicationContext context;
+	private Gson gson;
+	private LogDayXhMediaNewProgramService logDayXhMediaNewProgramService;
+	private LogXhMediaNewProgramService  logXhMediaNewProgramService;
+	public NewProgramController() {
+		context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		gson = new Gson();
+		logDayXhMediaNewProgramService=(LogDayXhMediaNewProgramService) context.getBean("logDayXhMediaNewProgramService");
+		logXhMediaNewProgramService=(LogXhMediaNewProgramService) context.getBean("logXhMediaNewProgramService");
+	}
+
+	/**
+	 * 获取节目统计列表数据
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 */
+	@RequestMapping("/getNewProgram")
+	public void getProgramData(HttpServletRequest request,HttpServletResponse response) throws IOException{
+		LogDayXhMediaNewProgram program= initData(request);
+		if (program.getSiteCode()==null&&program.getOriginId()==null&&program.getChannelId()==null&&program.getPartId()==null&&program.getGlobalId()==null) {
+			List<LogDayXhMediaNewProgram> newProgramList = logDayXhMediaNewProgramService.getNewProgramList();
+			for (LogDayXhMediaNewProgram logDayXhMediaNewProgram : newProgramList) {
+				int playUserNumber = logDayXhMediaNewProgram.getPlayUserNumber();
+				int timeLength = logDayXhMediaNewProgram.getTimeLength();
+				if (playUserNumber>=0&&timeLength>=0) {
+					int  playTime = logDayXhMediaNewProgram.getPlayTime();
+					int average=playTime/playUserNumber;
+					logDayXhMediaNewProgram.setAlreadyPlay(Integer.toString(average/timeLength));
+				}
+			}
+			Map map=new HashMap();
+			map.put("rows", newProgramList);
+			map.put("total", newProgramList.size());
+			String result = gson.toJson(map);
+			response.setCharacterEncoding("utf-8");
+			response.getWriter().write(result);
+			response.getWriter().close();
+		}else{
+			searchProgram(program, request, response);
+		}
+		
+	}
+	
+	/**
+	 * 检索列表数据
+	 * @param program
+	 * @param request
+	 * @param response
+	 */
+	public void searchProgram(LogDayXhMediaNewProgram program,HttpServletRequest request,HttpServletResponse response){
+		
+		List<LogDayXhMediaNewProgram> searchNewProgramList = logDayXhMediaNewProgramService.searchNewProgramList(program);
+		for (LogDayXhMediaNewProgram logDayXhMediaNewProgram : searchNewProgramList) {
+			int playUserNumber = logDayXhMediaNewProgram.getPlayUserNumber();
+			int timeLength = logDayXhMediaNewProgram.getTimeLength();
+			if (playUserNumber>=0&&timeLength>=0) {
+				int  playTime = logDayXhMediaNewProgram.getPlayTime();
+				int average=playTime/playUserNumber;
+				logDayXhMediaNewProgram.setAlreadyPlay(Integer.toString(average/timeLength));
+			}
+		}
+		Map map=new HashMap();
+		map.put("rows", searchNewProgramList);
+		map.put("total", searchNewProgramList.size());
+		String result = gson.toJson(map);
+		response.setCharacterEncoding("utf-8");
+		try {
+			response.getWriter().write(result);
+			response.getWriter().close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 对接收到的参数做初始化
+	 * @param request
+	 */
+	private LogDayXhMediaNewProgram initData(HttpServletRequest request) {
+		LogDayXhMediaNewProgram newProgram=new LogDayXhMediaNewProgram();
+		if (request.getParameter("siteCode")!=null&&!"".equals(request.getParameter("siteCode"))) {
+			newProgram.setSiteCode(request.getParameter("siteCode"));
+		}
+		if (request.getParameter("originId")!=null&&!"".equals(request.getParameter("originId"))) {
+			newProgram.setOriginId(request.getParameter("originId"));
+		}		
+		if (request.getParameter("channelId")!=null&&!"".equals(request.getParameter("channelId"))) {
+			newProgram.setChannelId(request.getParameter("channelId"));
+		}		
+		if (request.getParameter("partId")!=null&&!"".equals(request.getParameter("partId"))) {
+			newProgram.setPartId(request.getParameter("partId"));
+		}	
+		if (request.getParameter("globalId")!=null&&!"".equals(request.getParameter("globalId"))) {
+			newProgram.setGlobalId(request.getParameter("globalId"));
+		}
+		if (request.getParameter("startTime")!=null&&!"".equals(request.getParameter("startTime"))) {
+			newProgram.setStartTime(request.getParameter("startTime"));
+		}	
+		if (request.getParameter("endTime")!=null&&!"".equals(request.getParameter("endTime"))) {
+			newProgram.setStartTime(request.getParameter("startTime"));
+		}
+		
+//		String startTime="";
+//		if (request.getParameter("startTime")!=null) {
+//			startTime=request.getParameter("startTime");
+//		}	
+//		if("".equals(startTime)){
+//			startTime = "1900-01-01";
+//			newProgram.setStartTime(startTime);
+//		}
+//		String endTime="";
+//		if (request.getParameter("endTime")!=null) {
+//			endTime=request.getParameter("endTime");
+//		}
+//		if("".equals(endTime)){
+//			Timestamp ts = new Timestamp(System.currentTimeMillis());
+//			String nowTime = ts+"";
+//			endTime = nowTime.substring(0,10);
+//			newProgram.setEndTime(endTime);
+//		}
+		return newProgram;
+	}
+	
+	@RequestMapping("/getNewProgramDetail")
+	public void getProgramDetail(HttpServletRequest request,HttpServletResponse response){
+		LogDayXhMediaNewProgram newProgram_day = initData(request);
+		if (newProgram_day.getStartTime()==null&&newProgram_day.getEndTime()==null) {
+			LogXhMediaNewProgram newProgram=new LogXhMediaNewProgram();
+			newProgram.setGlobalId(newProgram_day.getStartTime());
+			newProgram.setSiteCode(newProgram_day.getSiteCode());
+			List<LogXhMediaNewProgram> newProgramDetail = logXhMediaNewProgramService.getNewProgramDetail(newProgram);
+			for (LogXhMediaNewProgram logXhMediaNewProgram : newProgramDetail) {
+				int playUserNumber = logXhMediaNewProgram.getPlayUserNumber();
+				int timeLength = logXhMediaNewProgram.getTimeLength();
+				if (playUserNumber>=0&&timeLength>=0) {
+					int  playTime = logXhMediaNewProgram.getPlayTime();
+					int average=playTime/playUserNumber;
+					logXhMediaNewProgram.setAlreadyPlay(Integer.toString(average/timeLength));
+				}
+			}
+			Map map=new HashMap();
+			map.put("rows", newProgramDetail);
+			map.put("total", newProgramDetail.size());
+			String result = gson.toJson(map);
+			response.setCharacterEncoding("utf-8");
+			try {
+				response.getWriter().write(result);
+				response.getWriter().close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	  }else{
+		  searchDetail(newProgram_day, request, response);
+	  }
+	}
+	
+	/**
+	 * 搜索详情页
+	 * @param newProgram_day
+	 * @param request
+	 * @param response
+	 */
+	public void searchDetail(LogDayXhMediaNewProgram newProgram_day,HttpServletRequest request,HttpServletResponse response){
+		LogXhMediaNewProgram newProgram=new LogXhMediaNewProgram();
+		newProgram.setGlobalId(newProgram_day.getGlobalId());
+		newProgram.setSiteCode(newProgram_day.getSiteCode());
+		if (newProgram_day.getStartTime()==null) {
+			newProgram.setStartTime("1900-01-01");
+		}else{
+			newProgram.setStartTime(newProgram_day.getStartTime());
+		}
+		if (newProgram_day.getEndTime()==null) {
+			Timestamp ts = new Timestamp(System.currentTimeMillis());
+			String nowTime = ts+"";
+			newProgram.setEndTime("nowTime.substring(0,10)");
+		}else{
+			newProgram.setEndTime(newProgram_day.getEndTime());
+			
+		}
+		List<LogXhMediaNewProgram> searchNewProgramDetail = logXhMediaNewProgramService.searchNewProgramDetail(newProgram);
+		for (LogXhMediaNewProgram logXhMediaNewProgram : searchNewProgramDetail) {
+			int playUserNumber = logXhMediaNewProgram.getPlayUserNumber();
+			int timeLength = logXhMediaNewProgram.getTimeLength();
+			if (playUserNumber>=0&&timeLength>=0) {
+				int  playTime = logXhMediaNewProgram.getPlayTime();
+				int average=playTime/playUserNumber;
+				logXhMediaNewProgram.setAlreadyPlay(Integer.toString(average/timeLength));
+			}
+		}
+		Map map=new HashMap();
+		map.put("rows", searchNewProgramDetail);
+		map.put("total", searchNewProgramDetail.size());
+		String result = gson.toJson(map);
+		response.setCharacterEncoding("utf-8");
+		try {
+			response.getWriter().write(result);
+			response.getWriter().close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+}
