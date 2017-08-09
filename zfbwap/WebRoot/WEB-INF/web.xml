@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" 
+	xmlns="http://java.sun.com/xml/ns/javaee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+  <display-name></display-name>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>wappay</servlet-name>
+    <servlet-class>com.xh.zfb.servlet.Wappay</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>notify</servlet-name>
+    <servlet-class>com.xh.zfb.servlet.Notify</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>Returnurl</servlet-name>
+    <servlet-class>com.xh.zfb.servlet.Returnurl</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>RecordVisitLog</servlet-name>
+    <servlet-class>com.xh.zfb.servlet.RecordVisitLog</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>CheckOrderStatus</servlet-name>
+    <servlet-class>com.xh.zfb.servlet.CheckOrderStatus</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>WappayApp</servlet-name>
+    <servlet-class>com.xh.zfb.servlet.WappayApp</servlet-class>
+  </servlet>
+
+
+
+
+
+
+  <servlet-mapping>
+    <servlet-name>wappay</servlet-name>
+    <url-pattern>/wappay</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>notify</servlet-name>
+    <url-pattern>/notify</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Returnurl</servlet-name>
+    <url-pattern>/returnurl</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>RecordVisitLog</servlet-name>
+    <url-pattern>/recordVisitLog</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>CheckOrderStatus</servlet-name>
+    <url-pattern>/checkOrderStatus</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>WappayApp</servlet-name>
+    <url-pattern>/wappayapp</url-pattern>
+  </servlet-mapping>	
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+  <filter>
+    <filter-name>CorsFilter</filter-name>
+    <filter-class>com.xh.zfb.filter.CORSFilter</filter-class>
+	</filter>
+ 
+  <filter-mapping>
+    <filter-name>CorsFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+</web-app>
