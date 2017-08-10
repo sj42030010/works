@@ -79,5 +79,27 @@ public class OriginController extends AbstractController {
 		
 	}
 	
+	@RequestMapping("/getOriginBySite")
+	public void getOriginBySite(HttpServletRequest request,HttpServletResponse response)throws Exception{
+		List<SysGroups> groupList = (List<SysGroups>) request.getSession().getAttribute("groups");
+		List siteList = new ArrayList();
+		for(SysGroups sg:groupList)
+		{
+			siteList.add(sg.getId());
+		}
+		List<IndexXhMediaOrigin> originList = new ArrayList<IndexXhMediaOrigin>();
+		
+		IndexXhMediaOrigin ixmo = new IndexXhMediaOrigin();
+		ixmo.setSiteList(siteList);
+		
+		originList = indexXhMediaOriginService.getOriginBySiteCode(ixmo);
+			
+		String resultStr1 = gson.toJson(originList);
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().write(resultStr1);
+		response.getWriter().flush();
+		response.getWriter().close();
+	}
+	
 
 }

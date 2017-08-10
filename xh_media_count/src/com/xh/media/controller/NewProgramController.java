@@ -157,7 +157,7 @@ public class NewProgramController {
 			String programName = "";
 			SysGroups sg = sysGroupsService.selectByPrimaryKey(Integer.parseInt(logDayXhMediaNewProgram.getSiteCode()));
 			siteName = sg.getName();
-			originName = indexXhMediaOriginService.getOriginNameByOriginId(logDayXhMediaNewProgram.getOriginId());
+			originName = indexXhMediaOriginService.getOriginNameByOriginId(logDayXhMediaNewProgram.getOriginId(), logDayXhMediaNewProgram.getSiteCode());
 			IndexXhMediaChannel channel = new IndexXhMediaChannel();
 			channel = indexXhMediaChannelService.getChannelByChannelIdAndSiteCode(logDayXhMediaNewProgram.getChannelId(), logDayXhMediaNewProgram.getSiteCode());
 			if(channel != null)
@@ -408,7 +408,7 @@ public class NewProgramController {
 			String programName = "";
 			SysGroups sg = sysGroupsService.selectByPrimaryKey(Integer.parseInt(logDayXhMediaNewProgram.getSiteCode()));
 			siteName = sg.getName();
-			originName = indexXhMediaOriginService.getOriginNameByOriginId(logDayXhMediaNewProgram.getOriginId());
+			originName = indexXhMediaOriginService.getOriginNameByOriginId(logDayXhMediaNewProgram.getOriginId(),logDayXhMediaNewProgram.getSiteCode());
 			IndexXhMediaChannel channel = new IndexXhMediaChannel();
 			channel = indexXhMediaChannelService.getChannelByChannelIdAndSiteCode(logDayXhMediaNewProgram.getChannelId(), logDayXhMediaNewProgram.getSiteCode());
 			if(channel != null)
@@ -535,7 +535,7 @@ public class NewProgramController {
 			String programName = "";
 			SysGroups sg = sysGroupsService.selectByPrimaryKey(Integer.parseInt(logDayXhMediaNewProgram.getSiteCode()));
 			siteName = sg.getName();
-			originName = indexXhMediaOriginService.getOriginNameByOriginId(logDayXhMediaNewProgram.getOriginId());
+			originName = indexXhMediaOriginService.getOriginNameByOriginId(logDayXhMediaNewProgram.getOriginId(), logDayXhMediaNewProgram.getSiteCode());
 			IndexXhMediaChannel channel = new IndexXhMediaChannel();
 			channel = indexXhMediaChannelService.getChannelByChannelIdAndSiteCode(logDayXhMediaNewProgram.getChannelId(), logDayXhMediaNewProgram.getSiteCode());
 			if(channel != null)

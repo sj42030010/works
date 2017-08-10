@@ -4,6 +4,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		
 		<property name="url"
 			value="jdbc:mysql://db.ctv-cloud.com:3306/xh_media_count?characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull"></property>
 		<property name="username" value="tidecms"></property>
@@ -14,13 +15,14 @@
 		<property name="defaultAutoCommit" value="false"></property>
 		 
 		<!--<property name="url"
-			value="jdbc:mysql://localhost:3306/xh_media_count?characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull"></property>
-		<property name="username" value="root"></property>
-		<property name="password" value=""></property>
+			value="jdbc:mysql://localhost:3306/xh_media_count2?characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull"></property>
+		<property name="username" value="songjian"></property>
+		<property name="password" value="773726791231"></property>
 		<property name="maxActive" value="100"></property>
 		<property name="maxIdle" value="30"></property>
 		<property name="maxWait" value="500"></property>
 		<property name="defaultAutoCommit" value="false"></property> -->
+		
 	</bean>
 	<!-- <bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">

@@ -1,6 +1,7 @@
 package com.xh.media.model;
 
 import java.util.Date;
+import java.util.List;
 
 public class IndexXhMediaOrigin {
     private Integer id;
@@ -14,8 +15,18 @@ public class IndexXhMediaOrigin {
     private Byte status;
 
     private Date createTime;
+    
+    private List siteList;
 
-    public Integer getId() {
+    public List getSiteList() {
+		return siteList;
+	}
+
+	public void setSiteList(List siteList) {
+		this.siteList = siteList;
+	}
+
+	public Integer getId() {
         return id;
     }
 

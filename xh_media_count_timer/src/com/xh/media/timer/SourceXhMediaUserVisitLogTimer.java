@@ -123,6 +123,10 @@ public class SourceXhMediaUserVisitLogTimer {
 								{
 									publishDate = map.get("publishDate").toString();
 								}
+								if("".equals(timeLength))
+								{
+									timeLength = "0";
+								}
 								IndexProgramBean ipb= new IndexProgramBean();
 								ipb.setChannelId(svb.getChannelId());
 								ipb.setGlobalId(svb.getGlobalId());

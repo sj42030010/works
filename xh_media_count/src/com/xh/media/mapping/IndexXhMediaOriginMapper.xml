@@ -107,16 +107,24 @@
   <select id="getAllOrigin" resultMap="BaseResultMap">
   	SELECT 
     <include refid="Base_Column_List" />
-    FROM index_xh_media_origin GROUP BY ORIGIN_ID ORDER BY ORIGIN_ID
+    FROM index_xh_media_origin WHERE origin_id!='0' GROUP BY ORIGIN_ID ORDER BY ORIGIN_ID
   </select>
   
   <select id="getAllOriginBySiteCode" resultMap="BaseResultMap">
   	SELECT 
     <include refid="Base_Column_List" />
-    FROM index_xh_media_origin WHERE site_code=#{0} GROUP BY ORIGIN_ID ORDER BY ORIGIN_ID
+    FROM index_xh_media_origin WHERE site_code=#{0} AND origin_id!='0' GROUP BY ORIGIN_ID ORDER BY ORIGIN_ID
   </select>
   
   <select id="getOriginNameByOriginId" resultType="java.lang.String">
-      SELECT origin_name FROM index_xh_media_origin WHERE origin_id=#{0} LIMIT 1
+      SELECT origin_name FROM index_xh_media_origin WHERE origin_id=#{0} AND site_code=#{1} LIMIT 1
+  </select>
+  
+  <select id="getOriginBySiteCode" resultMap="BaseResultMap">
+      SELECT id,origin_id,origin_name,site_code,status,create_time FROM index_xh_media_origin WHERE site_code IN
+      <foreach collection="siteList" index="index" item="item" open="(" separator="," close=")">
+                #{item}       
+      </foreach>
+      AND origin_id!='0' GROUP BY origin_id ORDER BY origin_id
   </select>
 </mapper>

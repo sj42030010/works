@@ -21,5 +21,7 @@ public interface IndexXhMediaOriginMapper {
     
     List<IndexXhMediaOrigin> getAllOriginBySiteCode(String siteCode);
     
-    String getOriginNameByOriginId(String originId);
+    String getOriginNameByOriginId(String originId, String siteCode);
+    
+    List<IndexXhMediaOrigin> getOriginBySiteCode(IndexXhMediaOrigin record);
 }

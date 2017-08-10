@@ -63,7 +63,12 @@ public class IndexXhMediaOriginServiceImpl implements IndexXhMediaOriginService 
 	}
 	
 	@Override
-	public String getOriginNameByOriginId(String originId){
-		return indexXhMediaOriginMapper.getOriginNameByOriginId(originId);
+	public String getOriginNameByOriginId(String originId, String siteCode){
+		return indexXhMediaOriginMapper.getOriginNameByOriginId(originId, siteCode);
+	}
+	
+	@Override
+	public List<IndexXhMediaOrigin> getOriginBySiteCode(IndexXhMediaOrigin record){
+		return indexXhMediaOriginMapper.getOriginBySiteCode(record);
 	}
 }
