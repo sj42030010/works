@@ -1,0 +1,948 @@
+<script type="text/javascript">
+$(function(){ 
+    //渠道 
+     $('#originId_4').combobox({
+            valueField:'id', //值字段
+            textField:'name', //显示的字段
+            url:'origin',
+            panelHeight:'300',
+            editable:true,//不可编辑，只能选择
+            onLoadSuccess: function () {  
+             var data = $('#originId_4').combobox('getData');
+                 if (data[0].id!=null) {
+				  //$('#originId_4').combobox('select', data[0].id);	
+				}
+             },
+            onChange:function(originId){
+                //$('#city').combobox('clear');
+                $('#channelId_4').combobox({
+                valueField:'originId', //值字段
+                textField:'originName', //显示的字段
+                url:'channel?action=2&originId='+originId,
+                panelHeight:'300',
+                editable:true,//不可编辑，只能选择
+            });
+            }
+         });
+    //频道 
+    $('#channelId_4').combobox({
+            valueField:'originId', //值字段
+            textField:'originName', //显示的字段
+            url:'channel?action=2&originId=${user.originId}',
+            panelHeight:'300',
+            editable:true,//不可编辑，只能选择
+         });
+    });
+</script>
+
+<div class="easyui-layout" data-options="fit:true" style="overflow:auto;width:400px;height:500px">
+
+ <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div id="echarts_4" style="height:400px;width: 1000px"></div>
+<!-- ECharts单文件引入 -->  
+<script src="js/dist/echarts.js"></script>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts图表
+    var myChart = echarts.init(document.getElementById("echarts_4"));
+    var option = {
+        title : {
+            text: '时间趋势图'
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:[]
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : []
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value',
+                axisLabel : {
+                    formatter: '{value}'
+                }
+            }
+        ],
+        series : [
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'line',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'line',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'line',
+                data:[]
+            }
+        ]
+    };
+
+    myChart.showLoading();    //数据加载完之前先显示一段简单的loading动画
+    $.ajax({
+         type : "post",
+         async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+         url : "newandolduser?action=2",    //请求发送到TestServlet处
+         data : {},
+         dataType : "json",        //返回数据形式为json
+         success : function(result) {
+         //alert(result);
+             //请求成功时执行该函数内容，result即为服务器返回的json对象
+             if (result) {
+             		//alert("result true!"+result.rows[0].pv);
+                     for(var i=0;i<result.total;i++){ 
+                       //names.push(result[i].name);    //挨个取出类别并填入类别数组
+                       option.xAxis[0].data.push(result.rows[i].date);
+                     }
+                    for(var i=0;i<result.total;i++){
+                        option.series[0].data.push(result.rows[i].newUser);
+                        option.series[1].data.push(result.rows[i].activeUser);
+                        option.series[2].data.push(result.rows[i].useLength);
+                          } 
+                          option.series[0].name='新增用户';
+                           option.series[1].name='活跃用户';
+                           option.series[2].name='人均时长';
+                           option.series[0].type='line';
+                           option.series[1].type='line';
+                           option.series[2].type='line';
+                      var legendarray=[];
+                      legendarray.push('新增用户');
+                      legendarray.push('活跃用户');
+                      legendarray.push('人均时长');
+                      option.legend.data=legendarray; 
+                    myChart.clear();
+                    myChart.hideLoading();    //隐藏加载动画
+                    myChart.setOption(option,true); 
+                    
+             }else{
+             	//alert("result false!");
+             }
+         
+        },
+         error : function(errorMsg) {
+             //请求失败时执行该函数
+         alert("图表请求数据失败!");
+         myChart.hideLoading();
+         }
+    })
+
+</script>
+<div id="echarts_pie_4" style="height:400px;width: 1400px"></div>
+<script type="text/javascript">
+// 基于准备好的dom，初始化echarts实例 
+var myChart_pie = echarts.init(document.getElementById('echarts_pie_4')); 
+ 
+var option_pie = { 
+    title : {
+            text: '位置分析图'
+        },
+    tooltip: { 
+        trigger: 'item', 
+        formatter: "{a} <br/>{b}: {c} ({d}%)" 
+    }, 
+    legend: { 
+        orient: 'vertical', 
+        x:'left',
+        width: 150, 
+        padding:[50,0,0,100], 
+        data:[] 
+    }, 
+    series: [ 
+        { 
+            name:'', 
+            type:'pie', 
+            clockwise:'true',
+            radius : '60%',
+            center: ['50%', '50%'],
+ 
+            data:[] 
+        }
+    ] 
+}; 
+ 
+     myChart_pie.showLoading();    //数据加载完之前先显示一段简单的loading动画
+    $.ajax({
+         type : "post",
+         async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+         url : "newandolduser?action=3",    //请求发送到TestServlet处
+         data : {},
+         dataType : "json",        //返回数据形式为json
+         success : function(result) {
+             //请求成功时执行该函数内容，result即为服务器返回的json对象
+             if (result) {
+                 option_pie.legend.data.push("");
+                    for(var i=0;i<result.total;i++){
+                        option_pie.series[0].data.push({name:result.rows[i].originName,value:result.rows[i].newUser});
+                        option_pie.legend.data.push(result.rows[i].originName);
+                          } 
+	                    myChart_pie.clear();
+	                    myChart_pie.hideLoading();    //隐藏加载动画
+	                    myChart_pie.setOption(option_pie,true); 
+             }else{
+             }
+        },
+         error : function(errorMsg) {
+             //请求失败时执行该函数
+         alert("图表请求数据失败!");
+         myChart_pie.hideLoading();
+         }
+    })
+
+</script>
+    <!-- Begin of toolbar -->
+       <p id="dataSum_4"></p>
+    <div id="wu-toolbar-4">
+         <div class="wu-toolbar-search">
+         	<label>发布人：</label>
+        	<!-- <input class="easyui-combobox"  style="width:100px;"  id="originId" >  -->
+        	<input type="text" id="originId_4" name="originId_4" style="width: 128px" class="easyui-validatebox" validtype="selectValid['--请选择--']">
+            <label>发布终端：</label> 
+           <!--  <input class="easyui-combobox"  style="width:100px;"  id="channelId"> -->
+            <input type="text" id="channelId_4" name="channelId_4" style="width: 128px" class="easyui-validatebox" validtype="selectValid['--请选择--']">
+            <label>起始时间：</label><input id="startTime_4" name="startTime" class="easyui-datebox" style="width:100px">
+            <label>结束时间：</label><input id="endTime_4" name="endTime"class="easyui-datebox" style="width:100px">
+            
+            <!-- <label>关键词：</label><input class="wu-text" style="width:100px"> -->
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="javascript:searchUserCountRecord($('#originId_4').combobox('getValue'),$('#channelId_4').combobox('getValue'),$('#startTime_4').datebox('getValue'),$('#endTime_4').datebox('getValue'));">开始检索</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-undo" onclick="javascript:clearSearch4();">清空</a>
+            <!-- <a href="#" class="easyui-linkbutton" iconCls="icon-save" onclick="javascript:export2EXcel_4($('#originId_4').combobox('getValue'),$('#channelId_4').combobox('getValue'),$('#startTime_4').datebox('getValue'),$('#endTime_4').datebox('getValue'));">导出数据</a> -->
+        </div> 
+    </div>
+    <!-- End of toolbar -->
+    <table id="wu-datagrid-4" class="easyui-datagrid" toolbar="#wu-toolbar-4"></table>
+</div>
+<!-- Begin of easyui-dialog -->
+<div id="win_d4" class="easyui-window"  title="详情" maximizable="false" resizable="false" collapsible="false" minimizable="false" style="width:1200px;height:600px"data-options="closed:true,iconCls:'icon-save',modal:true">
+<div class="easyui-layout" data-options="fit:true" style="overflow:auto;width:400px;height:500px">
+ <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div id="echarts_d4" style="height:400px;width: 1000px"></div>
+<!-- ECharts单文件引入 -->  
+<script src="js/dist/echarts.js"></script>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts图表
+   var option_d4 = {
+        title : {
+            text: '时间趋势图'
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:[]
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : []
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value',
+                axisLabel : {
+                    formatter: '{value}'
+                }
+            }
+        ],
+        series : [
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'line',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'line',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'line',
+                data:[]
+            }
+        ]
+    };
+</script>
+<div id="echarts_pie_d4" style="height:400px;width: 1400px"></div>
+<script type="text/javascript">
+// 基于准备好的dom，初始化echarts实例 
+var option_pie_d4 = { 
+    title : {
+            text: '位置分析图'
+        },
+    tooltip: { 
+        trigger: 'item', 
+        formatter: "{a} <br/>{b}: {c} ({d}%)" 
+    }, 
+    legend: { 
+        orient: 'vertical', 
+        x:'left',
+        width: 150, 
+        padding:[50,0,0,100], 
+        data:[] 
+    }, 
+    series: [ 
+        { 
+            name:'', 
+            type:'pie', 
+            clockwise:'true',
+            radius : '60%',
+            center: ['50%', '50%'],
+ 
+            data:[] 
+        }
+    ] 
+}; 
+
+</script>
+    <!-- Begin of toolbar -->
+       <p id="dataSum_4_d4"></p>
+<!--     <div id="wu-toolbar-d4">
+         <div class="wu-toolbar-search">
+         	<label>站点：</label>
+        	<input class="easyui-combobox"  style="width:100px;"  id="originId" > 
+        	<input type="text" id="originId_d4" name="originId_d4" style="width: 128px" class="easyui-validatebox" validtype="selectValid['--请选择--']">
+            <label>渠道：</label> 
+            <input class="easyui-combobox"  style="width:100px;"  id="channelId">
+            <input type="text" id="channelId_d4" name="channelId_d4" style="width: 128px" class="easyui-validatebox" validtype="selectValid['--请选择--']">
+            <label>起始时间：</label><input id="startTime_d4" name="startTime" class="easyui-datebox" style="width:100px">
+            <label>结束时间：</label><input id="endTime_d4" name="endTime"class="easyui-datebox" style="width:100px">
+            
+            <label>关键词：</label><input class="wu-text" style="width:100px">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="javascript:searchUserCountRecordDetail($('#originId_d4').combobox('getValue'),$('#channelId_d4').combobox('getValue'),$('#startTime_d4').datebox('getValue'),$('#endTime_d4').datebox('getValue'));">开始检索</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-undo" onclick="javascript:clearSearch4();">清空</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-save" onclick="javascript:export2EXcel_4($('#originId_4').combobox('getValue'),$('#channelId_4').combobox('getValue'),$('#startTime_4').datebox('getValue'),$('#endTime_4').datebox('getValue'));">导出数据</a>
+        </div> 
+    </div> -->
+    <!-- End of toolbar --><!-- toolbar="#wu-toolbar-4" -->
+    <table id="wu-datagrid-d4" class="easyui-datagrid"></table>
+</div>
+
+<!-- End of easyui-dialog -->
+<script type="text/javascript">
+	
+	/**
+	* Name 分页过滤器
+	*/
+	function pagerFilter(data){            
+		if (typeof data.length == 'number' && typeof data.splice == 'function'){// is array                
+			data = {                   
+				total: data.length,                   
+				rows: data               
+			}            
+		}        
+		var dg = $(this);         
+		var opts = dg.datagrid('options');          
+		var pager = dg.datagrid('getPager');          
+		pager.pagination({                
+			onSelectPage:function(pageNum, pageSize){                 
+				opts.pageNumber = pageNum;                   
+				opts.pageSize = pageSize;                
+				pager.pagination('refresh',{pageNumber:pageNum,pageSize:pageSize});                  
+				dg.datagrid('loadData',data);                
+			}          
+		});           
+		if (!data.originalRows){               
+			data.originalRows = (data.rows);       
+		}         
+		var start = (opts.pageNumber-1)*parseInt(opts.pageSize);          
+		var end = start + parseInt(opts.pageSize);        
+		data.rows = (data.originalRows.slice(start, end));         
+		return data;       
+	}
+	
+		 $.ajax({
+         type : "post",
+         async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+         url:'newandolduser?action=5',
+         data : {},
+         dataType : "json",        //返回数据形式为json
+         success : function(result) {
+        // var datasum="";
+          var datasum  =$("<h3 style='margin:10px;float:left'>数据汇总</h3>"+
+                          "<h3 style='margin:10px;float:left'>新增用户数："+result.rows[0].newUser+"</h3>"+
+                          "<h3 style='margin:10px;float:left'>活跃用户数："+result.rows[0].activeUser+"</h3>"+
+                          "<h3 style='margin:10px;float:left'>人均使用时长："+result.rows[0].useLength+"</h3>"
+                          );
+         $(dataSum_4).append(datasum);
+         }
+        });
+	
+	/**
+	* Name 载入数据
+	*/
+	$('#wu-datagrid-4').datagrid({
+		url:'newandolduser?action=1',
+		loadFilter:pagerFilter,		
+		rownumbers:true,
+		singleSelect:false,
+		pageList : [20],//可以选择的分页集合
+		pageSize:20,           
+		pagination:true,
+		multiSort:true,
+		fitColumns:true,
+		fit:true,
+		columns:[[
+			{ field:'date',title:'日期',width:20,sortable:'true'},
+			{ field:'siteName',title:'发布人',width:20},
+			{ field:'originName',title:'发布终端',width:20},
+			{ field:'newUser',title:'app新增用户数',width:20,sortable:'true'},
+			{ field:'activeUser',title:'活跃用户数',width:20,sortable:'true'},
+			{ field:'useLength',title:'人均使用时长(秒)',width:20,sortable:'true'},
+		]]
+	});
+	
+		/**
+	* Name 搜索
+	*/
+	function searchUserCountRecord(originId,channelId,startTime,endTime){
+	var start=new Date(startTime.replace("-", "/").replace("-", "/")); 
+	var end=new Date(endTime.replace("-", "/").replace("-", "/"));
+	if(end<start){
+			$.messager.alert('','结束时间不能小于起始时间','info');
+			}else{
+	 clearOption();
+	searchChartPie(originId,channelId,startTime,endTime);
+		$('#wu-datagrid-4').datagrid('options').url = "newandolduser?action=1&originId="+originId+"&channelId="+channelId+"&startTime="+startTime+"&endTime="+endTime;
+		if(startTime!=''&endTime!=''&startTime==endTime){
+		searchChartsForOneDay(originId, channelId, startTime, endTime);
+		
+			$('#wu-datagrid-4').datagrid({
+			columns:[[
+				{ field:'date',title:'日期',width:20,sortable:'true'},
+				//{ field:'hour',title:'小时',width:20,sortable:'true'},
+				{ field:'siteName',title:'发布人',width:20},
+				{ field:'originName',title:'发布终端',width:20},
+				{ field:'newUser',title:'app新增用户数',width:20,sortable:'true'},
+				{ field:'activeUser',title:'活跃用户数',width:20,sortable:'true'},
+				{ field:'useLength',title:'人均使用时长(秒)',width:20,sortable:'true'},
+			      ]]
+		      });
+		}else{
+		searchCharts(originId, channelId, startTime, endTime);
+		$('#wu-datagrid-4').datagrid({
+			columns:[[
+				{ field:'date',title:'日期',width:20,sortable:'true'},
+				{ field:'siteName',title:'发布人',width:20},
+				{ field:'originName',title:'发布终端',width:20},
+				{ field:'newUser',title:'app新增用户数',width:20,sortable:'true'},
+				{ field:'activeUser',title:'活跃用户数',width:20,sortable:'true'},
+				{ field:'useLength',title:'人均使用时长(秒)',width:20,sortable:'true'},
+			]]
+		      });
+		}
+		
+		$('#wu-datagrid-4').datagrid('reload'); 
+	  }
+	}
+	
+		function clearOption(){
+	   option=null;
+          option = {
+        title : {
+            text: '时间趋势图'
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:[]
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : []
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value',
+                axisLabel : {
+                    formatter: '{value}'
+                }
+            }
+        ],
+        series : [
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'',
+                data:[]
+            }
+        ]
+    };
+	}
+	/**
+	* Name 图表搜索
+	*/
+	function searchCharts(originId,channelId,startTime,endTime){
+	    $.ajax({
+         type : "post",
+         async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+         url : "newandolduser?action=2&originId="+originId+"&channelId="+channelId+"&startTime="+startTime+"&endTime="+endTime,    //请求发送到TestServlet处
+         data : {},
+         dataType : "json",        //返回数据形式为json
+         success : function(result) {
+         // alert(result);
+             //请求成功时执行该函数内容，result即为服务器返回的json对象
+             if (result.total>0) {
+             		//alert("result true!"+result.rows[0].pv);
+                     for(var i=0;i<result.total;i++){ 
+                       //names.push(result[i].name);    //挨个取出类别并填入类别数组
+                       option.xAxis[0].data.push(result.rows[i].date);
+                     }
+                  for(var i=0;i<result.total;i++){
+                        option.series[0].data.push(result.rows[i].newUser);
+                        option.series[1].data.push(result.rows[i].activeUser);
+                        option.series[2].data.push(result.rows[i].useLength);
+                          } 
+                          option.series[0].name='新增用户';
+                           option.series[1].name='活跃用户';
+                           option.series[2].name='人均时长';
+                           option.series[0].type='line';
+                           option.series[1].type='line';
+                           option.series[2].type='line';
+                      var legendarray=[];
+                      legendarray.push('新增用户');
+                      legendarray.push('活跃用户');
+                      legendarray.push('人均时长');
+                      option.legend.data=legendarray;     
+                    myChart.hideLoading();    //隐藏加载动画
+                    myChart.clear();
+                    myChart.setOption(option,true); 
+                    
+             }else{
+              
+             myChart.hideLoading();    //隐藏加载动画
+             myChart.setOption(option,true);
+             }
+         
+        },
+         error : function(errorMsg) {
+             //请求失败时执行该函数
+         alert("图表请求数据失败!");
+         myChart.hideLoading();
+         }
+    }) 
+	}
+	
+	/**
+	* Name 图表搜索（针对同一天）
+	*/
+	function searchChartsForOneDay(originId,channelId,startTime,endTime){
+	    $.ajax({
+         type : "post",
+         async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+         url : "newandolduser?action=2&originId="+originId+"&channelId="+channelId+"&startTime="+startTime+"&endTime="+endTime,    //请求发送到TestServlet处
+         data : {},
+         dataType : "json",        //返回数据形式为json
+         success : function(result) {
+         // alert(result);
+             //请求成功时执行该函数内容，result即为服务器返回的json对象
+             if (result.total>0) {
+             		//alert("result true!"+result.rows[0].pv);
+                     for(var i=0;i<result.total;i++){ 
+                       //names.push(result[i].name);    //挨个取出类别并填入类别数组
+                       option.xAxis[0].data.push(result.rows[i].hour);
+                     }
+                  for(var i=0;i<result.total;i++){
+                        option.series[0].data.push(result.rows[i].newUser);
+                        option.series[1].data.push(result.rows[i].activeUser);
+                        option.series[2].data.push(result.rows[i].useLength);
+                          } 
+                          option.series[0].name='新增用户';
+                           option.series[1].name='活跃用户';
+                           option.series[2].name='人均时长';
+                           option.series[0].type='line';
+                           option.series[1].type='line';
+                           option.series[2].type='line';
+                      var legendarray=[];
+                      legendarray.push('新增用户');
+                      legendarray.push('活跃用户');
+                      legendarray.push('人均时长');
+                      option.legend.data=legendarray;   
+                    myChart.hideLoading();    //隐藏加载动画
+                    myChart.clear();
+                    myChart.setOption(option,true); 
+                    
+             }else{
+              
+             myChart.hideLoading();    //隐藏加载动画
+             myChart.setOption(option,true);
+             }
+         
+        },
+         error : function(errorMsg) {
+             //请求失败时执行该函数
+         alert("图表请求数据失败!");
+         myChart.hideLoading();
+         }
+    }) 
+	}
+	
+	/**
+	* Name 清空搜索框
+	*/
+	function clearSearch4(){
+		$('#originId_4').combobox('clear');
+		$('#channelId_4').combobox('clear');
+		$('#startTime_4').datebox('setValue','');
+		$('#endTime_4').datebox('setValue','');
+	}
+	
+	/** 清除饼状图数据
+	  */
+	function clearOption_pie(){
+	      option_pie=null;
+		  option_pie = { 
+		    title : {
+		            text: '位置分析图'
+		        },
+		    tooltip: { 
+		        trigger: 'item', 
+		        formatter: "{a} <br/>{b}: {c} ({d}%)" 
+		    }, 
+		    legend: { 
+		        orient: 'vertical', 
+		        x:'left',
+		        width: 150, 
+		        padding:[50,0,0,100], 
+		        data:[] 
+		    }, 
+		    series: [ 
+		        { 
+		            name:'', 
+		            type:'pie', 
+		            clockwise:'true',
+		            radius : '60%',
+		            center: ['50%', '50%'],
+		 
+		            data:[] 
+		        }
+		    ] 
+		}; 
+	}
+	
+	/**
+	* Name 搜索饼状图
+	*/
+	 function searchChartPie(originId,channelId,startTime,endTime){
+	  clearOption_pie();
+	   myChart_pie.showLoading();    //数据加载完之前先显示一段简单的loading动画
+	    $.ajax({
+	         type : "post",
+	         async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+	         url : "newandolduser?action=3&originId="+originId+"&channelId="+channelId+"&startTime="+startTime+"&endTime="+endTime,    //请求发送到TestServlet处
+	         data : {},
+	         dataType : "json",        //返回数据形式为json
+	         success : function(result) {
+	             //请求成功时执行该函数内容，result即为服务器返回的json对象
+	             if (result) {
+	                    for(var i=0;i<result.total;i++){
+	                        option_pie.series[0].data.push({name:result.rows[i].originName,value:result.rows[i].newUser});
+	                        option_pie.legend.data.push(result.rows[i].originName);
+	                          } 
+		                    myChart_pie.clear();
+		                    myChart_pie.hideLoading();    //隐藏加载动画
+		                    myChart_pie.setOption(option_pie,true); 
+	             }else{
+	                    myChart_pie.clear();
+		                myChart_pie.hideLoading();    //隐藏加载动画
+		                myChart_pie.setOption(option_pie,true); 
+	             }
+	        },
+	         error : function(errorMsg) {
+	             //请求失败时执行该函数
+	         alert("图表请求数据失败!");
+	         myChart_pie.hideLoading();
+	         }
+	    })
+	 }
+	 
+	/**
+	* Name 详情页载入数据
+	*/
+	var date;
+	var siteCode;
+	var originId;
+	$('#wu-datagrid-4').datagrid({
+	    
+	 onDblClickRow: function (rowIndex, rowData) {
+          date=rowData.date;
+          siteCode=rowData.siteCode;
+          originId=rowData.originId;
+        $('#wu-datagrid-d4').datagrid({
+		url:'newandolduser_detail?date='+date+'&siteCode='+siteCode+'&originId='+originId,
+		loadFilter:pagerFilter,		
+		rownumbers:true,
+		singleSelect:false,
+		pageList : [20],//可以选择的分页集合
+		pageSize:20,           
+		pagination:true,
+		multiSort:true,
+		fitColumns:true,
+		fit:true,
+		columns:[[
+			{ field:'date',title:'日期',width:20,sortable:'true'},
+			{ field:'hour',title:'小时',width:20,sortable:'true'},
+			{ field:'siteName',title:'发布人',width:20},
+			{ field:'originName',title:'发布终端',width:20},
+			{ field:'newUser',title:'app新增用户数',width:20,sortable:'true'},
+			{ field:'activeUser',title:'活跃用户数',width:20,sortable:'true'},
+			{ field:'useLength',title:'人均使用时长(秒)',width:20,sortable:'true'},
+		]]
+	});
+	
+	     showChart_line(date,siteCode,originId);
+	     showChart_pie(date,siteCode,originId);
+	     //showDetailSum(date,siteCode,originId);
+         $('#win_d4').window('open'); // open a window  
+       }
+	});
+	 
+	 
+	 /**
+	 * 显示详情页折线图
+	 */
+	 function showChart_line(date,siteCode,originId){
+	   var myChart_d4 = echarts.init(document.getElementById("echarts_d4"));
+	clearLineOption();
+	myChart_d4.showLoading();    //数据加载完之前先显示一段简单的loading动画
+    $.ajax({
+         type : "post",
+         async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+         url : "newandolduser_detail_line?date="+date+"&siteCode="+siteCode+"&originId="+originId,    //请求发送到TestServlet处
+         //url:"newandolduser?action=2",
+         data : {},
+         dataType : "json",        //返回数据形式为json
+         success : function(result) {
+         //alert(result);
+             //请求成功时执行该函数内容，result即为服务器返回的json对象
+             if (result) {
+                     for(var i=0;i<result.total;i++){ 
+                       //names.push(result[i].name);    //挨个取出类别并填入类别数组
+                       option_d4.xAxis[0].data.push(result.rows[i].hour);
+                     }
+                    for(var i=0;i<result.total;i++){
+                        option_d4.series[0].data.push(result.rows[i].newUser);
+                        option_d4.series[1].data.push(result.rows[i].activeUser);
+                        option_d4.series[2].data.push(result.rows[i].useLength);
+                          } 
+                           option_d4.series[0].name='新增用户';
+                           option_d4.series[1].name='活跃用户';
+                           option_d4.series[2].name='人均时长';
+                           option_d4.series[0].type='line';
+                           option_d4.series[1].type='line';
+                           option_d4.series[2].type='line';
+                      var legendarray=[];
+                      legendarray.push('新增用户');
+                      legendarray.push('活跃用户');
+                      legendarray.push('人均时长');
+                      option_d4.legend.data=legendarray; 
+                    myChart_d4.clear();
+                    myChart_d4.hideLoading();    //隐藏加载动画
+                    myChart_d4.setOption(option_d4,true); 
+                    
+             }else{
+             }
+        },
+         error : function(errorMsg) {
+             //请求失败时执行该函数
+         alert("图表请求数据失败!");
+         myChart_d4.hideLoading();
+         }
+    })
+}
+
+   function clearLineOption(){
+     option_d4=null;
+      option_d4 = {
+        title : {
+            text: '时间趋势图'
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:[]
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : []
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value',
+                axisLabel : {
+                    formatter: '{value}'
+                }
+            }
+        ],
+        series : [
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'line',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'line',
+                data:[]
+            },
+            {
+                name:'',
+                symbol:'none',  //这句就是去掉点的  
+                smooth:true,  //这句就是让曲线变平滑的  
+                type:'line',
+                data:[]
+            }
+        ]
+    };
+   }
+   
+   /**
+   * 显示饼状图详情
+   */
+   function showChart_pie(date,siteCode,originId){
+   var myChart_pie_d4 = echarts.init(document.getElementById('echarts_pie_d4'));
+   clearPieOption();
+    myChart_pie_d4.showLoading();    //数据加载完之前先显示一段简单的loading动画
+    $.ajax({
+         type : "post",
+         async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+         url : "newandolduser_detail_pie?date="+date+"&siteCode="+siteCode+"&originId="+originId,    //请求发送到TestServlet处
+         data : {},
+         dataType : "json",        //返回数据形式为json
+         success : function(result) {
+             //请求成功时执行该函数内容，result即为服务器返回的json对象
+             if (result) {
+                 option_pie_d4.legend.data.push("");
+                    for(var i=0;i<result.total;i++){
+                        option_pie_d4.series[0].data.push({name:result.rows[i].originName,value:result.rows[i].newUser});
+                        option_pie_d4.legend.data.push(result.rows[i].originName);
+                          } 
+	                    myChart_pie_d4.clear();
+	                    myChart_pie_d4.hideLoading();    //隐藏加载动画
+	                    myChart_pie_d4.setOption(option_pie_d4,true); 
+             }else{
+             }
+        },
+         error : function(errorMsg) {
+             //请求失败时执行该函数
+         alert("图表请求数据失败!");
+         myChart_pie_d4.hideLoading();
+         }
+    })
+   }
+   
+   /**
+   * 清除饼状图缓存数据
+   */
+   function clearPieOption(){
+    option_pie_d4=null;
+    option_pie_d4 = { 
+    title : {
+            text: '位置分析图'
+        },
+    tooltip: { 
+        trigger: 'item', 
+        formatter: "{a} <br/>{b}: {c} ({d}%)" 
+    }, 
+    legend: { 
+        orient: 'vertical', 
+        x:'left',
+        width: 150, 
+        padding:[50,0,0,100], 
+        data:[] 
+    }, 
+    series: [ 
+        { 
+            name:'', 
+            type:'pie', 
+            clockwise:'true',
+            radius : '60%',
+            center: ['50%', '50%'],
+ 
+            data:[] 
+        }
+    ] 
+}; 
+   }
+   
+     function showDetailSum(date,siteCode,originId){
+      $.ajax({
+         type : "post",
+         async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+         url:'detailDataSum?date='+date+'&siteCode='+siteCode+'&originId='+originId,
+         data : {},
+         dataType : "json",        //返回数据形式为json
+         success : function(result) {
+        // var datasum="";
+          var datasum  =$("<h3 style='margin:10px;float:left'>数据汇总</h3>"+
+                          "<h3 style='margin:10px;float:left'>新增用户数："+result.rows[0].newUser+"</h3>"+
+                          "<h3 style='margin:10px;float:left'>活跃用户数："+result.rows[0].activeUser+"</h3>"+
+                          "<h3 style='margin:10px;float:left'>人均使用时长："+result.rows[0].useLength+"</h3>"
+                          );
+         $(dataSum_4_d4).append(datasum);
+         }
+        });
+     }
+   
+  /**
+	* 把数据导到Excel 表格中
+	*/
+	function export2EXcel_4(originId,channelId,startTime,endTime){
+	window.location.href="newandolduser?action=4&originId="+originId+"&channelId="+channelId+"&startTime="+startTime+"&endTime="+endTime;   
+	}
+	
+</script>

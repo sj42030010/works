@@ -1,0 +1,23 @@
+package com.xh.media.dao;
+
+import java.util.List;
+
+import com.xh.media.model.IndexXhMediaProgram;
+
+public interface IndexXhMediaProgramMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(IndexXhMediaProgram record);
+
+    int insertSelective(IndexXhMediaProgram record);
+
+    IndexXhMediaProgram selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(IndexXhMediaProgram record);
+
+    int updateByPrimaryKey(IndexXhMediaProgram record);
+    
+    List<IndexXhMediaProgram> getProgramByChannel(IndexXhMediaProgram record);
+    
+    IndexXhMediaProgram getProgramByGlobalIdAndSiteCode(String globalId, String siteCode);
+}

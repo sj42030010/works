@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxool-config>
+   <proxool>
+      <alias>dbpool</alias>
+      <driver-url>jdbc:mysql://localhost:3306/xh_media_count2?characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull</driver-url>
+      <driver-class>com.mysql.jdbc.Driver</driver-class>
+      <driver-properties>
+      <property name="user" value="songjian"/>
+      <property name="password" value="773726791231"/>
+      </driver-properties>
+      
+      <house-keeping-sleep-time>600000</house-keeping-sleep-time>
+      
+      <maximum-new-connections>10</maximum-new-connections>
+      
+      <maximum-connection-count>20</maximum-connection-count>
+      
+      <minimum-connection-count>2</minimum-connection-count>
+      <prototype-count>0</prototype-count>
+      <simultaneous-build-throttle>20</simultaneous-build-throttle>
+      <house-keeping-test-sql>select CURRENT_DATE</house-keeping-test-sql>
+      <statistics>15s,10m,1d</statistics>
+      <statistics-log-level>INFO</statistics-log-level>
+   </proxool>
+   <proxool>
+    
+   </proxool>
+</proxool-config>

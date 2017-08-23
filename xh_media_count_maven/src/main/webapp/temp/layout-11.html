@@ -1,0 +1,275 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript">
+$(function(){ 
+    //渠道 
+     $('#originId_11').combobox({
+            valueField:'originId', //值字段
+            textField:'originName', //显示的字段
+            url:'originList',
+            panelHeight:'300',
+            editable:true,//不可编辑，只能选择
+         });
+    });
+    
+</script>
+<div class="easyui-layout" data-options="fit:true" style="overflow:auto;width:400px;height:500px">
+    <!-- Begin of toolbar -->
+    <div id="wu-toolbar-11">
+        <div class="wu-toolbar-search">
+<!--        <label>起始时间：</label><input id="startTime_9" name="startTime_9" class="easyui-datebox" style="width:100px">
+            <label>结束时间：</label><input id="endTime_9" name="endTime_9"class="easyui-datebox" style="width:100px"> -->
+        	<label>终端名称：</label>
+        	<input type="text" id="originId_11" name="originId_11" style="width: 128px" class="easyui-validatebox" validtype="selectValid['--请选择--']">
+        	<label>起始时间：</label><input id="startTime_d11" name="startTime_d11" class="easyui-datebox" style="width:100px">
+            <label>结束时间：</label><input id="endTime_d11" name="endTime_d11"class="easyui-datebox" style="width:100px">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="javascript:searchAppData($('#originId_11').combobox('getValue'),$('#startTime_d11').datebox('getValue'),$('#endTime_d11').datebox('getValue'));">开始检索</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-undo" onclick="javascript:clearSearch11();">清空</a>
+        </div>   
+    </div>
+    <!-- End of toolbar -->
+    <table id="wu-datagrid-11" class="easyui-datagrid" toolbar="#wu-toolbar-11"></table>
+</div>
+<div id="win_d11" class="easyui-window" title="详情" maximizable="false" resizable="false" collapsible="false" minimizable="false" style="width:1200px;height:600px"data-options="closed:true,iconCls:'icon-save',modal:true">
+<div class="easyui-layout" data-options="fit:true" style="overflow:auto;width:400px;height:500px">
+    <!-- Begin of toolbar -->
+    <!-- <div id="wu-toolbar-d11">
+        <div class="wu-toolbar-search">
+            <label>起始时间：</label><input id="startTime_d11" name="startTime_d11" class="easyui-datebox" style="width:100px">
+            <label>结束时间：</label><input id="endTime_d11" name="endTime_d11"class="easyui-datebox" style="width:100px">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="javascript:searchAppDataDetail($('#startTime_d11').datebox('getValue'),$('#endTime_d11').datebox('getValue'));">开始检索</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-undo" onclick="javascript:clearSearch_d11();">清空</a>
+        </div>   
+    </div> -->
+    <!-- End of toolbar -->
+    <table id="wu-datagrid-d11" class="easyui-datagrid" toolbar="#wu-toolbar-d11"></table>
+</div>
+<script type="text/javascript">
+	/**
+	* Name 分页过滤器
+	*/
+	function pagerFilter(data){            
+		if (typeof data.length == 'number' && typeof data.splice == 'function'){// is array                
+			data = {                   
+				total: data.length,                   
+				rows: data               
+			}            
+		}        
+		var dg = $(this);         
+		var opts = dg.datagrid('options');          
+		var pager = dg.datagrid('getPager');          
+		pager.pagination({                
+			onSelectPage:function(pageNum, pageSize){                 
+				opts.pageNumber = pageNum;                   
+				opts.pageSize = pageSize;                
+				pager.pagination('refresh',{pageNumber:pageNum,pageSize:pageSize});                  
+				dg.datagrid('loadData',data);                
+			}          
+		});           
+		if (!data.originalRows){               
+			data.originalRows = (data.rows);       
+		}         
+		var start = (opts.pageNumber-1)*parseInt(opts.pageSize);          
+		var end = start + parseInt(opts.pageSize);        
+		data.rows = (data.originalRows.slice(start, end));         
+		return data;       
+	}
+	
+	
+	/**
+	* Name 载入数据
+	*/
+	
+	$('#wu-datagrid-11').datagrid({
+		url:'getAppData',
+		loadFilter:pagerFilter,		
+		rownumbers:true,
+		singleSelect:false,
+		pageList : [20],//可以选择的分页集合
+		pageSize:20,           
+		pagination:true,
+		multiSort:true,
+		fitColumns:true,
+		fit:true,
+		columns:[[
+			{field:'date',title:'日期',width:20,sortable:'true'},
+			{field:'originName',title:'终端名称',width:20,sortable:'true'},
+			{field:'startPv',title:'app启动pv',width:20,sortable:'true'},
+			{field:'startUv',title:'app启动uv',width:40,sortable:'true'},
+			{field:'newUser',title:'app新增用户',width:20,sortable:'true'},
+			{field:'nonLocal',title:'app浏览量',width:20,sortable:'true'},
+			{field:'local',title:'app站内浏览量',width:20,sortable:'true'},
+			{field:'commentNumber',title:'评论',width:20,sortable:'true'},
+			{field:'collectionNumber',title:'收藏',width:20,sortable:'true'},
+			{field:'shareNumber',title:'分享',width:20,sortable:'true'},
+			{field:'ip',title:'ip数',width:20,sortable:'true'},
+		]],
+	});
+
+	
+	/**
+	 * 执行搜索
+	 */
+	function searchAppData(originId,startTime,endTime){
+/* 		var start=new Date(startTime.replace("-", "/").replace("-", "/")); 
+		var end=new Date(endTime.replace("-", "/").replace("-", "/"));
+		if(end<start){
+			$.messager.alert('','结束时间不能小于起始时间','info');
+			}else{ */
+		var start=new Date(startTime.replace("-", "/").replace("-", "/")); 
+		var end=new Date(endTime.replace("-", "/").replace("-", "/"));
+		if(end<start)
+		{
+			$.messager.alert('','结束时间不能小于起始时间','info');
+		}else{
+			$('#wu-datagrid-11').datagrid({
+			url:'getAppData?originId='+originId+'&startTime='+startTime+'&endTime='+endTime,
+			loadFilter:pagerFilter,		
+			rownumbers:true,
+			singleSelect:false,
+			pageList : [20],//可以选择的分页集合
+			pageSize:20,           
+			pagination:true,
+			multiSort:true,
+			fitColumns:true,
+			fit:true,
+			columns:[[
+				{field:'date',title:'日期',width:20,sortable:'true'},
+				{field:'originName',title:'终端名称',width:20,sortable:'true'},
+				{field:'startPv',title:'app启动pv',width:20,sortable:'true'},
+				{field:'startUv',title:'app启动uv',width:40,sortable:'true'},
+				{field:'newUser',title:'app新增用户',width:20,sortable:'true'},
+				{field:'nonLocal',title:'app浏览量',width:20,sortable:'true'},
+				{field:'local',title:'app站内浏览量',width:20,sortable:'true'},
+				{field:'commentNumber',title:'评论',width:20,sortable:'true'},
+				{field:'collectionNumber',title:'收藏',width:20,sortable:'true'},
+				{field:'shareNumber',title:'分享',width:20,sortable:'true'},
+				{field:'ip',title:'ip数',width:20,sortable:'true'},
+			]],
+			});
+		}
+}
+
+   /**
+   * 清空检索项
+   */
+   function clearSearch11(){
+        $('#originId_11').combobox('clear');
+        $('#startTime_d11').datebox('setValue','');
+		$('#endTime_d11').datebox('setValue','');
+   }
+   
+      /**
+   * 清空检索项
+   */
+   function clearSearch_d11(){
+        $('#startTime_d11').datebox('setValue','');
+		$('#endTime_d11').datebox('setValue','');
+   }
+   var originId;
+   var date;
+   $('#wu-datagrid-11').datagrid({
+        onDblClickRow: function (rowIndex, rowData) {
+        originId=rowData.originId;
+        date = rowData.date;
+        $('#wu-datagrid-d11').datagrid({
+				url:'getDayAppDataDetail?originId='+originId+'&date='+date,
+				loadFilter:pagerFilter,		
+				rownumbers:true,
+				singleSelect:false,
+				pageList : [20],//可以选择的分页集合
+				pageSize:20,           
+				pagination:true,
+				multiSort:true,
+				fitColumns:true,
+				fit:true,
+				columns:[[
+					{field:'date',title:'日期',width:20,sortable:'true'},
+					{field:'hour',title:'小时',width:20,sortable:'true'},
+					{field:'originName',title:'终端名称'},
+					{field:'startPv',title:'app启动pv',width:20,sortable:'true'},
+					{field:'startUv',title:'app启动uv',width:20,sortable:'true'},
+					{field:'newUser',title:'app新增用户',width:20,sortable:'true'},
+					{field:'nonLocal',title:'app浏览量',width:20,sortable:'true'},
+					{field:'local',title:'app站内浏览量',width:20,sortable:'true'},
+					{field:'commentNumber',title:'评论',width:20,sortable:'true'},
+					{field:'collectionNumber',title:'收藏',width:20,sortable:'true'},
+					{field:'shareNumber',title:'分享',width:20,sortable:'true'},
+					{field:'ip',title:'ip数',width:20,sortable:'true'},
+				]],
+			});
+		 $('#win_d11').window('open'); // open a window		
+		        }
+		    })
+   
+ /**
+   *详情页搜索
+   */
+   function searchAppDataDetail(startTime,endTime){
+        //alert(startTime+"::"+endTime);
+        
+   		var start=new Date(startTime.replace("-", "/").replace("-", "/")); 
+		var end=new Date(endTime.replace("-", "/").replace("-", "/"));
+		if(end<start)
+		{
+			$.messager.alert('','结束时间不能小于起始时间','info');
+		}else{
+			if(startTime == endTime){
+				$('#wu-datagrid-d11').datagrid({
+			    url:'getAppDataDetail?originId='+originId+'&startTime='+startTime+'&endTime='+endTime,
+			    loadFilter:pagerFilter,		
+				rownumbers:true,
+				singleSelect:false,
+				pageList : [20],//可以选择的分页集合
+				pageSize:20,           
+				pagination:true,
+				multiSort:true,
+				fitColumns:true,
+				fit:true,
+				columns:[[
+					{field:'date',title:'日期',width:20},
+				    {field:'hour',title:'小时',width:20,sortable:'true'},
+				    {field:'originName',title:'终端名称',width:20},
+					{field:'startPv',title:'app启动pv',width:20,sortable:'true'},
+					{field:'startUv',title:'app启动uv',width:20,sortable:'true'},
+					{field:'newUser',title:'app新增用户',width:20,sortable:'true'},
+					{field:'nonLocal',title:'app浏览量',width:20,sortable:'true'},
+					{field:'local',title:'app站内浏览量',width:20,sortable:'true'},
+					{field:'commentNumber',title:'评论',width:20,sortable:'true'},
+					{field:'collectionNumber',title:'收藏',width:20,sortable:'true'},
+					{field:'shareNumber',title:'分享',width:20,sortable:'true'},
+					{field:'ip',title:'ip数',width:20,sortable:'true'},
+				]],
+			    });
+			}
+			else
+			{
+	            $('#wu-datagrid-d11').datagrid({
+			    url:'getDayAppDataDetail?originId='+originId+'&startTime='+startTime+'&endTime='+endTime,
+			    loadFilter:pagerFilter,		
+				rownumbers:true,
+				singleSelect:false,
+				pageList : [20],//可以选择的分页集合
+				pageSize:20,           
+				pagination:true,
+				multiSort:true,
+				fitColumns:true,
+				fit:true,
+				columns:[[
+					{field:'date',title:'日期',width:20,sortable:'true'},
+				    {field:'originName',title:'终端名称',width:20},
+					{field:'startPv',title:'app启动pv',width:20,sortable:'true'},
+					{field:'startUv',title:'app启动uv',width:20,sortable:'true'},
+					{field:'newUser',title:'app新增用户',width:20,sortable:'true'},
+					{field:'nonLocal',title:'app浏览量',width:20,sortable:'true'},
+					{field:'local',title:'app站内浏览量',width:20,sortable:'true'},
+					{field:'commentNumber',title:'评论',width:20,sortable:'true'},
+					{field:'collectionNumber',title:'收藏',width:20,sortable:'true'},
+					{field:'shareNumber',title:'分享',width:20,sortable:'true'},
+					{field:'ip',title:'ip数',width:20,sortable:'true'},
+				]],
+			    });
+		    }
+   }
+  }
+   
+</script>

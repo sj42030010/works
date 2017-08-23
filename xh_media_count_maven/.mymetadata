@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="xh_media_count_maven"
+  id="myeclipse.1502358504026"
+  context-root="/xh_media_count_maven"
+  j2ee-spec="6.0"
+  archive="xh_media_count_maven.war">
+  <attributes>
+    <attribute name="webrootdir" value="src/main/webapp" />
+  </attributes>
+</project-module>
+

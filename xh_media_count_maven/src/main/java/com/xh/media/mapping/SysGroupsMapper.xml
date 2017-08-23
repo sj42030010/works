@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xh.media.dao.SysGroupsMapper" >
+  <resultMap id="BaseResultMap" type="com.xh.media.model.SysGroups" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="PARENT" property="parent" jdbcType="INTEGER" />
+    <result column="ORDER_NUMBER" property="orderNumber" jdbcType="INTEGER" />
+    <result column="STATUS" property="status" jdbcType="TINYINT" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="oldId" property="oldId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, NAME, PARENT, ORDER_NUMBER, STATUS, CREATE_DATE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_groups
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_groups
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.xh.media.model.SysGroups" >
+    insert into sys_groups (ID, NAME, PARENT, 
+      ORDER_NUMBER, STATUS, CREATE_DATE
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{parent,jdbcType=INTEGER}, 
+      #{orderNumber,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, #{createDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.xh.media.model.SysGroups" >
+    insert into sys_groups
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="parent != null" >
+        PARENT,
+      </if>
+      <if test="orderNumber != null" >
+        ORDER_NUMBER,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="parent != null" >
+        #{parent,jdbcType=INTEGER},
+      </if>
+      <if test="orderNumber != null" >
+        #{orderNumber,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xh.media.model.SysGroups" >
+    update sys_groups
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="parent != null" >
+        PARENT = #{parent,jdbcType=INTEGER},
+      </if>
+      <if test="orderNumber != null" >
+        ORDER_NUMBER = #{orderNumber,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xh.media.model.SysGroups" >
+    update sys_groups
+    set 
+      ID = #{id,jdbcType=INTEGER},
+      NAME = #{name,jdbcType=VARCHAR},
+      PARENT = #{parent,jdbcType=INTEGER},
+      ORDER_NUMBER = #{orderNumber,jdbcType=INTEGER},
+      STATUS = #{status,jdbcType=TINYINT},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+    where ID = #{oldId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="findGroupsByUserId" resultMap="BaseResultMap">
+  	SELECT name,id ,create_date FROM sys_groups WHERE id = #{0}
+  </select>
+  
+  <select id="findGroupsByDept" resultMap="BaseResultMap">
+  	SELECT name,id FROM sys_groups WHERE id&gt;=#{0} ORDER BY id
+  </select>
+  
+  <select id="findAllGroups" resultMap="BaseResultMap">
+  	SELECT id,name,create_date FROM sys_groups WHERE ID >0 AND STATUS =1   ORDER BY id
+  </select>
+  
+   <select id="findGroupsByName" resultMap="BaseResultMap">
+  	SELECT name,id ,create_date FROM sys_groups WHERE name = #{name,jdbcType=VARCHAR}
+  </select>
+  
+    <update id="updateByName" parameterType="com.xh.media.model.SysGroups" >
+    update sys_groups
+    set ID = #{id,jdbcType=INTEGER}
+    where  NAME = #{name,jdbcType=VARCHAR}
+  </update>
+  
+    <update id="updateById" parameterType="com.xh.media.model.SysGroups" >
+    update sys_groups
+    set 
+      NAME = #{name,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <update id="updateByOldId" parameterType="com.xh.media.model.SysGroups" >
+    update sys_groups
+    set 
+      ID = #{id,jdbcType=INTEGER},
+      NAME = #{name,jdbcType=VARCHAR}
+    where ID = #{oldId,jdbcType=INTEGER}
+  </update>
+</mapper>
